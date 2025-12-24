@@ -1,9 +1,11 @@
 /**
  * Electron Main Process
- * Quản lý window, menu, backend subprocess
+ * Quản lý window, menu, backend subprocess, auto-updater
  */
 
 const { app, BrowserWindow, Menu, ipcMain, Tray, nativeTheme, dialog, Notification } = require('electron');
+const { autoUpdater } = require('electron-updater');
+const log = require('electron-log');
 const isDev = require('electron-is-dev');
 const path = require('path');
 const { spawn } = require('child_process');
@@ -17,6 +19,61 @@ let backendProcess = null;
 // URL backend
 const BACKEND_URL = 'http://localhost:5000';
 const API_BASE_URL = 'http://localhost:5000/api';
+
+/**
+ * Configure Auto-Updater
+ */
+if (!isDev) {
+  // Configure logging
+  autoUpdater.logger = log;
+  autoUpdater.logger.transports.file.level = 'info';
+  
+  // Check for updates when app starts
+  autoUpdater.checkForUpdatesAndNotify();
+  
+  // Check for updates every hour
+  setInterval(() => {
+    autoUpdater.checkForUpdates();
+  }, 60 * 60 * 1000);
+  
+  // Handle update events
+  autoUpdater.on('update-available', (info) => {
+    if (mainWindow) {
+      mainWindow.webContents.send('update-available', {
+        version: info.version,
+        releaseDate: info.releaseDate
+      });
+      
+      new Notification({
+        title: 'Update Available',
+        body: `Version ${info.version} is available. Downloading...`
+      }).show();
+    }
+  });
+  
+  autoUpdater.on('update-downloaded', (info) => {
+    if (mainWindow) {
+      mainWindow.webContents.send('update-downloaded', {
+        version: info.version
+      });
+    }
+  });
+  
+  autoUpdater.on('error', (error) => {
+    if (mainWindow) {
+      mainWindow.webContents.send('update-error', {
+        message: error.message
+      });
+    }
+    log.error('Update error:', error);
+  });
+  
+  autoUpdater.on('checking-for-update', () => {
+    if (mainWindow) {
+      mainWindow.webContents.send('checking-for-update');
+    }
+  });
+}
 
 /**
  * Tạo main window
@@ -253,6 +310,39 @@ ipcMain.handle('shutdown-backend', () => {
     return true;
   }
   return false;
+});
+
+/**
+ * Auto-Updater IPC Handlers
+ */
+
+// Check for updates
+ipcMain.handle('check-updates', async () => {
+  try {
+    const result = await autoUpdater.checkForUpdates();
+    return {
+      updateAvailable: result?.updateInfo?.version !== app.getVersion(),
+      currentVersion: app.getVersion(),
+      newVersion: result?.updateInfo?.version,
+      releaseDate: result?.updateInfo?.releaseDate
+    };
+  } catch (error) {
+    log.error('Check updates error:', error);
+    return { error: error.message };
+  }
+});
+
+// Download and install update
+ipcMain.handle('install-update', () => {
+  autoUpdater.quitAndInstall();
+});
+
+// Get current version
+ipcMain.handle('get-app-version', () => {
+  return {
+    version: app.getVersion(),
+    name: 'Baidoxe'
+  };
 });
 
 // Show notification

@@ -20,8 +20,18 @@ contextBridge.exposeInMainWorld('electron', {
   // Data export/import
   exportData: (data) => ipcRenderer.invoke('export-data', data),
   
-  // Updates
+  // Auto-Updater
   checkUpdates: () => ipcRenderer.invoke('check-updates'),
+  installUpdate: () => ipcRenderer.invoke('install-update'),
+  getAppVersion: () => ipcRenderer.invoke('get-app-version'),
+  onUpdateAvailable: (callback) => 
+    ipcRenderer.on('update-available', (_, data) => callback(data)),
+  onUpdateDownloaded: (callback) => 
+    ipcRenderer.on('update-downloaded', (_, data) => callback(data)),
+  onUpdateError: (callback) => 
+    ipcRenderer.on('update-error', (_, data) => callback(data)),
+  onCheckingForUpdate: (callback) => 
+    ipcRenderer.on('checking-for-update', () => callback()),
   
   // App info
   isElectron: true,

@@ -85,6 +85,76 @@ export const useElectron = () => {
 
   const checkUpdates = useCallback(async () => {
     if (!isElectron) {
+      console.log('Updates not available in web mode');
+      return null;
+    }
+
+    try {
+      return await window.electron?.checkUpdates();
+    } catch (error) {
+      console.error('Failed to check updates:', error);
+      return null;
+    }
+  }, [isElectron]);
+
+  const installUpdate = useCallback(async () => {
+    if (!isElectron) {
+      console.log('Update installation not available in web mode');
+      return false;
+    }
+
+    try {
+      window.electron?.installUpdate();
+      return true;
+    } catch (error) {
+      console.error('Failed to install update:', error);
+      return false;
+    }
+  }, [isElectron]);
+
+  const getAppVersion = useCallback(async () => {
+    if (!isElectron) {
+      return { version: 'web', name: 'Baidoxe Web' };
+    }
+
+    try {
+      return await window.electron?.getAppVersion();
+    } catch (error) {
+      console.error('Failed to get app version:', error);
+      return null;
+    }
+  }, [isElectron]);
+
+  const onUpdateAvailable = useCallback((callback: (data: any) => void) => {
+    if (isElectron) {
+      window.electron?.onUpdateAvailable?.(callback);
+    }
+  }, [isElectron]);
+
+  const onUpdateDownloaded = useCallback((callback: (data: any) => void) => {
+    if (isElectron) {
+      window.electron?.onUpdateDownloaded?.(callback);
+    }
+  }, [isElectron]);
+
+  const onUpdateError = useCallback((callback: (data: any) => void) => {
+    if (isElectron) {
+      window.electron?.onUpdateError?.(callback);
+    }
+  }, [isElectron]);
+
+  const onCheckingForUpdate = useCallback((callback: () => void) => {
+    if (isElectron) {
+      window.electron?.onCheckingForUpdate?.(callback);
+    }
+  }, [isElectron]);
+      console.error('Failed to get backend status:', error);
+      return false;
+    }
+  }, [isElectron]);
+
+  const checkUpdates = useCallback(async () => {
+    if (!isElectron) {
       return { available: false, currentVersion: '0.0.0' };
     }
 
@@ -104,6 +174,12 @@ export const useElectron = () => {
     exportData,
     getBackendStatus,
     checkUpdates,
+    installUpdate,
+    getAppVersion,
+    onUpdateAvailable,
+    onUpdateDownloaded,
+    onUpdateError,
+    onCheckingForUpdate,
   };
 };
 
