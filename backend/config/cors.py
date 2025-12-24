@@ -7,11 +7,13 @@ def init_cors(app):
     """Initialize CORS for the Flask app"""
     CORS(app, 
          origins=[
-             "http://localhost:3000",      # React development
-             "http://127.0.0.1:3000",     # React development  
+             "http://localhost:3000",      # React development - localhost
+             "http://127.0.0.1:3000",     # React development - loopback
+             "http://192.168.1.15:3000",  # React development - network IP
              "http://localhost:5000",      # Production build
              "http://127.0.0.1:5000",     # Production build
-             "http://192.168.4.3:5000",   # Network access
+             "http://192.168.1.15:5000",  # Production build - network IP
+             "http://192.168.4.3:5000",   # Network access (legacy)
          ],
          methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
          allow_headers=["Content-Type", "Authorization"],

@@ -109,7 +109,7 @@ export const parkingApi = {
    * @returns Record object với key là UID thẻ
    */
   getCards: async (): Promise<Record<string, ParkingCard>> => {
-    const response = await api.get<{success: boolean, cards: ParkingCard[], count: number}>('/api/cards');
+    const response = await api.get<{success: boolean, cards: ParkingCard[], count: number}>('/api/cards/');
     const cardsObject: Record<string, ParkingCard> = {};
     if (response.data.cards && Array.isArray(response.data.cards)) {
       response.data.cards.forEach(card => {
@@ -128,7 +128,7 @@ export const parkingApi = {
     const statusMap = { 0: 'active', 1: 'parked' };
     const apiStatus = statusMap[status as keyof typeof statusMap] || 'active';
     
-    const response = await api.post<ApiResponse<any>>('/api/cards', {
+    const response = await api.post<ApiResponse<any>>('/api/cards/', {
       id: uid,
       name: `Thẻ ${uid}`,
       status: apiStatus,

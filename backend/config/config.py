@@ -37,7 +37,7 @@ def detect_api_host():
     # Lựa chọn 2: Local WiFi - uncomment dòng dưới và comment hàm trên
     # return "192.168.1.50"  # // IP cụ thể của PC chạy backend trên local WiFi
 
-API_HOST = detect_api_host()
+API_HOST = "0.0.0.0"  # Chạy trên tất cả interface (localhost + 192.168.x.x đều kết nối được)
 API_PORT = 5000
 DEBUG_MODE = True
 

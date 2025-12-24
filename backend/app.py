@@ -54,6 +54,9 @@ def create_app(config_name='default'):
     # Load configuration
     app.config.from_object(config[config_name])
     
+    # Disable automatic trailing slash redirect
+    app.url_map.strict_slashes = False
+    
     # Initialize CORS
     init_cors(app)
     

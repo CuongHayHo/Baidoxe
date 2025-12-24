@@ -55,6 +55,16 @@ const Dashboard: React.FC = () => {
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
 
   /**
+   * Hàm lấy base URL cho API calls
+   */
+  const getApiBaseUrl = () => {
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      return 'http://localhost:5000';
+    }
+    return `http://${window.location.hostname}:5000`;
+  };
+
+  /**
    * Hàm fetch dữ liệu dashboard từ API
    * - Gọi đồng thời 2 API: thống kê và log gần đây
    * - Xử lý lỗi và cập nhật state tương ứng
@@ -62,10 +72,11 @@ const Dashboard: React.FC = () => {
    */
   const fetchStats = async () => {
     try {
+      const baseUrl = getApiBaseUrl();
       // Gọi đồng thời 2 API để tối ưu tốc độ loading
       const [statsResponse, logsResponse] = await Promise.all([
-        fetch('/api/cards/statistics'),    // API lấy thống kê tổng quan
-        fetch('/api/cards/logs?limit=10')  // API lấy 10 log gần đây nhất
+        fetch(`${baseUrl}/api/cards/statistics`),    // API lấy thống kê tổng quan
+        fetch(`${baseUrl}/api/cards/logs?limit=10`)  // API lấy 10 log gần đây nhất
       ]);
 
       // Xử lý response API thống kê
@@ -304,8 +315,9 @@ const Dashboard: React.FC = () => {
             className="action-btn backup-btn"
             onClick={async () => {
               try {
+                const baseUrl = getApiBaseUrl();
                 // Gọi API backup dữ liệu
-                const response = await fetch('/api/cards/backup', { method: 'POST' });
+                const response = await fetch(`${baseUrl}/api/cards/backup`, { method: 'POST' });
                 const result = await response.json();
                 
                 // Hiển thị kết quả cho user
@@ -330,8 +342,9 @@ const Dashboard: React.FC = () => {
               // Xác nhận trước khi thực hiện để tránh thao tác nhầm
               if (window.confirm('Bạn có muốn sửa lỗi dữ liệu không?')) {
                 try {
+                  const baseUrl = getApiBaseUrl();
                   // Gọi API sửa lỗi dữ liệu
-                  const response = await fetch('/api/cards/fix-data', { method: 'POST' });
+                  const response = await fetch(`${baseUrl}/api/cards/fix-data`, { method: 'POST' });
                   const result = await response.json();
                   
                   if (result.success) {
