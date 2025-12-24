@@ -1,0 +1,263 @@
+/**
+ * Electron Main Process
+ * Quản lý window, menu, backend subprocess
+ */
+
+const { app, BrowserWindow, Menu, ipcMain, Tray, nativeTheme } = require('electron');
+const isDev = require('electron-is-dev');
+const path = require('path');
+const { spawn } = require('child_process');
+const fs = require('fs');
+const os = require('os');
+
+let mainWindow;
+let tray;
+let backendProcess = null;
+
+// URL backend
+const BACKEND_URL = 'http://localhost:5000';
+const API_BASE_URL = 'http://localhost:5000/api';
+
+/**
+ * Tạo main window
+ */
+function createWindow() {
+  mainWindow = new BrowserWindow({
+    width: 1400,
+    height: 900,
+    minWidth: 800,
+    minHeight: 600,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: false,
+      contextIsolation: true,
+      enableRemoteModule: false,
+    },
+    icon: path.join(__dirname, '../public/favicon.ico'),
+  });
+
+  // Load app từ React dev server hoặc build folder
+  const startUrl = isDev
+    ? 'http://localhost:3000'
+    : `file://${path.join(__dirname, '../build/index.html')}`;
+
+  mainWindow.loadURL(startUrl);
+
+  if (isDev) {
+    mainWindow.webContents.openDevTools();
+  }
+
+  mainWindow.on('closed', () => {
+    mainWindow = null;
+  });
+
+  // Hide khi close (tray mode)
+  mainWindow.on('close', (event) => {
+    if (!app.isQuitting) {
+      event.preventDefault();
+      mainWindow.hide();
+    }
+  });
+}
+
+/**
+ * Tạo tray icon
+ */
+function createTray() {
+  const icon = path.join(__dirname, '../public/favicon.ico');
+  tray = new Tray(icon);
+
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Show',
+      click: () => {
+        if (mainWindow) {
+          mainWindow.show();
+          mainWindow.focus();
+        }
+      },
+    },
+    {
+      label: 'Quit',
+      click: () => {
+        app.isQuitting = true;
+        app.quit();
+      },
+    },
+  ]);
+
+  tray.setContextMenu(contextMenu);
+  tray.setToolTip('Baidoxe - Parking Management');
+
+  tray.on('click', () => {
+    if (mainWindow) {
+      mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
+    }
+  });
+}
+
+/**
+ * Tạo application menu
+ */
+function createMenu() {
+  const template = [
+    {
+      label: 'File',
+      submenu: [
+        {
+          label: 'Exit',
+          accelerator: 'CmdOrCtrl+Q',
+          click: () => {
+            app.isQuitting = true;
+            app.quit();
+          },
+        },
+      ],
+    },
+    {
+      label: 'Edit',
+      submenu: [
+        { role: 'undo' },
+        { role: 'redo' },
+        { type: 'separator' },
+        { role: 'cut' },
+        { role: 'copy' },
+        { role: 'paste' },
+      ],
+    },
+    {
+      label: 'View',
+      submenu: [
+        { role: 'reload' },
+        { role: 'forceReload' },
+        { role: 'toggleDevTools' },
+      ],
+    },
+    {
+      label: 'Help',
+      submenu: [
+        {
+          label: 'About',
+          click: () => {
+            const { dialog } = require('electron');
+            dialog.showMessageBox(mainWindow, {
+              type: 'info',
+              title: 'About Baidoxe',
+              message: 'Baidoxe Parking Management System v1.0.0',
+              detail: 'Desktop application for parking management',
+            });
+          },
+        },
+      ],
+    },
+  ];
+
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
+}
+
+/**
+ * Start Flask backend
+ */
+async function startBackend() {
+  try {
+    // Kiểm tra xem backend có đang chạy không
+    const axios = require('axios');
+    const response = await axios.get(`${BACKEND_URL}/health`, { timeout: 2000 }).catch(() => null);
+    
+    if (response && response.status === 200) {
+      console.log('✅ Backend already running');
+      return true;
+    }
+  } catch (error) {
+    console.log('Backend not running, starting...');
+  }
+
+  return new Promise((resolve) => {
+    try {
+      // Tìm đường dẫn Python
+      const pythonPath = process.env.PYTHON_PATH || 'python';
+      const backendDir = path.join(__dirname, '../../backend');
+
+      // Start Flask server
+      backendProcess = spawn(pythonPath, ['-m', 'backend.run'], {
+        cwd: backendDir,
+        stdio: 'inherit',
+      });
+
+      backendProcess.on('error', (error) => {
+        console.error('Failed to start backend:', error);
+        resolve(false);
+      });
+
+      // Chờ backend khởi động
+      setTimeout(() => resolve(true), 3000);
+    } catch (error) {
+      console.error('Error starting backend:', error);
+      resolve(false);
+    }
+  });
+}
+
+/**
+ * App event handlers
+ */
+app.on('ready', async () => {
+  // Start backend
+  const backendReady = await startBackend();
+  
+  if (!backendReady) {
+    console.warn('⚠️ Warning: Backend failed to start');
+  }
+
+  createWindow();
+  createTray();
+  createMenu();
+});
+
+app.on('window-all-closed', () => {
+  // macOS behavior: keep app in dock
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
+});
+
+app.on('activate', () => {
+  if (mainWindow === null) {
+    createWindow();
+  } else {
+    mainWindow.show();
+    mainWindow.focus();
+  }
+});
+
+/**
+ * IPC Handlers - Communication between Electron and React
+ */
+
+// Get backend status
+ipcMain.handle('get-backend-status', async () => {
+  try {
+    const axios = require('axios');
+    const response = await axios.get(`${BACKEND_URL}/health`, { timeout: 5000 });
+    return response.status === 200;
+  } catch {
+    return false;
+  }
+});
+
+// Shutdown backend gracefully
+ipcMain.handle('shutdown-backend', () => {
+  if (backendProcess) {
+    backendProcess.kill();
+    return true;
+  }
+  return false;
+});
+
+/**
+ * Handle unhandled exceptions
+ */
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception:', error);
+});

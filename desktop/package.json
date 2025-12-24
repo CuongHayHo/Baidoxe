@@ -1,0 +1,60 @@
+{
+  "name": "baidoxe-desktop",
+  "version": "1.0.0",
+  "description": "Desktop application for Baidoxe parking management system",
+  "main": "src/main.js",
+  "homepage": "./",
+  "author": "Baidoxe Team",
+  "license": "MIT",
+  "scripts": {
+    "dev": "concurrently \"npm run react-start\" \"wait-on http://localhost:3000 && electron .\"",
+    "react-start": "react-scripts start",
+    "react-build": "react-scripts build",
+    "electron-dev": "electron .",
+    "electron-build": "npm run react-build && electron-builder",
+    "build": "npm run react-build && electron-builder --publish never",
+    "dist": "npm run react-build && electron-builder",
+    "test": "react-scripts test --no-coverage",
+    "eject": "react-scripts eject"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "electron-is-dev": "^2.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.0.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0",
+    "electron": "^27.0.0",
+    "electron-builder": "^24.9.1",
+    "react-scripts": "5.0.1",
+    "wait-on": "^7.0.1"
+  },
+  "build": {
+    "appId": "com.baidoxe.app",
+    "productName": "Baidoxe",
+    "files": [
+      "src/**/*",
+      "public/**/*",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "buildResources": "public"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "certificateFile": null,
+      "certificatePassword": null
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  }
+}
