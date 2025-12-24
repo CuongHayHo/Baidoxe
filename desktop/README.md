@@ -90,6 +90,48 @@ desktop/
 
 - [BUILD_GUIDE.md](./BUILD_GUIDE.md) - Complete build & packaging guide
 - [NATIVE_FEATURES.md](./NATIVE_FEATURES.md) - Native Electron features guide
+- [TESTING_GUIDE.md](./TESTING_GUIDE.md) - Testing & QA procedures
+
+## Testing
+
+### Running Tests
+
+```bash
+# Unit tests
+npm test
+
+# Watch mode
+npm run test:watch
+
+# Coverage report
+npm run test:coverage
+
+# E2E tests
+npm run test:e2e
+
+# Debug mode
+npm run test:debug
+```
+
+### Test Coverage
+
+- Unit tests with Jest
+- React component tests with Testing Library
+- E2E tests with Spectron
+- Manual testing checklist
+
+See [TESTING_GUIDE.md](./TESTING_GUIDE.md) for complete testing documentation.
+
+## Quality Assurance
+
+See [QA_GUIDELINES.md](../QA_GUIDELINES.md) for:
+- QA process overview
+- Test coverage guidelines
+- Manual testing protocol
+- Performance benchmarks
+- Cross-platform testing
+- Bug reporting template
+- CI/CD workflow example
 
 ## Architecture
 
