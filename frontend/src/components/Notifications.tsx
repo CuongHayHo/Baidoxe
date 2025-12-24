@@ -188,7 +188,7 @@ export const useActivityMonitor = () => {
    * Function kiểm tra hoạt động mới trong hệ thống
    * Gọi API để lấy log mới nhất và so sánh với lần check trước
    */
-  const checkForNewActivity = async () => {
+  const checkForNewActivity = useCallback(async () => {
     try {
       // Lấy log entry mới nhất (limit=1) để check count
       const data = await parkingApi.getLogs({ limit: 1 });
@@ -245,7 +245,7 @@ export const useActivityMonitor = () => {
     } catch (error) {
       console.error('Lỗi khi kiểm tra hoạt động mới:', error);
     }
-  };
+  }, [showToast]);
 
   useEffect(() => {
     // Khởi tạo log count lần đầu
@@ -275,7 +275,7 @@ export const useStatsMonitor = () => {
    * Function kiểm tra thay đổi trong thống kê hệ thống
    * So sánh stats hiện tại với lần check trước để phát hiện thay đổi quan trọng
    */
-  const checkStatsChange = async () => {
+  const checkStatsChange = useCallback(async () => {
     try {
       const data = await parkingApi.getStatistics();
       const stats = data.statistics || data;
@@ -303,13 +303,12 @@ export const useStatsMonitor = () => {
           showToast('error', '🚫 Bãi xe đầy', 'Không còn chỗ trống trong bãi xe');
         }
       }
-
       // Lưu stats hiện tại để so sánh cho lần tiếp theo
       setPreviousStats(stats);
     } catch (error) {
       console.error('Lỗi khi kiểm tra thống kê:', error);
     }
-  };
+  }, [showToast]);
 
   useEffect(() => {
     // Khởi tạo stats lần đầu
@@ -320,7 +319,7 @@ export const useStatsMonitor = () => {
 
     // Cleanup interval khi component unmount
     return () => clearInterval(interval);
-  }, []); // Bỏ previousStats khỏi dependency để tránh infinite loop
+  }, [showToast]); // Bỏ previousStats khỏi dependency để tránh infinite loop
 
   return { checkStatsChange };
 };
