@@ -12,6 +12,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNotifications } from './Notifications';
+import parkingApi from '../api';
 
 /**
  * Interface cho thông tin backup file
@@ -46,12 +47,9 @@ const AdminPanel: React.FC = () => {
 
   const fetchBackupFiles = async () => {
     try {
-      const response = await fetch('/api/cards/backups');
-      if (response.ok) {
-        const result = await response.json();
-        if (result.success) {
-          setBackupFiles(result.backups || []);
-        }
+      const result = await parkingApi.getBackups();
+      if (result.success) {
+        setBackupFiles(result.backups || []);
       }
     } catch (err) {
       console.error('Error fetching backup files:', err);
@@ -62,31 +60,17 @@ const AdminPanel: React.FC = () => {
     setIsLoading(true);
     try {
       const [statsResponse, logsResponse, backupsResponse] = await Promise.all([
-        fetch('/api/cards/statistics'),
-        fetch('/api/cards/logs?limit=1'),
-        fetch('/api/cards/backups')
+        parkingApi.getStatistics(),
+        parkingApi.getLogs({ limit: 1 }),
+        parkingApi.getBackups()
       ]);
 
-      let stats = null;
-      let logs = null;
-      let backups = null;
+      let stats = statsResponse.statistics || statsResponse;
+      let logs = logsResponse;
+      let backups = backupsResponse.backups || [];
 
-      if (statsResponse.ok) {
-        const statsData = await statsResponse.json();
-        stats = statsData.statistics || statsData;
-      }
-
-      if (logsResponse.ok) {
-        const logsData = await logsResponse.json();
-        logs = logsData;
-      }
-
-      if (backupsResponse.ok) {
-        const backupsData = await backupsResponse.json();
-        if (backupsData.success) {
-          backups = backupsData.backups || [];
-          setBackupFiles(backups);
-        }
+      if (backupsResponse.success) {
+        setBackupFiles(backups);
       }
 
       setSystemInfo({
@@ -114,8 +98,7 @@ const AdminPanel: React.FC = () => {
   const createBackup = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('/api/cards/backup', { method: 'POST' });
-      const result = await response.json();
+      const result = await parkingApi.createBackup();
 
       if (result.success) {
         showToast('success', '✅ Backup thành công', `Đã tạo backup: ${result.backup_path}`);
@@ -138,8 +121,7 @@ const AdminPanel: React.FC = () => {
 
     try {
       setIsLoading(true);
-      const response = await fetch('/api/cards/fix-data', { method: 'POST' });
-      const result = await response.json();
+      const result = await parkingApi.fixData();
 
       if (result.success) {
         showToast('success', '✅ Sửa lỗi thành công', 
@@ -174,13 +156,10 @@ const AdminPanel: React.FC = () => {
 
   const exportSystemReport = async () => {
     try {
-      const [statsResponse, logsResponse] = await Promise.all([
-        fetch('/api/cards/statistics'),
-        fetch('/api/cards/logs?limit=100') // Get recent logs for report
+      const [statsData, logsData] = await Promise.all([
+        parkingApi.getStatistics(),
+        parkingApi.getLogs({ limit: 100 })
       ]);
-
-      const statsData = statsResponse.ok ? await statsResponse.json() : null;
-      const logsData = logsResponse.ok ? await logsResponse.json() : null;
 
       const report = {
         generated_at: new Date().toISOString(),

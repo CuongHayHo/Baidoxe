@@ -226,6 +226,48 @@ export const parkingApi = {
 
     const response = await api.get<any>(`/api/cards/logs?${queryParams}`);
     return response.data;
+  },
+
+  /**
+   * Lấy danh sách backup files
+   */
+  getBackups: async (): Promise<any> => {
+    const response = await api.get<any>('/api/cards/backups');
+    return response.data;
+  },
+
+  /**
+   * Tạo backup mới
+   */
+  createBackup: async (): Promise<any> => {
+    const response = await api.post<any>('/api/cards/backup');
+    return response.data;
+  },
+
+  /**
+   * Restore backup
+   * @param filename - Tên file backup cần restore
+   */
+  restoreBackup: async (filename: string): Promise<any> => {
+    const response = await api.post<any>('/api/cards/restore', { filename });
+    return response.data;
+  },
+
+  /**
+   * Xóa backup file
+   * @param filename - Tên file backup cần xóa
+   */
+  deleteBackup: async (filename: string): Promise<any> => {
+    const response = await api.delete<any>(`/api/cards/backup/${filename}`);
+    return response.data;
+  },
+
+  /**
+   * Fix dữ liệu
+   */
+  fixData: async (): Promise<any> => {
+    const response = await api.post<any>('/api/cards/fix-data');
+    return response.data;
   }
 };
 

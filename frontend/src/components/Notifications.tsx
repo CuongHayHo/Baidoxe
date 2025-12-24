@@ -11,6 +11,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
+import parkingApi from '../api';
 
 /**
  * Interface cho toast notification
@@ -190,60 +191,57 @@ export const useActivityMonitor = () => {
   const checkForNewActivity = async () => {
     try {
       // Lấy log entry mới nhất (limit=1) để check count
-      const response = await fetch('/api/cards/logs?limit=1');
-      if (response.ok) {
-        const data = await response.json();
-        
-        // Kiểm tra có log mới không (count tăng so với lần trước)
-        if (data.success && data.count > lastLogCount && lastLogCount > 0) {
-          // Phát hiện hoạt động mới
-          const newCount = data.count - lastLogCount;
+      const data = await parkingApi.getLogs({ limit: 1 });
+      
+      // Kiểm tra có log mới không (count tăng so với lần trước)
+      if (data.success && data.count > lastLogCount && lastLogCount > 0) {
+        // Phát hiện hoạt động mới
+        const newCount = data.count - lastLogCount;
           
-          if (data.logs && data.logs.length > 0) {
-            const latestLog = data.logs[0];
-            let title = '';
-            let message = '';
-            let type: Toast['type'] = 'info';
+        if (data.logs && data.logs.length > 0) {
+          const latestLog = data.logs[0];
+          let title = '';
+          let message = '';
+          let type: Toast['type'] = 'info';
 
-            // Parse loại hoạt động và tạo notification phù hợp
-            switch (latestLog.action) {
-              case 'entry':
-                title = '🚗 Xe vào bãi';
-                message = `Thẻ ${latestLog.card_id} vừa vào bãi đỗ xe`;
-                type = 'success';
-                break;
-              case 'exit':
-                title = '🚗 Xe ra khỏi bãi';
-                message = `Thẻ ${latestLog.card_id} vừa rời khỏi bãi đỗ xe`;
-                type = 'info';
-                break;
-              case 'scan':
-                title = '📱 Quét thẻ';
-                message = `Thẻ ${latestLog.card_id} được quét bởi hệ thống`;
-                type = 'info';
-                break;
-              case 'unknown':
-                title = '❓ Thẻ không xác định';
-                message = `Phát hiện thẻ lạ: ${latestLog.card_id}`;
-                type = 'warning';
-                break;
-              default:
-                title = '📝 Hoạt động mới';
-                message = `Thẻ ${latestLog.card_id}: ${latestLog.action}`;
-                type = 'info';
-            }
-
-            // Hiển thị toast notification với thông tin chi tiết
-            showToast(type, title, message);
-          } else {
-            // Fallback nếu không có log chi tiết
-            showToast('info', '🔔 Hoạt động mới', `Có ${newCount} hoạt động mới`);
+          // Parse loại hoạt động và tạo notification phù hợp
+          switch (latestLog.action) {
+            case 'entry':
+              title = '🚗 Xe vào bãi';
+              message = `Thẻ ${latestLog.card_id} vừa vào bãi đỗ xe`;
+              type = 'success';
+              break;
+            case 'exit':
+              title = '🚗 Xe ra khỏi bãi';
+              message = `Thẻ ${latestLog.card_id} vừa rời khỏi bãi đỗ xe`;
+              type = 'info';
+              break;
+            case 'scan':
+              title = '📱 Quét thẻ';
+              message = `Thẻ ${latestLog.card_id} được quét bởi hệ thống`;
+              type = 'info';
+              break;
+            case 'unknown':
+              title = '❓ Thẻ không xác định';
+              message = `Phát hiện thẻ lạ: ${latestLog.card_id}`;
+              type = 'warning';
+              break;
+            default:
+              title = '📝 Hoạt động mới';
+              message = `Thẻ ${latestLog.card_id}: ${latestLog.action}`;
+              type = 'info';
           }
+
+          // Hiển thị toast notification với thông tin chi tiết
+          showToast(type, title, message);
+        } else {
+          // Fallback nếu không có log chi tiết
+          showToast('info', '🔔 Hoạt động mới', `Có ${newCount} hoạt động mới`);
         }
-        
-        // Cập nhật count để sử dụng cho lần check tiếp theo
-        setLastLogCount(data.count || 0);
       }
+      
+      // Cập nhật count để sử dụng cho lần check tiếp theo
+      setLastLogCount(data.count || 0);
     } catch (error) {
       console.error('Lỗi khi kiểm tra hoạt động mới:', error);
     }
@@ -279,38 +277,35 @@ export const useStatsMonitor = () => {
    */
   const checkStatsChange = async () => {
     try {
-      const response = await fetch('/api/cards/statistics');
-      if (response.ok) {
-        const data = await response.json();
-        const stats = data.statistics || data;
+      const data = await parkingApi.getStatistics();
+      const stats = data.statistics || data;
 
-        if (previousStats) {
-          // Kiểm tra thay đổi quan trọng trong số xe trong bãi
-          if (stats.inside_parking !== previousStats.inside_parking) {
-            const change = stats.inside_parking - previousStats.inside_parking;
-            if (change > 0) {
-              // Có xe mới vào bãi
-              showToast('success', '📈 Tăng số xe', `Có thêm ${change} xe vào bãi. Tổng: ${stats.inside_parking}/${stats.total_cards}`);
-            } else {
-              // Có xe rời bãi
-              showToast('info', '📉 Giảm số xe', `Có ${Math.abs(change)} xe rời bãi. Tổng: ${stats.inside_parking}/${stats.total_cards}`);
-            }
-          }
-
-          // Kiểm tra cảnh báo tỷ lệ sử dụng bãi xe
-          if (stats.occupancy_rate >= 90 && previousStats.occupancy_rate < 90) {
-            showToast('warning', '⚠️ Bãi xe gần đầy', `Tỷ lệ sử dụng: ${stats.occupancy_rate.toFixed(1)}%`);
-          }
-
-          // Cảnh báo bãi xe đầy
-          if (stats.occupancy_rate === 100 && previousStats.occupancy_rate < 100) {
-            showToast('error', '🚫 Bãi xe đầy', 'Không còn chỗ trống trong bãi xe');
+      if (previousStats) {
+        // Kiểm tra thay đổi quan trọng trong số xe trong bãi
+        if (stats.inside_parking !== previousStats.inside_parking) {
+          const change = stats.inside_parking - previousStats.inside_parking;
+          if (change > 0) {
+            // Có xe mới vào bãi
+            showToast('success', '📈 Tăng số xe', `Có thêm ${change} xe vào bãi. Tổng: ${stats.inside_parking}/${stats.total_cards}`);
+          } else {
+            // Có xe rời bãi
+            showToast('info', '📉 Giảm số xe', `Có ${Math.abs(change)} xe rời bãi. Tổng: ${stats.inside_parking}/${stats.total_cards}`);
           }
         }
 
-        // Lưu stats hiện tại để so sánh cho lần tiếp theo
-        setPreviousStats(stats);
+        // Kiểm tra cảnh báo tỷ lệ sử dụng bãi xe
+        if (stats.occupancy_rate >= 90 && previousStats.occupancy_rate < 90) {
+          showToast('warning', '⚠️ Bãi xe gần đầy', `Tỷ lệ sử dụng: ${stats.occupancy_rate.toFixed(1)}%`);
+        }
+
+        // Cảnh báo bãi xe đầy
+        if (stats.occupancy_rate === 100 && previousStats.occupancy_rate < 100) {
+          showToast('error', '🚫 Bãi xe đầy', 'Không còn chỗ trống trong bãi xe');
+        }
       }
+
+      // Lưu stats hiện tại để so sánh cho lần tiếp theo
+      setPreviousStats(stats);
     } catch (error) {
       console.error('Lỗi khi kiểm tra thống kê:', error);
     }
