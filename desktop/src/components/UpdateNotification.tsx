@@ -31,7 +31,7 @@ export default function UpdateNotification() {
 
     // Listen for checking-for-update event
     onCheckingForUpdate?.(() => {
-      setUpdateStatus((prev) => ({ ...prev, checking: true }));
+      setUpdateStatus((prev: UpdateStatus) => ({ ...prev, checking: true }));
     });
 
     // Listen for update-available event
@@ -56,7 +56,7 @@ export default function UpdateNotification() {
 
     // Listen for update-error event
     onUpdateError?.((data: any) => {
-      setUpdateStatus((prev) => ({
+      setUpdateStatus((prev: UpdateStatus) => ({
         ...prev,
         checking: false,
         error: data.message,
@@ -84,7 +84,7 @@ export default function UpdateNotification() {
           </button>
           <button
             onClick={() =>
-              setUpdateStatus((prev) => ({ ...prev, downloaded: false }))
+              setUpdateStatus((prev: UpdateStatus) => ({ ...prev, downloaded: false }))
             }
             className="btn-secondary"
           >

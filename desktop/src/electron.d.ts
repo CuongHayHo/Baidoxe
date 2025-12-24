@@ -29,6 +29,14 @@ declare global {
       
       // Updates
       checkUpdates: () => Promise<{ available: boolean; currentVersion: string }>;
+      installUpdate: () => void;
+      getAppVersion: () => Promise<{ version: string; name: string } | null>;
+      
+      // Update event listeners
+      onUpdateAvailable: (callback: (data: any) => void) => void;
+      onUpdateDownloaded: (callback: (data: any) => void) => void;
+      onUpdateError: (callback: (data: any) => void) => void;
+      onCheckingForUpdate: (callback: () => void) => void;
       
       // App info
       isElectron: boolean;

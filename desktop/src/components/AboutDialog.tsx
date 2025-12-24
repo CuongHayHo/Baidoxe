@@ -26,12 +26,13 @@ export default function AboutDialog({ isOpen, onClose }: AboutDialogProps) {
       setLoading(true);
       try {
         const version = await getAppVersion?.();
-        const updates = await checkUpdates?.();
+        const result = await checkUpdates?.();
+        const updateAvailable = (result ?? false) as boolean;
 
         setAppInfo({
-          version: version?.version || '1.0.0',
-          name: version?.name || 'Baidoxe',
-          updateAvailable: updates?.updateAvailable,
+          version: (version as any)?.version || '1.0.0',
+          name: (version as any)?.name || 'Baidoxe',
+          updateAvailable: updateAvailable,
         });
       } catch (error) {
         console.error('Failed to load app info:', error);

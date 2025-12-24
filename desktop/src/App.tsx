@@ -5,20 +5,23 @@
 
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import './components/App.css';
+import './components/index.css';
 
-// Import existing components từ frontend
-import Dashboard from '../../frontend/src/components/Dashboard';
-import CardList from '../../frontend/src/components/CardList';
-import ParkingSlots from '../../frontend/src/components/ParkingSlots';
-import AdminPanel from '../../frontend/src/components/AdminPanel';
-import LogViewer from '../../frontend/src/components/LogViewer';
-import { NotificationProvider } from '../../frontend/src/components/Notifications';
+// Import existing components từ local src/components
+import Dashboard from './components/Dashboard';
+import CardList from './components/CardList';
+import ParkingSlots from './components/ParkingSlots';
+import AdminPanel from './components/AdminPanel';
+import LogViewer from './components/LogViewer';
+import { NotificationProvider } from './components/Notifications';
 
 type Tab = 'dashboard' | 'cards' | 'parking' | 'logs' | 'admin';
 
 function App() {
   const [activeTab, setActiveTab] = useState<Tab>('dashboard');
   const [backendStatus, setBackendStatus] = useState(false);
+  const [cards, setCards] = useState<Record<string, any>>({});
 
   // Check backend status on mount
   useEffect(() => {
@@ -45,9 +48,13 @@ function App() {
       case 'dashboard':
         return <Dashboard />;
       case 'cards':
-        return <CardList />;
+        return <CardList cards={cards} onDeleteCard={(uid: string) => {
+          const newCards = { ...cards };
+          delete newCards[uid];
+          setCards(newCards);
+        }} />;
       case 'parking':
-        return <ParkingSlots />;
+        return <ParkingSlots onBack={() => setActiveTab('dashboard')} />;
       case 'logs':
         return <LogViewer />;
       case 'admin':
@@ -57,63 +64,82 @@ function App() {
     }
   };
 
+  // Get breadcrumb text
+  const getBreadcrumbText = () => {
+    switch (activeTab) {
+      case 'dashboard': return '📊 Dashboard';
+      case 'cards': return '🎫 Quản lý thẻ';
+      case 'parking': return '🅿️ Bãi xe';
+      case 'logs': return '📝 Logs';
+      case 'admin': return '⚙️ Quản trị';
+      default: return '📊 Dashboard';
+    }
+  };
+
+  // Calculate stats from cards
+  const totalCards = Object.keys(cards).length;
+  const insideCards = Object.values(cards).filter((c: any) => c?.status === 1).length;
+  const outsideCards = totalCards - insideCards;
+
   return (
     <div className="app-container">
-      <nav className="desktop-navbar">
-        <div className="nav-brand">
-          <span className="brand-icon">🅿️</span>
-          <span className="brand-name">Baidoxe Desktop</span>
+      {/* Header */}
+      <header className="App-header">
+        <h1>🅿️ Hệ thống quản lý bãi đỗ xe</h1>
+        
+        {/* Breadcrumb */}
+        <div className="breadcrumb">
+          <span className="breadcrumb-home">🏠 Trang chủ</span>
+          <span className="breadcrumb-separator">›</span>
+          <span className="breadcrumb-current">{getBreadcrumbText()}</span>
         </div>
 
-        <ul className="nav-menu">
-          <li>
-            <button
-              className={`nav-btn ${activeTab === 'dashboard' ? 'active' : ''}`}
+        {/* Stats */}
+        <div className="stats">
+          <span className="stat">📊 Tổng: {totalCards}</span>
+          <span className="stat">🅿️ Trong bãi: {insideCards}</span>
+          <span className="stat">🚗 Ngoài bãi: {outsideCards}</span>
+        </div>
+
+        {/* Navigation buttons */}
+        <div className="navigation">
+          <div className="nav-buttons">
+            <button 
+              className={`nav-button ${activeTab === 'dashboard' ? 'active' : ''}`}
               onClick={() => setActiveTab('dashboard')}
             >
               📊 Dashboard
             </button>
-          </li>
-          <li>
-            <button
-              className={`nav-btn ${activeTab === 'cards' ? 'active' : ''}`}
+            <button 
+              className={`nav-button ${activeTab === 'cards' ? 'active' : ''}`}
               onClick={() => setActiveTab('cards')}
             >
-              🎫 Thẻ xe
+              🎫 Quản lý thẻ
             </button>
-          </li>
-          <li>
-            <button
-              className={`nav-btn ${activeTab === 'parking' ? 'active' : ''}`}
+            <button 
+              className={`nav-button ${activeTab === 'parking' ? 'active' : ''}`}
               onClick={() => setActiveTab('parking')}
             >
-              🅿️ Bãi xe
+              🅿️ Vị trí đỗ xe
             </button>
-          </li>
-          <li>
-            <button
-              className={`nav-btn ${activeTab === 'logs' ? 'active' : ''}`}
+            <button 
+              className={`nav-button ${activeTab === 'logs' ? 'active' : ''}`}
               onClick={() => setActiveTab('logs')}
             >
-              📝 Logs
+              📝 Nhật ký
             </button>
-          </li>
-          <li>
-            <button
-              className={`nav-btn ${activeTab === 'admin' ? 'active' : ''}`}
+            <button 
+              className={`nav-button ${activeTab === 'admin' ? 'active' : ''}`}
               onClick={() => setActiveTab('admin')}
             >
               ⚙️ Quản trị
             </button>
-          </li>
-        </ul>
-
-        <div className="nav-status">
+          </div>
           <span className={`status-indicator ${backendStatus ? 'online' : 'offline'}`}>
             {backendStatus ? '🟢 Online' : '🔴 Offline'}
           </span>
         </div>
-      </nav>
+      </header>
 
       <main className="app-content">{renderContent()}</main>
     </div>

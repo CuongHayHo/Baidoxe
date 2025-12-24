@@ -1,6 +1,6 @@
+/// <reference types="jest" />
 import '@testing-library/jest-dom';
 
-// Mock window.electron for tests
 Object.defineProperty(window, 'electron', {
   value: {
     isElectron: false,

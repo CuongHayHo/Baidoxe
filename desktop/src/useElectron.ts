@@ -145,24 +145,7 @@ export const useElectron = () => {
 
   const onCheckingForUpdate = useCallback((callback: () => void) => {
     if (isElectron) {
-      window.electron?.onCheckingForUpdate?.(callback);
-    }
-  }, [isElectron]);
-      console.error('Failed to get backend status:', error);
-      return false;
-    }
-  }, [isElectron]);
-
-  const checkUpdates = useCallback(async () => {
-    if (!isElectron) {
-      return { available: false, currentVersion: '0.0.0' };
-    }
-
-    try {
-      return await window.electron?.checkUpdates();
-    } catch (error) {
-      console.error('Failed to check updates:', error);
-      return { available: false, currentVersion: '0.0.0' };
+      (window as any).electron?.onCheckingForUpdate?.(callback);
     }
   }, [isElectron]);
 

@@ -121,13 +121,14 @@ function createWindow() {
  * Tạo tray icon
  */
 function createTray() {
-  const icon = path.join(__dirname, '../public/favicon.ico');
-  tray = new Tray(icon);
+  try {
+    const icon = path.join(__dirname, '../public/favicon.ico');
+    tray = new Tray(icon);
 
-  const contextMenu = Menu.buildFromTemplate([
-    {
-      label: 'Show',
-      click: () => {
+    const contextMenu = Menu.buildFromTemplate([
+      {
+        label: 'Show',
+        click: () => {
         if (mainWindow) {
           mainWindow.show();
           mainWindow.focus();
@@ -143,14 +144,18 @@ function createTray() {
     },
   ]);
 
-  tray.setContextMenu(contextMenu);
-  tray.setToolTip('Baidoxe - Parking Management');
+    tray.setContextMenu(contextMenu);
+    tray.setToolTip('Baidoxe - Parking Management');
 
-  tray.on('click', () => {
-    if (mainWindow) {
-      mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
-    }
-  });
+    tray.on('click', () => {
+      if (mainWindow) {
+        mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
+      }
+    });
+  } catch (error) {
+    log.error('Failed to create tray icon:', error);
+    console.error('Failed to create tray icon:', error);
+  }
 }
 
 /**
@@ -411,12 +416,6 @@ ipcMain.handle('export-data', async (event, data) => {
     console.error('Error exporting data:', error);
     return false;
   }
-});
-
-// Check update availability
-ipcMain.handle('check-updates', async () => {
-  // TODO: Implement auto-update logic
-  return { available: false, currentVersion: app.getVersion() };
 });
 
 /**
