@@ -1,0 +1,22 @@
+{
+  "name": "BaiDoXe - Parking Management",
+  "short_name": "BaiDoXe",
+  "description": "Hệ thống quản lý bãi đỗ xe thông minh",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "16x16 32x32",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#2563eb",
+  "background_color": "#ffffff",
+  "orientation": "portrait"
+}

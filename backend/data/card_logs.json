@@ -1,0 +1,2252 @@
+{
+  "logs": [
+    {
+      "id": "log_20251006_221815_914661",
+      "timestamp": "2025-10-06T15:18:15.914682+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "source": "esp32",
+        "local_time": "2025-10-06 22:18:15"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221815_915418",
+      "timestamp": "2025-10-06T15:18:15.915436+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-06 22:18:15"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221822_869862",
+      "timestamp": "2025-10-06T15:18:22.869881+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "source": "esp32",
+        "local_time": "2025-10-06 22:18:22"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221822_878972",
+      "timestamp": "2025-10-06T15:18:22.879002+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-06 22:18:22"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222153_754584",
+      "timestamp": "2025-10-06T15:21:53.754618+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "exit",
+      "details": {
+        "previous_status": 1,
+        "new_status": 0,
+        "local_time": "2025-10-06 22:21:53"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222153_755607",
+      "timestamp": "2025-10-06T15:21:53.755624+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "scan",
+      "details": {
+        "source": "esp32",
+        "timestamp": "",
+        "previous_status": 1,
+        "new_status": 0,
+        "local_time": "2025-10-06 22:21:53"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222153_766532",
+      "timestamp": "2025-10-06T15:21:53.766558+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "exit",
+      "details": {
+        "timestamp": "",
+        "source": "esp32_scan",
+        "local_time": "2025-10-06 22:21:53"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222218_492170",
+      "timestamp": "2025-10-06T15:22:18.492187+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "entry",
+      "details": {
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-10-06 22:22:18"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222218_493003",
+      "timestamp": "2025-10-06T15:22:18.493023+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "scan",
+      "details": {
+        "source": "esp32",
+        "timestamp": "",
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-10-06 22:22:18"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222218_504944",
+      "timestamp": "2025-10-06T15:22:18.504974+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "entry",
+      "details": {
+        "timestamp": "",
+        "source": "esp32_scan",
+        "local_time": "2025-10-06 22:22:18"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005745_975329",
+      "timestamp": "2025-10-06T17:57:45.975352+00:00",
+      "card_id": "TEST999",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:57:45"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005806_355756",
+      "timestamp": "2025-10-06T17:58:06.355783+00:00",
+      "card_id": "ABC999",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:06"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005806_863262",
+      "timestamp": "2025-10-06T17:58:06.863279+00:00",
+      "card_id": "ESP888",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:06"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005807_381892",
+      "timestamp": "2025-10-06T17:58:07.381914+00:00",
+      "card_id": "RF567",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:07"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005843_991138",
+      "timestamp": "2025-10-06T17:58:43.991153+00:00",
+      "card_id": "LIVE1759773523",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:43"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_010250_787847",
+      "timestamp": "2025-10-06T18:02:50.787862+00:00",
+      "card_id": "FILETEST123",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 01:02:50"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_010319_611880",
+      "timestamp": "2025-10-06T18:03:19.611905+00:00",
+      "card_id": "FILETEST123",
+      "action": "created",
+      "details": {
+        "initial_status": 0,
+        "local_time": "2025-10-07 01:03:19"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011234_655839",
+      "timestamp": "2025-10-06T18:12:34.655862+00:00",
+      "card_id": "TESTFIX999",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 01:12:34"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011242_393098",
+      "timestamp": "2025-10-06T18:12:42.393127+00:00",
+      "card_id": "TESTFIX999",
+      "action": "created",
+      "details": {
+        "initial_status": 0,
+        "local_time": "2025-10-07 01:12:42"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011340_546149",
+      "timestamp": "2025-10-06T18:13:40.546180+00:00",
+      "card_id": "12345678",
+      "action": "deleted",
+      "details": {
+        "reason": "manual_deletion",
+        "local_time": "2025-10-07 01:13:40"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011407_107657",
+      "timestamp": "2025-10-06T18:14:07.107679+00:00",
+      "card_id": "DEMO2025",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 01:14:07"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221815_914661",
+      "timestamp": "2025-10-06T15:18:15.914682+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "source": "esp32",
+        "local_time": "2025-10-06 22:18:15"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221815_915418",
+      "timestamp": "2025-10-06T15:18:15.915436+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-06 22:18:15"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221822_869862",
+      "timestamp": "2025-10-06T15:18:22.869881+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "source": "esp32",
+        "local_time": "2025-10-06 22:18:22"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221822_878972",
+      "timestamp": "2025-10-06T15:18:22.879002+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-06 22:18:22"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222153_754584",
+      "timestamp": "2025-10-06T15:21:53.754618+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "exit",
+      "details": {
+        "previous_status": 1,
+        "new_status": 0,
+        "local_time": "2025-10-06 22:21:53"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222153_755607",
+      "timestamp": "2025-10-06T15:21:53.755624+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "scan",
+      "details": {
+        "source": "esp32",
+        "timestamp": "",
+        "previous_status": 1,
+        "new_status": 0,
+        "local_time": "2025-10-06 22:21:53"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222153_766532",
+      "timestamp": "2025-10-06T15:21:53.766558+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "exit",
+      "details": {
+        "timestamp": "",
+        "source": "esp32_scan",
+        "local_time": "2025-10-06 22:21:53"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222218_492170",
+      "timestamp": "2025-10-06T15:22:18.492187+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "entry",
+      "details": {
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-10-06 22:22:18"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222218_493003",
+      "timestamp": "2025-10-06T15:22:18.493023+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "scan",
+      "details": {
+        "source": "esp32",
+        "timestamp": "",
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-10-06 22:22:18"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222218_504944",
+      "timestamp": "2025-10-06T15:22:18.504974+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "entry",
+      "details": {
+        "timestamp": "",
+        "source": "esp32_scan",
+        "local_time": "2025-10-06 22:22:18"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005745_975329",
+      "timestamp": "2025-10-06T17:57:45.975352+00:00",
+      "card_id": "TEST999",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:57:45"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005806_355756",
+      "timestamp": "2025-10-06T17:58:06.355783+00:00",
+      "card_id": "ABC999",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:06"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005806_863262",
+      "timestamp": "2025-10-06T17:58:06.863279+00:00",
+      "card_id": "ESP888",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:06"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005807_381892",
+      "timestamp": "2025-10-06T17:58:07.381914+00:00",
+      "card_id": "RF567",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:07"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005843_991138",
+      "timestamp": "2025-10-06T17:58:43.991153+00:00",
+      "card_id": "LIVE1759773523",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:43"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_010250_787847",
+      "timestamp": "2025-10-06T18:02:50.787862+00:00",
+      "card_id": "FILETEST123",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 01:02:50"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_010319_611880",
+      "timestamp": "2025-10-06T18:03:19.611905+00:00",
+      "card_id": "FILETEST123",
+      "action": "created",
+      "details": {
+        "initial_status": 0,
+        "local_time": "2025-10-07 01:03:19"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011234_655839",
+      "timestamp": "2025-10-06T18:12:34.655862+00:00",
+      "card_id": "TESTFIX999",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 01:12:34"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011242_393098",
+      "timestamp": "2025-10-06T18:12:42.393127+00:00",
+      "card_id": "TESTFIX999",
+      "action": "created",
+      "details": {
+        "initial_status": 0,
+        "local_time": "2025-10-07 01:12:42"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011340_546149",
+      "timestamp": "2025-10-06T18:13:40.546180+00:00",
+      "card_id": "12345678",
+      "action": "deleted",
+      "details": {
+        "reason": "manual_deletion",
+        "local_time": "2025-10-07 01:13:40"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011407_107657",
+      "timestamp": "2025-10-06T18:14:07.107679+00:00",
+      "card_id": "DEMO2025",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 01:14:07"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221815_914661",
+      "timestamp": "2025-10-06T15:18:15.914682+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "source": "esp32",
+        "local_time": "2025-10-06 22:18:15"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221815_915418",
+      "timestamp": "2025-10-06T15:18:15.915436+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-06 22:18:15"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221822_869862",
+      "timestamp": "2025-10-06T15:18:22.869881+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "source": "esp32",
+        "local_time": "2025-10-06 22:18:22"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221822_878972",
+      "timestamp": "2025-10-06T15:18:22.879002+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-06 22:18:22"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222153_754584",
+      "timestamp": "2025-10-06T15:21:53.754618+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "exit",
+      "details": {
+        "previous_status": 1,
+        "new_status": 0,
+        "local_time": "2025-10-06 22:21:53"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222153_755607",
+      "timestamp": "2025-10-06T15:21:53.755624+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "scan",
+      "details": {
+        "source": "esp32",
+        "timestamp": "",
+        "previous_status": 1,
+        "new_status": 0,
+        "local_time": "2025-10-06 22:21:53"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222153_766532",
+      "timestamp": "2025-10-06T15:21:53.766558+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "exit",
+      "details": {
+        "timestamp": "",
+        "source": "esp32_scan",
+        "local_time": "2025-10-06 22:21:53"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222218_492170",
+      "timestamp": "2025-10-06T15:22:18.492187+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "entry",
+      "details": {
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-10-06 22:22:18"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222218_493003",
+      "timestamp": "2025-10-06T15:22:18.493023+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "scan",
+      "details": {
+        "source": "esp32",
+        "timestamp": "",
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-10-06 22:22:18"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222218_504944",
+      "timestamp": "2025-10-06T15:22:18.504974+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "entry",
+      "details": {
+        "timestamp": "",
+        "source": "esp32_scan",
+        "local_time": "2025-10-06 22:22:18"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005745_975329",
+      "timestamp": "2025-10-06T17:57:45.975352+00:00",
+      "card_id": "TEST999",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:57:45"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005806_355756",
+      "timestamp": "2025-10-06T17:58:06.355783+00:00",
+      "card_id": "ABC999",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:06"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005806_863262",
+      "timestamp": "2025-10-06T17:58:06.863279+00:00",
+      "card_id": "ESP888",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:06"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005807_381892",
+      "timestamp": "2025-10-06T17:58:07.381914+00:00",
+      "card_id": "RF567",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:07"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005843_991138",
+      "timestamp": "2025-10-06T17:58:43.991153+00:00",
+      "card_id": "LIVE1759773523",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:43"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_010250_787847",
+      "timestamp": "2025-10-06T18:02:50.787862+00:00",
+      "card_id": "FILETEST123",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 01:02:50"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_010319_611880",
+      "timestamp": "2025-10-06T18:03:19.611905+00:00",
+      "card_id": "FILETEST123",
+      "action": "created",
+      "details": {
+        "initial_status": 0,
+        "local_time": "2025-10-07 01:03:19"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011234_655839",
+      "timestamp": "2025-10-06T18:12:34.655862+00:00",
+      "card_id": "TESTFIX999",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 01:12:34"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011242_393098",
+      "timestamp": "2025-10-06T18:12:42.393127+00:00",
+      "card_id": "TESTFIX999",
+      "action": "created",
+      "details": {
+        "initial_status": 0,
+        "local_time": "2025-10-07 01:12:42"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011340_546149",
+      "timestamp": "2025-10-06T18:13:40.546180+00:00",
+      "card_id": "12345678",
+      "action": "deleted",
+      "details": {
+        "reason": "manual_deletion",
+        "local_time": "2025-10-07 01:13:40"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011407_107657",
+      "timestamp": "2025-10-06T18:14:07.107679+00:00",
+      "card_id": "DEMO2025",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 01:14:07"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221815_914661",
+      "timestamp": "2025-10-06T15:18:15.914682+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "source": "esp32",
+        "local_time": "2025-10-06 22:18:15"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221815_915418",
+      "timestamp": "2025-10-06T15:18:15.915436+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-06 22:18:15"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221822_869862",
+      "timestamp": "2025-10-06T15:18:22.869881+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "source": "esp32",
+        "local_time": "2025-10-06 22:18:22"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221822_878972",
+      "timestamp": "2025-10-06T15:18:22.879002+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-06 22:18:22"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222153_754584",
+      "timestamp": "2025-10-06T15:21:53.754618+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "exit",
+      "details": {
+        "previous_status": 1,
+        "new_status": 0,
+        "local_time": "2025-10-06 22:21:53"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222153_755607",
+      "timestamp": "2025-10-06T15:21:53.755624+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "scan",
+      "details": {
+        "source": "esp32",
+        "timestamp": "",
+        "previous_status": 1,
+        "new_status": 0,
+        "local_time": "2025-10-06 22:21:53"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222153_766532",
+      "timestamp": "2025-10-06T15:21:53.766558+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "exit",
+      "details": {
+        "timestamp": "",
+        "source": "esp32_scan",
+        "local_time": "2025-10-06 22:21:53"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222218_492170",
+      "timestamp": "2025-10-06T15:22:18.492187+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "entry",
+      "details": {
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-10-06 22:22:18"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222218_493003",
+      "timestamp": "2025-10-06T15:22:18.493023+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "scan",
+      "details": {
+        "source": "esp32",
+        "timestamp": "",
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-10-06 22:22:18"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222218_504944",
+      "timestamp": "2025-10-06T15:22:18.504974+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "entry",
+      "details": {
+        "timestamp": "",
+        "source": "esp32_scan",
+        "local_time": "2025-10-06 22:22:18"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005745_975329",
+      "timestamp": "2025-10-06T17:57:45.975352+00:00",
+      "card_id": "TEST999",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:57:45"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005806_355756",
+      "timestamp": "2025-10-06T17:58:06.355783+00:00",
+      "card_id": "ABC999",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:06"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005806_863262",
+      "timestamp": "2025-10-06T17:58:06.863279+00:00",
+      "card_id": "ESP888",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:06"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005807_381892",
+      "timestamp": "2025-10-06T17:58:07.381914+00:00",
+      "card_id": "RF567",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:07"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005843_991138",
+      "timestamp": "2025-10-06T17:58:43.991153+00:00",
+      "card_id": "LIVE1759773523",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:43"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_010250_787847",
+      "timestamp": "2025-10-06T18:02:50.787862+00:00",
+      "card_id": "FILETEST123",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 01:02:50"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_010319_611880",
+      "timestamp": "2025-10-06T18:03:19.611905+00:00",
+      "card_id": "FILETEST123",
+      "action": "created",
+      "details": {
+        "initial_status": 0,
+        "local_time": "2025-10-07 01:03:19"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011234_655839",
+      "timestamp": "2025-10-06T18:12:34.655862+00:00",
+      "card_id": "TESTFIX999",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 01:12:34"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011242_393098",
+      "timestamp": "2025-10-06T18:12:42.393127+00:00",
+      "card_id": "TESTFIX999",
+      "action": "created",
+      "details": {
+        "initial_status": 0,
+        "local_time": "2025-10-07 01:12:42"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011340_546149",
+      "timestamp": "2025-10-06T18:13:40.546180+00:00",
+      "card_id": "12345678",
+      "action": "deleted",
+      "details": {
+        "reason": "manual_deletion",
+        "local_time": "2025-10-07 01:13:40"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011407_107657",
+      "timestamp": "2025-10-06T18:14:07.107679+00:00",
+      "card_id": "DEMO2025",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 01:14:07"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221815_914661",
+      "timestamp": "2025-10-06T15:18:15.914682+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "source": "esp32",
+        "local_time": "2025-10-06 22:18:15"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221815_915418",
+      "timestamp": "2025-10-06T15:18:15.915436+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-06 22:18:15"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221822_869862",
+      "timestamp": "2025-10-06T15:18:22.869881+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "source": "esp32",
+        "local_time": "2025-10-06 22:18:22"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221822_878972",
+      "timestamp": "2025-10-06T15:18:22.879002+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-06 22:18:22"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222153_754584",
+      "timestamp": "2025-10-06T15:21:53.754618+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "exit",
+      "details": {
+        "previous_status": 1,
+        "new_status": 0,
+        "local_time": "2025-10-06 22:21:53"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222153_755607",
+      "timestamp": "2025-10-06T15:21:53.755624+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "scan",
+      "details": {
+        "source": "esp32",
+        "timestamp": "",
+        "previous_status": 1,
+        "new_status": 0,
+        "local_time": "2025-10-06 22:21:53"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222153_766532",
+      "timestamp": "2025-10-06T15:21:53.766558+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "exit",
+      "details": {
+        "timestamp": "",
+        "source": "esp32_scan",
+        "local_time": "2025-10-06 22:21:53"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222218_492170",
+      "timestamp": "2025-10-06T15:22:18.492187+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "entry",
+      "details": {
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-10-06 22:22:18"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222218_493003",
+      "timestamp": "2025-10-06T15:22:18.493023+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "scan",
+      "details": {
+        "source": "esp32",
+        "timestamp": "",
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-10-06 22:22:18"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222218_504944",
+      "timestamp": "2025-10-06T15:22:18.504974+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "entry",
+      "details": {
+        "timestamp": "",
+        "source": "esp32_scan",
+        "local_time": "2025-10-06 22:22:18"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005745_975329",
+      "timestamp": "2025-10-06T17:57:45.975352+00:00",
+      "card_id": "TEST999",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:57:45"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005806_355756",
+      "timestamp": "2025-10-06T17:58:06.355783+00:00",
+      "card_id": "ABC999",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:06"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005806_863262",
+      "timestamp": "2025-10-06T17:58:06.863279+00:00",
+      "card_id": "ESP888",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:06"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005807_381892",
+      "timestamp": "2025-10-06T17:58:07.381914+00:00",
+      "card_id": "RF567",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:07"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005843_991138",
+      "timestamp": "2025-10-06T17:58:43.991153+00:00",
+      "card_id": "LIVE1759773523",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:43"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_010250_787847",
+      "timestamp": "2025-10-06T18:02:50.787862+00:00",
+      "card_id": "FILETEST123",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 01:02:50"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_010319_611880",
+      "timestamp": "2025-10-06T18:03:19.611905+00:00",
+      "card_id": "FILETEST123",
+      "action": "created",
+      "details": {
+        "initial_status": 0,
+        "local_time": "2025-10-07 01:03:19"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011234_655839",
+      "timestamp": "2025-10-06T18:12:34.655862+00:00",
+      "card_id": "TESTFIX999",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 01:12:34"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011242_393098",
+      "timestamp": "2025-10-06T18:12:42.393127+00:00",
+      "card_id": "TESTFIX999",
+      "action": "created",
+      "details": {
+        "initial_status": 0,
+        "local_time": "2025-10-07 01:12:42"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011340_546149",
+      "timestamp": "2025-10-06T18:13:40.546180+00:00",
+      "card_id": "12345678",
+      "action": "deleted",
+      "details": {
+        "reason": "manual_deletion",
+        "local_time": "2025-10-07 01:13:40"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011407_107657",
+      "timestamp": "2025-10-06T18:14:07.107679+00:00",
+      "card_id": "DEMO2025",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 01:14:07"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221815_914661",
+      "timestamp": "2025-10-06T15:18:15.914682+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "source": "esp32",
+        "local_time": "2025-10-06 22:18:15"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221815_915418",
+      "timestamp": "2025-10-06T15:18:15.915436+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-06 22:18:15"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221822_869862",
+      "timestamp": "2025-10-06T15:18:22.869881+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "source": "esp32",
+        "local_time": "2025-10-06 22:18:22"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221822_878972",
+      "timestamp": "2025-10-06T15:18:22.879002+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-06 22:18:22"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222153_754584",
+      "timestamp": "2025-10-06T15:21:53.754618+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "exit",
+      "details": {
+        "previous_status": 1,
+        "new_status": 0,
+        "local_time": "2025-10-06 22:21:53"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222153_755607",
+      "timestamp": "2025-10-06T15:21:53.755624+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "scan",
+      "details": {
+        "source": "esp32",
+        "timestamp": "",
+        "previous_status": 1,
+        "new_status": 0,
+        "local_time": "2025-10-06 22:21:53"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222153_766532",
+      "timestamp": "2025-10-06T15:21:53.766558+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "exit",
+      "details": {
+        "timestamp": "",
+        "source": "esp32_scan",
+        "local_time": "2025-10-06 22:21:53"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222218_492170",
+      "timestamp": "2025-10-06T15:22:18.492187+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "entry",
+      "details": {
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-10-06 22:22:18"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222218_493003",
+      "timestamp": "2025-10-06T15:22:18.493023+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "scan",
+      "details": {
+        "source": "esp32",
+        "timestamp": "",
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-10-06 22:22:18"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222218_504944",
+      "timestamp": "2025-10-06T15:22:18.504974+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "entry",
+      "details": {
+        "timestamp": "",
+        "source": "esp32_scan",
+        "local_time": "2025-10-06 22:22:18"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005745_975329",
+      "timestamp": "2025-10-06T17:57:45.975352+00:00",
+      "card_id": "TEST999",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:57:45"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005806_355756",
+      "timestamp": "2025-10-06T17:58:06.355783+00:00",
+      "card_id": "ABC999",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:06"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005806_863262",
+      "timestamp": "2025-10-06T17:58:06.863279+00:00",
+      "card_id": "ESP888",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:06"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005807_381892",
+      "timestamp": "2025-10-06T17:58:07.381914+00:00",
+      "card_id": "RF567",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:07"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005843_991138",
+      "timestamp": "2025-10-06T17:58:43.991153+00:00",
+      "card_id": "LIVE1759773523",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:43"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_010250_787847",
+      "timestamp": "2025-10-06T18:02:50.787862+00:00",
+      "card_id": "FILETEST123",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 01:02:50"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_010319_611880",
+      "timestamp": "2025-10-06T18:03:19.611905+00:00",
+      "card_id": "FILETEST123",
+      "action": "created",
+      "details": {
+        "initial_status": 0,
+        "local_time": "2025-10-07 01:03:19"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011234_655839",
+      "timestamp": "2025-10-06T18:12:34.655862+00:00",
+      "card_id": "TESTFIX999",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 01:12:34"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011242_393098",
+      "timestamp": "2025-10-06T18:12:42.393127+00:00",
+      "card_id": "TESTFIX999",
+      "action": "created",
+      "details": {
+        "initial_status": 0,
+        "local_time": "2025-10-07 01:12:42"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011340_546149",
+      "timestamp": "2025-10-06T18:13:40.546180+00:00",
+      "card_id": "12345678",
+      "action": "deleted",
+      "details": {
+        "reason": "manual_deletion",
+        "local_time": "2025-10-07 01:13:40"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011407_107657",
+      "timestamp": "2025-10-06T18:14:07.107679+00:00",
+      "card_id": "DEMO2025",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 01:14:07"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221815_914661",
+      "timestamp": "2025-10-06T15:18:15.914682+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "source": "esp32",
+        "local_time": "2025-10-06 22:18:15"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221815_915418",
+      "timestamp": "2025-10-06T15:18:15.915436+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-06 22:18:15"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221822_869862",
+      "timestamp": "2025-10-06T15:18:22.869881+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "source": "esp32",
+        "local_time": "2025-10-06 22:18:22"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221822_878972",
+      "timestamp": "2025-10-06T15:18:22.879002+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-06 22:18:22"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222153_754584",
+      "timestamp": "2025-10-06T15:21:53.754618+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "exit",
+      "details": {
+        "previous_status": 1,
+        "new_status": 0,
+        "local_time": "2025-10-06 22:21:53"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222153_755607",
+      "timestamp": "2025-10-06T15:21:53.755624+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "scan",
+      "details": {
+        "source": "esp32",
+        "timestamp": "",
+        "previous_status": 1,
+        "new_status": 0,
+        "local_time": "2025-10-06 22:21:53"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222153_766532",
+      "timestamp": "2025-10-06T15:21:53.766558+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "exit",
+      "details": {
+        "timestamp": "",
+        "source": "esp32_scan",
+        "local_time": "2025-10-06 22:21:53"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222218_492170",
+      "timestamp": "2025-10-06T15:22:18.492187+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "entry",
+      "details": {
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-10-06 22:22:18"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222218_493003",
+      "timestamp": "2025-10-06T15:22:18.493023+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "scan",
+      "details": {
+        "source": "esp32",
+        "timestamp": "",
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-10-06 22:22:18"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222218_504944",
+      "timestamp": "2025-10-06T15:22:18.504974+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "entry",
+      "details": {
+        "timestamp": "",
+        "source": "esp32_scan",
+        "local_time": "2025-10-06 22:22:18"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005745_975329",
+      "timestamp": "2025-10-06T17:57:45.975352+00:00",
+      "card_id": "TEST999",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:57:45"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005806_355756",
+      "timestamp": "2025-10-06T17:58:06.355783+00:00",
+      "card_id": "ABC999",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:06"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005806_863262",
+      "timestamp": "2025-10-06T17:58:06.863279+00:00",
+      "card_id": "ESP888",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:06"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005807_381892",
+      "timestamp": "2025-10-06T17:58:07.381914+00:00",
+      "card_id": "RF567",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:07"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005843_991138",
+      "timestamp": "2025-10-06T17:58:43.991153+00:00",
+      "card_id": "LIVE1759773523",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:43"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_010250_787847",
+      "timestamp": "2025-10-06T18:02:50.787862+00:00",
+      "card_id": "FILETEST123",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 01:02:50"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_010319_611880",
+      "timestamp": "2025-10-06T18:03:19.611905+00:00",
+      "card_id": "FILETEST123",
+      "action": "created",
+      "details": {
+        "initial_status": 0,
+        "local_time": "2025-10-07 01:03:19"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011234_655839",
+      "timestamp": "2025-10-06T18:12:34.655862+00:00",
+      "card_id": "TESTFIX999",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 01:12:34"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011242_393098",
+      "timestamp": "2025-10-06T18:12:42.393127+00:00",
+      "card_id": "TESTFIX999",
+      "action": "created",
+      "details": {
+        "initial_status": 0,
+        "local_time": "2025-10-07 01:12:42"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011340_546149",
+      "timestamp": "2025-10-06T18:13:40.546180+00:00",
+      "card_id": "12345678",
+      "action": "deleted",
+      "details": {
+        "reason": "manual_deletion",
+        "local_time": "2025-10-07 01:13:40"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011407_107657",
+      "timestamp": "2025-10-06T18:14:07.107679+00:00",
+      "card_id": "DEMO2025",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 01:14:07"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221815_914661",
+      "timestamp": "2025-10-06T15:18:15.914682+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "source": "esp32",
+        "local_time": "2025-10-06 22:18:15"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221815_915418",
+      "timestamp": "2025-10-06T15:18:15.915436+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-06 22:18:15"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221822_869862",
+      "timestamp": "2025-10-06T15:18:22.869881+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "source": "esp32",
+        "local_time": "2025-10-06 22:18:22"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_221822_878972",
+      "timestamp": "2025-10-06T15:18:22.879002+00:00",
+      "card_id": "TEST123",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-06 22:18:22"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222153_754584",
+      "timestamp": "2025-10-06T15:21:53.754618+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "exit",
+      "details": {
+        "previous_status": 1,
+        "new_status": 0,
+        "local_time": "2025-10-06 22:21:53"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222153_755607",
+      "timestamp": "2025-10-06T15:21:53.755624+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "scan",
+      "details": {
+        "source": "esp32",
+        "timestamp": "",
+        "previous_status": 1,
+        "new_status": 0,
+        "local_time": "2025-10-06 22:21:53"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222153_766532",
+      "timestamp": "2025-10-06T15:21:53.766558+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "exit",
+      "details": {
+        "timestamp": "",
+        "source": "esp32_scan",
+        "local_time": "2025-10-06 22:21:53"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222218_492170",
+      "timestamp": "2025-10-06T15:22:18.492187+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "entry",
+      "details": {
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-10-06 22:22:18"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222218_493003",
+      "timestamp": "2025-10-06T15:22:18.493023+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "scan",
+      "details": {
+        "source": "esp32",
+        "timestamp": "",
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-10-06 22:22:18"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251006_222218_504944",
+      "timestamp": "2025-10-06T15:22:18.504974+00:00",
+      "card_id": "A1B2C3D4",
+      "action": "entry",
+      "details": {
+        "timestamp": "",
+        "source": "esp32_scan",
+        "local_time": "2025-10-06 22:22:18"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005745_975329",
+      "timestamp": "2025-10-06T17:57:45.975352+00:00",
+      "card_id": "TEST999",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:57:45"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005806_355756",
+      "timestamp": "2025-10-06T17:58:06.355783+00:00",
+      "card_id": "ABC999",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:06"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005806_863262",
+      "timestamp": "2025-10-06T17:58:06.863279+00:00",
+      "card_id": "ESP888",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:06"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005807_381892",
+      "timestamp": "2025-10-06T17:58:07.381914+00:00",
+      "card_id": "RF567",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:07"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_005843_991138",
+      "timestamp": "2025-10-06T17:58:43.991153+00:00",
+      "card_id": "LIVE1759773523",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 00:58:43"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_010250_787847",
+      "timestamp": "2025-10-06T18:02:50.787862+00:00",
+      "card_id": "FILETEST123",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 01:02:50"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_010319_611880",
+      "timestamp": "2025-10-06T18:03:19.611905+00:00",
+      "card_id": "FILETEST123",
+      "action": "created",
+      "details": {
+        "initial_status": 0,
+        "local_time": "2025-10-07 01:03:19"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011234_655839",
+      "timestamp": "2025-10-06T18:12:34.655862+00:00",
+      "card_id": "TESTFIX999",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 01:12:34"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011242_393098",
+      "timestamp": "2025-10-06T18:12:42.393127+00:00",
+      "card_id": "TESTFIX999",
+      "action": "created",
+      "details": {
+        "initial_status": 0,
+        "local_time": "2025-10-07 01:12:42"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011340_546149",
+      "timestamp": "2025-10-06T18:13:40.546180+00:00",
+      "card_id": "12345678",
+      "action": "deleted",
+      "details": {
+        "reason": "manual_deletion",
+        "local_time": "2025-10-07 01:13:40"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011407_107657",
+      "timestamp": "2025-10-06T18:14:07.107679+00:00",
+      "card_id": "DEMO2025",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 01:14:07"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011416_264594",
+      "timestamp": "2025-10-06T18:14:16.264740+00:00",
+      "card_id": "DEMO2025",
+      "action": "created",
+      "details": {
+        "initial_status": 1,
+        "local_time": "2025-10-07 01:14:16"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_011628_314076",
+      "timestamp": "2025-10-06T18:16:28.314122+00:00",
+      "card_id": "TESTFIX999",
+      "action": "entry",
+      "details": {
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-10-07 01:16:28"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_013746_567081",
+      "timestamp": "2025-10-06T18:37:46.567137+00:00",
+      "card_id": "TEST001",
+      "action": "created",
+      "details": {
+        "initial_status": 0,
+        "local_time": "2025-10-07 01:37:46"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_014351_495851",
+      "timestamp": "2025-10-06T18:43:51.495873+00:00",
+      "card_id": "SYSTEM",
+      "action": "restore",
+      "details": {
+        "backup_filename": "cards_backup_20251007_014301_hourly.json",
+        "restored_at": "2025-10-06T18:43:51.495830+00:00",
+        "local_time": "2025-10-07 01:43:51"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_014805_631859",
+      "timestamp": "2025-10-06T18:48:05.631885+00:00",
+      "card_id": "TEST002",
+      "action": "created",
+      "details": {
+        "initial_status": 0,
+        "local_time": "2025-10-07 01:48:05"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_015003_424577",
+      "timestamp": "2025-10-06T18:50:03.424593+00:00",
+      "card_id": "TEST001",
+      "action": "entry",
+      "details": {
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-10-07 01:50:03"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_015025_619608",
+      "timestamp": "2025-10-06T18:50:25.619626+00:00",
+      "card_id": "TEST002",
+      "action": "entry",
+      "details": {
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-10-07 01:50:25"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_015328_223683",
+      "timestamp": "2025-10-06T18:53:28.223705+00:00",
+      "card_id": "TEST001",
+      "action": "exit",
+      "details": {
+        "previous_status": 1,
+        "new_status": 0,
+        "local_time": "2025-10-07 01:53:28"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_015353_057253",
+      "timestamp": "2025-10-06T18:53:53.057270+00:00",
+      "card_id": "TEST002",
+      "action": "exit",
+      "details": {
+        "previous_status": 1,
+        "new_status": 0,
+        "local_time": "2025-10-07 01:53:53"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_015545_268775",
+      "timestamp": "2025-10-06T18:55:45.268792+00:00",
+      "card_id": "TEST001",
+      "action": "entry",
+      "details": {
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-10-07 01:55:45"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_015632_836961",
+      "timestamp": "2025-10-06T18:56:32.836983+00:00",
+      "card_id": "05A36C05",
+      "action": "created",
+      "details": {
+        "initial_status": 0,
+        "local_time": "2025-10-07 01:56:32"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_020638_749099",
+      "timestamp": "2025-10-06T19:06:38.749130+00:00",
+      "card_id": "UNKNOWN123",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 02:06:38"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_020647_648570",
+      "timestamp": "2025-10-06T19:06:47.648601+00:00",
+      "card_id": "UNKNOWN123",
+      "action": "created",
+      "details": {
+        "initial_status": 0,
+        "local_time": "2025-10-07 02:06:47"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_020701_174330",
+      "timestamp": "2025-10-06T19:07:01.174345+00:00",
+      "card_id": "NEWCARD999",
+      "action": "unknown",
+      "details": {
+        "source": "esp32",
+        "local_time": "2025-10-07 02:07:01"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_020701_176203",
+      "timestamp": "2025-10-06T19:07:01.176223+00:00",
+      "card_id": "NEWCARD999",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 02:07:01"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_020717_401778",
+      "timestamp": "2025-10-06T19:07:17.401798+00:00",
+      "card_id": "NEWCARD999",
+      "action": "created",
+      "details": {
+        "initial_status": 0,
+        "local_time": "2025-10-07 02:07:17"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_020734_145040",
+      "timestamp": "2025-10-06T19:07:34.145059+00:00",
+      "card_id": "TEST002",
+      "action": "entry",
+      "details": {
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-10-07 02:07:34"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_020734_146484",
+      "timestamp": "2025-10-06T19:07:34.146506+00:00",
+      "card_id": "TEST002",
+      "action": "scan",
+      "details": {
+        "source": "esp32",
+        "timestamp": "2025-10-07T02:07:34Z",
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-10-07 02:07:34"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_020734_166831",
+      "timestamp": "2025-10-06T19:07:34.166870+00:00",
+      "card_id": "TEST002",
+      "action": "entry",
+      "details": {
+        "timestamp": "2025-10-07T02:07:34Z",
+        "source": "esp32_scan",
+        "local_time": "2025-10-07 02:07:34"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_020801_252602",
+      "timestamp": "2025-10-06T19:08:01.252642+00:00",
+      "card_id": "MYSTERY777",
+      "action": "unknown",
+      "details": {
+        "source": "esp32",
+        "local_time": "2025-10-07 02:08:01"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_020801_255433",
+      "timestamp": "2025-10-06T19:08:01.255452+00:00",
+      "card_id": "MYSTERY777",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 02:08:01"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_020809_369569",
+      "timestamp": "2025-10-06T19:08:09.369595+00:00",
+      "card_id": "MYSTERY777",
+      "action": "created",
+      "details": {
+        "initial_status": 1,
+        "local_time": "2025-10-07 02:08:09"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_020829_251039",
+      "timestamp": "2025-10-06T19:08:29.251056+00:00",
+      "card_id": "MYSTERY777",
+      "action": "exit",
+      "details": {
+        "previous_status": 1,
+        "new_status": 0,
+        "local_time": "2025-10-07 02:08:29"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_020829_252968",
+      "timestamp": "2025-10-06T19:08:29.252987+00:00",
+      "card_id": "MYSTERY777",
+      "action": "scan",
+      "details": {
+        "source": "esp32",
+        "timestamp": "2025-10-07T02:08:29Z",
+        "previous_status": 1,
+        "new_status": 0,
+        "local_time": "2025-10-07 02:08:29"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_020829_267556",
+      "timestamp": "2025-10-06T19:08:29.267577+00:00",
+      "card_id": "MYSTERY777",
+      "action": "exit",
+      "details": {
+        "timestamp": "2025-10-07T02:08:29Z",
+        "source": "esp32_scan",
+        "local_time": "2025-10-07 02:08:29"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_020928_858861",
+      "timestamp": "2025-10-06T19:09:28.858889+00:00",
+      "card_id": "ALIEN888",
+      "action": "unknown",
+      "details": {
+        "source": "esp32",
+        "local_time": "2025-10-07 02:09:28"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_020928_862015",
+      "timestamp": "2025-10-06T19:09:28.862038+00:00",
+      "card_id": "ALIEN888",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-10-07 02:09:28"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251007_022407_005756",
+      "timestamp": "2025-10-06T19:24:07.005788+00:00",
+      "card_id": "ALIEN888",
+      "action": "created",
+      "details": {
+        "initial_status": 0,
+        "local_time": "2025-10-07 02:24:07"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251018_024910_492722",
+      "timestamp": "2025-10-17T19:49:10.492740+00:00",
+      "card_id": "TEST001",
+      "action": "deleted",
+      "details": {
+        "reason": "manual_deletion",
+        "local_time": "2025-10-18 02:49:10"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251018_024915_388702",
+      "timestamp": "2025-10-17T19:49:15.388725+00:00",
+      "card_id": "TEST002",
+      "action": "deleted",
+      "details": {
+        "reason": "manual_deletion",
+        "local_time": "2025-10-18 02:49:15"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251018_025321_887048",
+      "timestamp": "2025-10-17T19:53:21.887104+00:00",
+      "card_id": "05A36C05",
+      "action": "deleted",
+      "details": {
+        "reason": "manual_deletion",
+        "local_time": "2025-10-18 02:53:21"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251018_025323_607865",
+      "timestamp": "2025-10-17T19:53:23.607885+00:00",
+      "card_id": "UNKNOWN123",
+      "action": "deleted",
+      "details": {
+        "reason": "manual_deletion",
+        "local_time": "2025-10-18 02:53:23"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251018_025325_264604",
+      "timestamp": "2025-10-17T19:53:25.264636+00:00",
+      "card_id": "NEWCARD999",
+      "action": "deleted",
+      "details": {
+        "reason": "manual_deletion",
+        "local_time": "2025-10-18 02:53:25"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251018_025326_835090",
+      "timestamp": "2025-10-17T19:53:26.835124+00:00",
+      "card_id": "MYSTERY777",
+      "action": "deleted",
+      "details": {
+        "reason": "manual_deletion",
+        "local_time": "2025-10-18 02:53:26"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "log_20251018_025329_706514",
+      "timestamp": "2025-10-17T19:53:29.706535+00:00",
+      "card_id": "ALIEN888",
+      "action": "deleted",
+      "details": {
+        "reason": "manual_deletion",
+        "local_time": "2025-10-18 02:53:29"
+      },
+      "metadata": {}
+    }
+  ],
+  "created_at": "2025-10-06T15:06:01.564501+00:00",
+  "version": "1.0"
+}
