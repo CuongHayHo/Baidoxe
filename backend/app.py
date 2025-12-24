@@ -8,7 +8,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 from flask import Flask, jsonify, send_from_directory, request
 from werkzeug.exceptions import HTTPException
-from flask_restx import Api
 
 # Import configuration
 from config.config import config, DEBUG_MODE, FRONTEND_BUILD_DIR
@@ -57,22 +56,6 @@ def create_app(config_name='default'):
     
     # Disable automatic trailing slash redirect
     app.url_map.strict_slashes = False
-    
-    # Initialize Swagger/API documentation
-    api = Api(
-        app,
-        version='1.0',
-        title='Baidoxe Parking Management System API',
-        description='API for IoT Smart Parking Management System',
-        doc='/doc',
-        prefix='/api'
-    )
-    
-    # Add namespaces for Swagger documentation
-    from api.namespaces import cards_ns, parking_slots_ns, system_ns
-    api.add_namespace(cards_ns, path='/cards')
-    api.add_namespace(parking_slots_ns, path='/parking_slots')
-    api.add_namespace(system_ns, path='/system')
     
     # Initialize CORS
     init_cors(app)

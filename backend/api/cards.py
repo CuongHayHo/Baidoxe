@@ -22,9 +22,24 @@ card_service = CardService()
 def get_all_cards():
     """
     Lấy tất cả thẻ đỗ xe trong hệ thống
-    
-    Returns:
-        JSON response chứa danh sách thẻ hoặc lỗi
+    ---
+    tags:
+      - Cards
+    summary: Get all registered cards
+    description: Returns list of all parking cards in the system
+    responses:
+      200:
+        description: Cards retrieved successfully
+        schema:
+          properties:
+            success:
+              type: boolean
+            cards:
+              type: array
+              items:
+                type: object
+            count:
+              type: integer
     """
     try:
         logger.info("API: Getting all cards")
@@ -368,9 +383,29 @@ def update_card_status(card_id: str):
 def get_card_statistics():
     """
     Get card usage statistics
-    
-    Returns:
-        JSON response with statistics
+    ---
+    tags:
+      - Cards
+    summary: Get card statistics
+    description: Returns statistics about registered cards and parking status
+    responses:
+      200:
+        description: Statistics retrieved successfully
+        schema:
+          properties:
+            success:
+              type: boolean
+            statistics:
+              type: object
+              properties:
+                total_cards:
+                  type: integer
+                inside_parking:
+                  type: integer
+                outside_parking:
+                  type: integer
+                occupancy_rate:
+                  type: number
     """
     try:
         logger.info("API: Getting card statistics")
@@ -537,15 +572,41 @@ def remove_unknown_card(card_id: str):
 def get_card_logs():
     """
     Get card activity logs
-    
-    Query Parameters:
-        card_id (str): Filter logs by card ID
-        action (str): Filter logs by action type
-        limit (int): Number of logs to return (default: 50)
-        offset (int): Pagination offset
-        
-    Returns:
-        JSON response with log entries
+    ---
+    tags:
+      - Cards
+    summary: Get card activity logs
+    description: Returns recent card activity logs with optional filtering
+    parameters:
+      - name: card_id
+        in: query
+        type: string
+        description: Filter by card ID
+      - name: action
+        in: query
+        type: string
+        description: Filter by action type (entry, exit, scan, unknown)
+      - name: limit
+        in: query
+        type: integer
+        default: 50
+        description: Number of logs to return
+      - name: offset
+        in: query
+        type: integer
+        default: 0
+        description: Pagination offset
+    responses:
+      200:
+        description: Logs retrieved successfully
+        schema:
+          properties:
+            success:
+              type: boolean
+            count:
+              type: integer
+            logs:
+              type: array
     """
     try:
         logger.info("API: Getting card logs")
