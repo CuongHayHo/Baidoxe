@@ -330,11 +330,11 @@ const LogViewer: React.FC = () => {
         {logs.length > 0 ? (
           <>
             <div className="logs-table">
-              {logs.map((log) => {
+              {logs.map((log, index) => {
                 const { date, time } = formatTimestamp(log.timestamp);
                 
                 return (
-                  <div key={log.id} className="log-row">
+                  <div key={`${log.timestamp}-${log.card_id}-${log.action}-${index}`} className="log-row">
                     <div className="log-time">
                       <div className="log-date">{date}</div>
                       <div className="log-time-value">{time}</div>

@@ -447,19 +447,25 @@ const AdminPanel: React.FC = () => {
             📊 Cập Nhật Thống Kê
           </button>
           
-          <button 
-            onClick={() => window.open('/api/cards/', '_blank')}
+          <a 
+            href="http://localhost:5000/api/cards/"
+            target="_blank"
+            rel="noopener noreferrer"
             className="quick-btn api-btn"
+            style={{ textDecoration: 'none', color: 'inherit' }}
           >
             🔗 Xem API Cards
-          </button>
+          </a>
           
-          <button 
-            onClick={() => window.open('/api/cards/logs', '_blank')}
+          <a 
+            href="http://localhost:5000/api/cards/logs"
+            target="_blank"
+            rel="noopener noreferrer"
             className="quick-btn logs-btn"
+            style={{ textDecoration: 'none', color: 'inherit' }}
           >
             📋 Xem API Logs
-          </button>
+          </a>
         </div>
       </div>
 

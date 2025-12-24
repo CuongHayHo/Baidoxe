@@ -4,6 +4,7 @@ Ghi log chi tiết cho mọi thao tác: vào/ra bãi, thêm/xóa thẻ, etc.
 """
 import json
 import logging
+import uuid
 from datetime import datetime, timezone
 from typing import Dict, List, Any, Optional
 from pathlib import Path
@@ -38,6 +39,9 @@ class CardLogService:
         # Đảm bảo file log tồn tại
         self._ensure_log_file()
         
+        # Migrate existing logs to use UUID if needed
+        self._migrate_old_log_ids()
+        
         logger.info(f"CardLogService initialized - log file: {self.log_file}")
     
     def _ensure_log_file(self):
@@ -58,6 +62,29 @@ class CardLogService:
                 
         except Exception as e:
             logger.error(f"Failed to create log file: {e}")
+    
+    def _migrate_old_log_ids(self):
+        """Migrate old timestamp-based IDs to UUID-based IDs to fix duplicates"""
+        try:
+            log_data = self._read_log_file()
+            logs = log_data.get("logs", [])
+            
+            # Check if migration is needed (old IDs start with "log_")
+            if logs and logs[0].get("id", "").startswith("log_"):
+                logger.info(f"Starting migration of {len(logs)} logs to UUID-based IDs...")
+                
+                # Regenerate all IDs with UUID
+                for log in logs:
+                    log["id"] = str(uuid.uuid4())
+                
+                # Write back to file
+                with open(self.log_file, 'w', encoding='utf-8') as f:
+                    json.dump(log_data, f, ensure_ascii=False, indent=2)
+                
+                logger.info(f"Successfully migrated {len(logs)} logs to UUID-based IDs")
+        
+        except Exception as e:
+            logger.warning(f"Log ID migration failed (non-critical): {e}")
     
     def add_log(self, 
                 card_id: str, 
@@ -128,8 +155,8 @@ class CardLogService:
             }
     
     def _generate_log_id(self) -> str:
-        """Tạo unique ID cho log entry"""
-        return f"log_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}"
+        """Tạo unique ID cho log entry sử dụng UUID"""
+        return str(uuid.uuid4())
     
     def get_logs_with_count(self, 
                  card_id: Optional[str] = None,
