@@ -3,7 +3,7 @@
  * Quản lý window, menu, backend subprocess
  */
 
-const { app, BrowserWindow, Menu, ipcMain, Tray, nativeTheme } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, Tray, nativeTheme, dialog, Notification } = require('electron');
 const isDev = require('electron-is-dev');
 const path = require('path');
 const { spawn } = require('child_process');
@@ -253,6 +253,80 @@ ipcMain.handle('shutdown-backend', () => {
     return true;
   }
   return false;
+});
+
+// Show notification
+ipcMain.handle('show-notification', (event, options) => {
+  return new Promise((resolve) => {
+    const notification = new Notification(options);
+    notification.show();
+    
+    notification.on('click', () => {
+      resolve('clicked');
+    });
+    
+    notification.on('close', () => {
+      resolve('closed');
+    });
+  });
+});
+
+// Open file dialog
+ipcMain.handle('open-file-dialog', async (event, options) => {
+  try {
+    const result = await dialog.showOpenDialog(mainWindow, {
+      defaultPath: options?.defaultPath || app.getPath('documents'),
+      filters: options?.filters || [{ name: 'All Files', extensions: ['*'] }],
+      properties: ['openFile', ...(options?.properties || [])],
+    });
+    
+    return result.canceled ? null : result.filePaths[0];
+  } catch (error) {
+    console.error('Error opening file dialog:', error);
+    return null;
+  }
+});
+
+// Save file dialog
+ipcMain.handle('save-file-dialog', async (event, options) => {
+  try {
+    const result = await dialog.showSaveDialog(mainWindow, {
+      defaultPath: options?.defaultPath || app.getPath('documents'),
+      filters: options?.filters || [{ name: 'All Files', extensions: ['*'] }],
+    });
+    
+    return result.canceled ? null : result.filePath;
+  } catch (error) {
+    console.error('Error saving file dialog:', error);
+    return null;
+  }
+});
+
+// Export data
+ipcMain.handle('export-data', async (event, data) => {
+  try {
+    const result = await dialog.showSaveDialog(mainWindow, {
+      defaultPath: path.join(app.getPath('documents'), `baidoxe_export_${new Date().toISOString().split('T')[0]}.json`),
+      filters: [{ name: 'JSON Files', extensions: ['json'] }],
+    });
+    
+    if (!result.canceled && result.filePath) {
+      const fs = require('fs').promises;
+      await fs.writeFile(result.filePath, JSON.stringify(data, null, 2));
+      return true;
+    }
+    
+    return false;
+  } catch (error) {
+    console.error('Error exporting data:', error);
+    return false;
+  }
+});
+
+// Check update availability
+ipcMain.handle('check-updates', async () => {
+  // TODO: Implement auto-update logic
+  return { available: false, currentVersion: app.getVersion() };
 });
 
 /**
