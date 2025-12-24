@@ -35,26 +35,83 @@
     "appId": "com.baidoxe.app",
     "productName": "Baidoxe",
     "files": [
-      "src/**/*",
-      "public/**/*",
-      "node_modules/**/*"
+      "build/**/*",
+      "node_modules/**/*",
+      "src/main.js",
+      "src/preload.js",
+      "package.json"
     ],
     "directories": {
       "buildResources": "public"
     },
     "win": {
       "target": [
-        "nsis",
-        "portable"
+        {
+          "target": "nsis",
+          "arch": ["x64", "ia32"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
       ],
       "certificateFile": null,
-      "certificatePassword": null
+      "certificatePassword": null,
+      "signingHashAlgorithms": ["sha256"],
+      "sign": null
     },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
-      "createStartMenuShortcut": true
+      "createStartMenuShortcut": true,
+      "shortcutName": "Baidoxe",
+      "installerIcon": "public/favicon.ico",
+      "uninstallerIcon": "public/favicon.ico",
+      "installerHeaderIcon": "public/favicon.ico"
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "category": "public.app-category.utilities",
+      "icon": "public/favicon.icns",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220,
+          "type": "file"
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Utility",
+      "icon": "public/favicon.png",
+      "desktopName": "Baidoxe"
+    },
+    "deb": {
+      "depends": [
+        "libappindicator1",
+        "libnotify-bin"
+      ]
+    },
+    "appImage": {
+      "category": "Utility"
     }
   }
 }
