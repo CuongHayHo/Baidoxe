@@ -2592,6 +2592,49 @@
         "local_time": "2025-12-25 23:08:07"
       },
       "metadata": {}
+    },
+    {
+      "id": "bae11479-f9d4-41fc-a22a-c9e0f63e828f",
+      "timestamp": "2025-12-25T16:11:31.000763+00:00",
+      "card_id": "U7U2U3",
+      "action": "created",
+      "details": {
+        "initial_status": 1,
+        "local_time": "2025-12-25 23:11:31"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "30ef9b2a-6c31-4393-8a6f-ab24fde4204a",
+      "timestamp": "2025-12-25T16:12:03.890821+00:00",
+      "card_id": "U1U7U1",
+      "action": "unknown",
+      "details": {
+        "source": "uno_r4",
+        "local_time": "2025-12-25 23:12:03"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "a27d20ea-0cc6-460e-b8d2-38a14f4a3acf",
+      "timestamp": "2025-12-25T16:12:03.895639+00:00",
+      "card_id": "U1U7U1",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-12-25 23:12:03"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "de157b8b-d3e8-427e-b11a-38308b94d674",
+      "timestamp": "2025-12-25T16:12:25.783481+00:00",
+      "card_id": "U1U7U1",
+      "action": "created",
+      "details": {
+        "initial_status": 1,
+        "local_time": "2025-12-25 23:12:25"
+      },
+      "metadata": {}
     }
   ],
   "created_at": "2025-10-06T15:06:01.564501+00:00",

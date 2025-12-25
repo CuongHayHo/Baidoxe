@@ -215,27 +215,35 @@ const Dashboard: React.FC = () => {
           try {
             // Thêm thẻ vào hệ thống với API call
             const baseUrl = getApiBaseUrl();
+            const payload = {
+              id: uid,
+              name: uid, // Sử dụng UID làm tên mặc định
+              status: status === 0 ? 'outside' : 'inside'
+            };
+
+            console.log('📤 Adding card:', { uid, status, payload, baseUrl });
+
             const response = await fetch(`${baseUrl}/api/cards/`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('authToken')}`
               },
-              body: JSON.stringify({
-                id: uid,
-                name: uid, // Sử dụng UID làm tên mặc định
-                status: status
-              })
+              body: JSON.stringify(payload)
             });
 
+            console.log('📥 Response status:', response.status);
+            const responseData = await response.json();
+            console.log('📥 Response data:', responseData);
+
             if (!response.ok) {
-              throw new Error('Failed to add card');
+              throw new Error(responseData.message || 'Failed to add card');
             }
 
             // Refresh stats để cập nhật số lượng thẻ
             await fetchStats();
           } catch (error) {
-            console.error('Error adding card:', error);
+            console.error('❌ Error adding card:', error);
             throw error;
           }
         }}
