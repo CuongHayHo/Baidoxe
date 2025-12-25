@@ -97,7 +97,7 @@ class ValidationHelper:
                 errors.append("Card name cannot exceed 100 characters")
         
         # Validate status
-        valid_statuses = ['active', 'parked', 'inactive']
+        valid_statuses = ['active', 'parked', 'inactive', 'outside', 'inside']
         if 'status' in data:
             if data['status'] not in valid_statuses:
                 errors.append(f"Invalid status. Must be one of: {', '.join(valid_statuses)}")

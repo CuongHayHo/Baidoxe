@@ -45,6 +45,47 @@ const AppContent: React.FC<{ onLogout: () => void; userRole?: string }> = ({ onL
     return () => clearInterval(interval);
   }, []);
 
+  // Fetch cards from API
+  useEffect(() => {
+    const fetchCards = async () => {
+      try {
+        const token = localStorage.getItem('authToken');
+        if (!token) return;
+        
+        const response = await fetch('http://localhost:5000/api/cards/', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          if (data.cards && Array.isArray(data.cards)) {
+            // Convert array to object format (key = uid)
+            const cardsObj = data.cards.reduce((acc: any, card: any) => {
+              acc[card.uid] = {
+                status: card.status,
+                parking_duration: card.parking_duration,
+                created_at: card.created_at,
+                entry_time: card.entry_time,
+                exit_time: card.exit_time,
+                name: card.name
+              };
+              return acc;
+            }, {});
+            setCards(cardsObj);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching cards:', error);
+      }
+    };
+
+    fetchCards();
+    const interval = setInterval(fetchCards, 5000); // Refresh mỗi 5 giây
+    return () => clearInterval(interval);
+  }, []);
+
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':

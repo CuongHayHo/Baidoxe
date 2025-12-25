@@ -27,7 +27,8 @@ class Card:
     """
     
     def __init__(self, uid: str, status: int = 0, entry_time: Optional[str] = None, 
-                 exit_time: Optional[str] = None, created_at: Optional[str] = None):
+                 exit_time: Optional[str] = None, created_at: Optional[str] = None, 
+                 name: Optional[str] = None):
         """
         Khởi tạo đối tượng thẻ đỗ xe
         
@@ -43,7 +44,12 @@ class Card:
         self.entry_time = entry_time
         self.exit_time = exit_time
         self.created_at = created_at or datetime.now(timezone.utc).isoformat()
+        self.name = name or ''
         self.parking_duration = None
+        
+        # Nếu tạo thẻ với status=1 (trong bãi), tự động set entry_time
+        if status == 1 and not entry_time:
+            self.entry_time = datetime.now(timezone.utc).isoformat()
         
         # Tính toán thời lượng đỗ xe nếu có đủ thông tin
         self._calculate_parking_duration()
@@ -155,6 +161,7 @@ class Card:
         """Convert card to dictionary for JSON serialization"""
         result = {
             "uid": self.uid,
+            "name": self.name,
             "status": self.status,
             "created_at": self.created_at
         }
@@ -169,14 +176,15 @@ class Card:
         return result
     
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'ParkingCard':
-        """Create ParkingCard instance from dictionary"""
+    def from_dict(cls, data: Dict[str, Any]) -> 'Card':
+        """Create Card instance from dictionary"""
         return cls(
             uid=data["uid"],
             status=data.get("status", 0),
             entry_time=data.get("entry_time"),
             exit_time=data.get("exit_time"),
-            created_at=data.get("created_at")
+            created_at=data.get("created_at"),
+            name=data.get("name")
         )
     
     def validate(self) -> Dict[str, Any]:

@@ -2245,6 +2245,118 @@
         "local_time": "2025-10-18 02:53:29"
       },
       "metadata": {}
+    },
+    {
+      "id": "d89ed43e-de7e-425b-a61d-4e463980015b",
+      "timestamp": "2025-12-25T07:38:00.407807+00:00",
+      "card_id": "ABC123XYZ789",
+      "action": "created",
+      "details": {
+        "initial_status": 0,
+        "local_time": "2025-12-25 14:38:00"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "eed02867-0eac-4778-9458-a015f737d031",
+      "timestamp": "2025-12-25T07:40:38.960354+00:00",
+      "card_id": "A1B2C3",
+      "action": "created",
+      "details": {
+        "initial_status": 0,
+        "local_time": "2025-12-25 14:40:38"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "da64d8a1-8333-405e-8c81-0032ab13dacf",
+      "timestamp": "2025-12-25T07:43:12.071248+00:00",
+      "card_id": "TEST002",
+      "action": "created",
+      "details": {
+        "initial_status": 0,
+        "local_time": "2025-12-25 14:43:12"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "10949f58-1e66-4baf-8c71-947c05da8299",
+      "timestamp": "2025-12-25T07:45:56.152056+00:00",
+      "card_id": "A1B3C2",
+      "action": "created",
+      "details": {
+        "initial_status": 0,
+        "local_time": "2025-12-25 14:45:56"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "54472b8d-a21c-4d24-8c23-712e6d16cf3c",
+      "timestamp": "2025-12-25T08:25:01.762681+00:00",
+      "card_id": "A2G3B2",
+      "action": "created",
+      "details": {
+        "initial_status": 1,
+        "local_time": "2025-12-25 15:25:01"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "ac3d8a8b-b96d-429c-af2f-ddef80f024bb",
+      "timestamp": "2025-12-25T08:34:30.798716+00:00",
+      "card_id": "A1B2C3",
+      "action": "deleted",
+      "details": {
+        "reason": "manual_deletion",
+        "local_time": "2025-12-25 15:34:30"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "cc177d60-cc95-4c71-9eed-549e9a473202",
+      "timestamp": "2025-12-25T08:34:41.442694+00:00",
+      "card_id": "ABC123XYZ789",
+      "action": "deleted",
+      "details": {
+        "reason": "manual_deletion",
+        "local_time": "2025-12-25 15:34:41"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "4dff7946-0258-4463-af41-3c09131b96d3",
+      "timestamp": "2025-12-25T08:34:58.855401+00:00",
+      "card_id": "A6V6B3",
+      "action": "created",
+      "details": {
+        "initial_status": 1,
+        "local_time": "2025-12-25 15:34:58"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "76d60aa1-4739-436e-bc78-1b6e291ea761",
+      "timestamp": "2025-12-25T08:47:23.069090+00:00",
+      "card_id": "A2G3B2",
+      "action": "exit",
+      "details": {
+        "previous_status": 1,
+        "new_status": 0,
+        "local_time": "2025-12-25 15:47:23"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "72d460bc-1753-470f-9c57-e0fb9bac750f",
+      "timestamp": "2025-12-25T08:48:58.755559+00:00",
+      "card_id": "A1B3C2",
+      "action": "entry",
+      "details": {
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-12-25 15:48:58"
+      },
+      "metadata": {}
     }
   ],
   "created_at": "2025-10-06T15:06:01.564501+00:00",

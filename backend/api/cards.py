@@ -152,11 +152,12 @@ def create_card():
         
         # Extract UID and convert status to numeric
         uid = data.get('id')
-        status_map = {'active': 0, 'parked': 1, 'inactive': 0}  # Map string to int
-        initial_status = status_map.get(data.get('status', 'active'), 0)
+        name = data.get('name', '')
+        status_map = {'outside': 0, 'inside': 1, 'active': 0, 'parked': 1, 'inactive': 0}  # Map string to int
+        initial_status = status_map.get(data.get('status', 'outside'), 0)
         
         # Create card using service
-        success, message, new_card = card_service.create_card(uid, initial_status)
+        success, message, new_card = card_service.create_card(uid, name, initial_status)
         
         if success:
             return jsonify({

@@ -13,6 +13,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNotifications } from './Notifications';
 import UserManagement from './UserManagement';
+import CardManagement from './CardManagement';
 import parkingApi from '../api';
 
 /**
@@ -44,7 +45,7 @@ const AdminPanel: React.FC = () => {
   const [backupFiles, setBackupFiles] = useState<BackupFile[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'system' | 'users'>('system');
+  const [activeTab, setActiveTab] = useState<'system' | 'users' | 'cards'>('system');
   const { showToast } = useNotifications();
 
   const fetchBackupFiles = async () => {
@@ -478,10 +479,17 @@ const AdminPanel: React.FC = () => {
           >
             👥 User Management
           </button>
+          <button
+            className={`tab-button ${activeTab === 'cards' ? 'active' : ''}`}
+            onClick={() => setActiveTab('cards')}
+          >
+            🎫 Quản lý Thẻ
+          </button>
         </div>
 
         {/* Tab Content */}
         {activeTab === 'users' && <UserManagement />}
+        {activeTab === 'cards' && <CardManagement />}
       </div>
 
       {/* System Status Indicator */}

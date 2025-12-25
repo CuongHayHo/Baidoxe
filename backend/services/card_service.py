@@ -97,7 +97,7 @@ class CardService:
             logger.error(f"Error getting card {uid}: {e}")
             return False, None
             
-    def create_card(self, uid: str, status: int = 0) -> Tuple[bool, str, Optional[ParkingCard]]:
+    def create_card(self, uid: str, name: str = '', status: int = 0) -> Tuple[bool, str, Optional[ParkingCard]]:
         try:
             cards_dict = self.get_all_cards()
             if uid in cards_dict:
@@ -105,7 +105,7 @@ class CardService:
                 logger.warning(error_msg)
                 return False, error_msg, None
             
-            new_card = ParkingCard(uid=uid, status=status)
+            new_card = ParkingCard(uid=uid, name=name, status=status)
             cards_dict[uid] = new_card
             
             cards_data = {}
