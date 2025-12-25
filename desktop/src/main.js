@@ -137,56 +137,13 @@ function createWindow() {
 
 /**
  * Tạo tray icon
+ * NOTE: Tray icon disabled for now due to favicon.ico incompatibility with Electron Tray API
+ * Can be re-enabled with a proper PNG icon in the future
  */
 function createTray() {
-  try {
-    // Resolve icon path for both dev and production
-    let icon;
-    if (isDev) {
-      // Development: path from src/main.js to public/favicon.ico
-      icon = path.join(__dirname, '../public/favicon.ico');
-    } else {
-      // Production: path from app.asar to resources
-      icon = path.join(process.resourcesPath, 'public/favicon.ico');
-    }
-    
-    // Verify file exists before creating tray
-    if (!fs.existsSync(icon)) {
-      console.warn(`⚠️ Tray icon not found at: ${icon} - skipping tray icon`);
-      return;
-    }
-    
-    try {
-      tray = new Tray(icon);
-
-      const contextMenu = Menu.buildFromTemplate([
-        {
-          label: 'Show',
-          click: () => {
-          if (mainWindow) {
-            mainWindow.show();
-            mainWindow.focus();
-          }
-        },
-      },
-      {
-        label: 'Quit',
-        click: () => {
-          app.isQuitting = true;
-          app.quit();
-        },
-      },
-    ]);
-
-      tray.setContextMenu(contextMenu);
-      console.log('✅ Tray icon created successfully');
-    } catch (trayError) {
-      console.warn(`⚠️ Failed to create tray icon: ${trayError.message} - app will continue without tray`);
-      tray = null;
-    }
-  } catch (err) {
-    console.error('Error in createTray:', err);
-  }
+  // Tray icon creation disabled
+  // Re-enable by implementing with a PNG icon or using nativeImage builder
+  return;
 }
 
 /**
@@ -288,7 +245,9 @@ async function startBackend() {
       // Start Flask server using python -m backend.run
       backendProcess = spawn(pythonPath, ['run.py'], {
         cwd: backendDir,
-        stdio: 'inherit',
+        stdio: ['pipe', 'pipe', 'pipe'],
+        detached: true,
+        windowsHide: true,
       });
 
       backendProcess.on('error', (error) => {
