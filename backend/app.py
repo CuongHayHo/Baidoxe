@@ -13,10 +13,14 @@ from werkzeug.exceptions import HTTPException
 from config.config import config, DEBUG_MODE, FRONTEND_BUILD_DIR
 from config.cors import init_cors
 
+# Import database
+from flask_sqlalchemy import SQLAlchemy
+
 # Import API blueprints
 from api.cards import cards_bp
 from api.parking_slots import parking_slots_bp
 from api.system import system_bp
+from api.auth import auth_bp
 
 # Import scheduled tasks
 from services.scheduled_tasks import scheduled_tasks
@@ -32,6 +36,9 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
+
+# Initialize SQLAlchemy
+db = SQLAlchemy()
 
 def create_app(config_name='default'):
     """
@@ -56,6 +63,9 @@ def create_app(config_name='default'):
     
     # Disable automatic trailing slash redirect
     app.url_map.strict_slashes = False
+    
+    # Initialize SQLAlchemy
+    db.init_app(app)
     
     # Initialize CORS
     init_cors(app)
@@ -98,6 +108,7 @@ def register_blueprints(app):
     app.register_blueprint(cards_bp)
     app.register_blueprint(parking_slots_bp)
     app.register_blueprint(system_bp)
+    app.register_blueprint(auth_bp)
     
     logger.info("API blueprints registered successfully")
 

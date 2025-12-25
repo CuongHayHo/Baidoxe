@@ -7,12 +7,19 @@ Chứa tất cả cấu hình:
 - Auto IP detection cho UNO R4 WiFi network
 - Mock server settings cho testing
 - Flask app configurations
+- Database configuration
 """
 import os
 from pathlib import Path
 
 # Thư mục gốc của project
 BASE_DIR = Path(__file__).parent.parent
+
+# Database configuration
+DATABASE_DIR = BASE_DIR / "data"
+DATABASE_PATH = DATABASE_DIR / "parking_system.db"
+SQLALCHEMY_DATABASE_URI = f"sqlite:///{DATABASE_PATH}"
+SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 # Files lưu dữ liệu
 DATA_DIR = BASE_DIR / "data"
@@ -75,6 +82,12 @@ class Config:
     DEBUG = DEBUG_MODE
     HOST = API_HOST
     PORT = API_PORT
+    # Database configuration
+    SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI
+    SQLALCHEMY_TRACK_MODIFICATIONS = SQLALCHEMY_TRACK_MODIFICATIONS
+    # JWT configuration
+    JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY') or 'jwt-dev-secret-key'
+    JWT_EXPIRATION_HOURS = 24
 
 class DevelopmentConfig(Config):
     """Development configuration"""

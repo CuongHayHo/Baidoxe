@@ -7,12 +7,13 @@ Chức năng chính:
 - Validation dữ liệu đầu vào
 - Chuyển đổi giữa dict và object
 - Real-time tracking cho xe đang trong bãi
+- Hỗ trợ 3 loại thẻ: resident (cứ dân), temporary (gửi xe tạm), unknown (không xác định)
 """
 from datetime import datetime, timezone
 from typing import Optional, Dict, Any
 import json
 
-class ParkingCard:
+class Card:
     """
     Lớp ParkingCard - Đại diện cho một thẻ đỗ xe với khả năng tracking thời gian
     
