@@ -54,9 +54,15 @@ const api = axios.create({
 });
 
 /**
- * Request Interceptor - Ghi log mọi request để debug
+ * Request Interceptor - Ghi log mọi request và thêm JWT token
  */
 api.interceptors.request.use(request => {
+  // Thêm JWT token vào header nếu tồn tại
+  const token = localStorage.getItem('authToken');
+  if (token) {
+    request.headers.Authorization = `Bearer ${token}`;
+  }
+  
   console.log('🚀 API Request:', `${API_BASE_URL}${request.url}`, request.method?.toUpperCase());
   return request;
 });
@@ -105,8 +111,110 @@ api.interceptors.response.use(
  */
 export const parkingApi = {
   /**
-   * Lấy danh sách tất cả thẻ từ server
-   * @returns Record object với key là UID thẻ
+   * ============ AUTHENTICATION METHODS ============
+   */
+  
+  /**
+   * Đăng nhập với username và password
+   * @param username - Tên tài khoản
+   * @param password - Mật khẩu
+   * @returns Token và thông tin user
+   */
+  login: async (username: string, password: string): Promise<{token: string; user: any}> => {
+    const response = await api.post<{token: string; user: any}>('/api/auth/login', {
+      username,
+      password,
+    });
+    
+    // Lưu token vào localStorage
+    if (response.data.token) {
+      localStorage.setItem('authToken', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+    }
+    
+    return response.data;
+  },
+
+  /**
+   * Đăng xuất
+   */
+  logout: async (): Promise<void> => {
+    try {
+      await api.post('/api/auth/logout');
+    } catch (error) {
+      // Bỏ qua lỗi nếu token đã expired
+      console.log('Logout error (token might be expired):', error);
+    } finally {
+      // Xóa token từ localStorage dù có lỗi hay không
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('user');
+    }
+  },
+
+  /**
+   * Đăng ký tài khoản mới (Admin only)
+   * @param userData - Object chứa username, password, email, full_name, role
+   */
+  registerUser: async (userData: {
+    username: string;
+    password: string;
+    email?: string;
+    full_name?: string;
+    role?: 'admin' | 'staff';
+  }): Promise<{user: any}> => {
+    const response = await api.post<{user: any}>('/api/auth/register', userData);
+    return response.data;
+  },
+
+  /**
+   * Xác thực token hiện tại
+   */
+  verifyToken: async (): Promise<{user_id: number; role: string}> => {
+    const response = await api.get<{user_id: number; role: string}>('/api/auth/verify');
+    return response.data;
+  },
+
+  /**
+   * Lấy danh sách tất cả users (Admin only)
+   */
+  getAllUsers: async (): Promise<{users: any[]}> => {
+    const response = await api.get<{users: any[]}>('/api/auth/users');
+    return response.data;
+  },
+
+  /**
+   * Xóa user (Admin only)
+   * @param userId - ID user cần xóa
+   */
+  deleteUser: async (userId: number): Promise<{message: string}> => {
+    const response = await api.delete<{message: string}>(`/api/auth/user/${userId}`);
+    return response.data;
+  },
+
+  /**
+   * Lấy thông tin user hiện tại từ localStorage
+   */
+  getCurrentUser: (): any | null => {
+    const userStr = localStorage.getItem('user');
+    return userStr ? JSON.parse(userStr) : null;
+  },
+
+  /**
+   * Kiểm tra xem user đã login chưa
+   */
+  isAuthenticated: (): boolean => {
+    return !!localStorage.getItem('authToken');
+  },
+
+  /**
+   * Lấy token hiện tại
+   */
+  getToken: (): string | null => {
+    return localStorage.getItem('authToken');
+  },
+
+  /**
+   * ============ PARKING & CARD METHODS ============
    */
   getCards: async (): Promise<Record<string, ParkingCard>> => {
     const response = await api.get<{success: boolean, cards: ParkingCard[], count: number}>('/api/cards/');

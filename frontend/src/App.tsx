@@ -14,6 +14,8 @@ import ParkingSlots from './components/ParkingSlots';
 import Dashboard from './components/Dashboard';
 import LogViewer from './components/LogViewer';
 import AdminPanel from './components/AdminPanel';
+import LoginPage from './components/LoginPage';
+import ProtectedRoute from './components/ProtectedRoute';
 import { NotificationProvider, useActivityMonitor, useStatsMonitor } from './components/Notifications';
 import './App.css';
 
@@ -234,6 +236,26 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               ⚙️ Quản trị
             </Link>
           </div>
+
+          {/* User Info & Logout */}
+          <div className="user-section">
+            {parkingApi.isAuthenticated() && (
+              <>
+                <span className="user-info">
+                  👤 {parkingApi.getCurrentUser()?.full_name || parkingApi.getCurrentUser()?.username}
+                </span>
+                <button
+                  className="nav-button logout-button"
+                  onClick={() => {
+                    parkingApi.logout();
+                    window.location.href = '/login';
+                  }}
+                >
+                  🚪 Đăng xuất
+                </button>
+              </>
+            )}
+          </div>
         </div>
         
         {/* Statistics */}
@@ -250,26 +272,45 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
       {/* Page Content */}
       <Routes>
+        <Route path="/login" element={<LoginPage onLoginSuccess={(token, user) => {window.location.href = '/dashboard'}} />} />
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard" element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        } />
         <Route 
           path="/cards" 
           element={
-            <CardsPage 
-              cards={sharedProps.cards}
-              unknownCards={sharedProps.unknownCards}
-              handleAddCard={sharedProps.handleAddCard}
-              handleDeleteCard={sharedProps.handleDeleteCard}
-              handleReload={sharedProps.handleReload}
-              fetchCards={sharedProps.fetchCards}
-              fetchUnknownCards={sharedProps.fetchUnknownCards}
-              loading={sharedProps.loading}
-            />
+            <ProtectedRoute>
+              <CardsPage 
+                cards={sharedProps.cards}
+                unknownCards={sharedProps.unknownCards}
+                handleAddCard={sharedProps.handleAddCard}
+                handleDeleteCard={sharedProps.handleDeleteCard}
+                handleReload={sharedProps.handleReload}
+                fetchCards={sharedProps.fetchCards}
+                fetchUnknownCards={sharedProps.fetchUnknownCards}
+                loading={sharedProps.loading}
+              />
+            </ProtectedRoute>
           } 
         />
-        <Route path="/parking" element={<ParkingSlots onBack={() => window.history.back()} />} />
-        <Route path="/logs" element={<LogViewer />} />
-        <Route path="/admin" element={<AdminPanel />} />
+        <Route path="/parking" element={
+          <ProtectedRoute>
+            <ParkingSlots onBack={() => window.history.back()} />
+          </ProtectedRoute>
+        } />
+        <Route path="/logs" element={
+          <ProtectedRoute>
+            <LogViewer />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin" element={
+          <ProtectedRoute requiredRole="admin">
+            <AdminPanel />
+          </ProtectedRoute>
+        } />
       </Routes>
 
       {/* Footer */}
