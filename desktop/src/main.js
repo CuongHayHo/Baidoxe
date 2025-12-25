@@ -93,6 +93,9 @@ function createWindow() {
     icon: path.join(__dirname, '../public/favicon.ico'),
   });
 
+  // Hide menu bar (File, Edit, View, Help)
+  mainWindow.removeMenu();
+
   // Load app từ React dev server hoặc build folder
   const startUrl = isDev
     ? 'http://localhost:3000'
@@ -277,7 +280,7 @@ app.on('ready', async () => {
 
   createWindow();
   createTray();
-  createMenu();
+  // createMenu(); // Disabled: menu bar hidden via removeMenu()
 });
 
 app.on('window-all-closed', () => {
