@@ -2647,6 +2647,30 @@
         "local_time": "2025-12-25 23:28:04"
       },
       "metadata": {}
+    },
+    {
+      "id": "7eb14710-8adb-4e1f-848a-fc576c5db462",
+      "timestamp": "2025-12-25T16:30:45.971711+00:00",
+      "card_id": "A1B3C2",
+      "action": "exit",
+      "details": {
+        "previous_status": 1,
+        "new_status": 0,
+        "local_time": "2025-12-25 23:30:45"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "2d91100d-ffc9-4070-b296-8a2868da70dd",
+      "timestamp": "2025-12-25T16:34:13.786493+00:00",
+      "card_id": "A1B3C2",
+      "action": "entry",
+      "details": {
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-12-25 23:34:13"
+      },
+      "metadata": {}
     }
   ],
   "created_at": "2025-10-06T15:06:01.564501+00:00",

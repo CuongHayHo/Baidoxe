@@ -152,37 +152,55 @@ class CardLogService:
             log_entry: Log entry dict
         """
         try:
-            from models.db import db
-            
             # Tạo CardLogModel entry - mapping fields từ JSON sang database
-            card_log = {
+            card_log_data = {
                 "card_number": card_id,  # Map từ card_id
                 "action": action.value,  # entry, exit, scan, unknown, created, deleted, etc
-                "timestamp": log_entry["timestamp"],
                 "notes": log_entry["details"].get("local_time", ""),  # Store local_time as notes
             }
             
+            # Parse timestamp safely
+            try:
+                timestamp_str = log_entry["timestamp"]
+                if isinstance(timestamp_str, str):
+                    card_log_data["timestamp"] = datetime.fromisoformat(timestamp_str.replace('Z', '+00:00'))
+                else:
+                    card_log_data["timestamp"] = timestamp_str
+            except (ValueError, KeyError):
+                card_log_data["timestamp"] = datetime.now(timezone.utc)
+            
             # Nếu có source info, thêm vào notes
             if "source" in log_entry["details"]:
-                card_log["notes"] = f"{card_log['notes']} [Source: {log_entry['details']['source']}]"
+                card_log_data["notes"] = f"{card_log_data['notes']} [Source: {log_entry['details']['source']}]"
             
             # Nếu có thêm info, thêm vào metadata
             if log_entry.get("metadata"):
-                card_log["notes"] = f"{card_log['notes']} {json.dumps(log_entry['metadata'])}"
+                card_log_data["notes"] = f"{card_log_data['notes']} {json.dumps(log_entry['metadata'])}"
             
-            # Thử import và save
+            # Thử import và save vào database
             try:
-                from scripts.init_db import CardLogModel
+                from app import db as app_db
+                from scripts.init_db import create_sqlalchemy_models
+                
+                # Get CardLogModel
+                UserModel, CardModel, CardLogModel, ParkingSlotModel, ParkingConfigModel = create_sqlalchemy_models()
                 
                 # Tạo record mới
-                new_log = CardLogModel(**card_log)
-                db.session.add(new_log)
-                db.session.commit()
+                new_log = CardLogModel(**card_log_data)
+                app_db.session.add(new_log)
+                app_db.session.commit()
                 
                 logger.debug(f"Saved log to database: {card_id} - {action.value}")
-            except (ImportError, AttributeError):
+            except (ImportError, AttributeError, ModuleNotFoundError):
                 # CardLogModel không tồn tại hoặc SQLAlchemy chưa init
                 logger.debug(f"Database not available for logging, using JSON only")
+            except Exception as db_error:
+                # Database error
+                logger.debug(f"Database write failed: {db_error}")
+                try:
+                    app_db.session.rollback()
+                except:
+                    pass
                 
         except Exception as e:
             # Không throw error - JSON log đã được lưu

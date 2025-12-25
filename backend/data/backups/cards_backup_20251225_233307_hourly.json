@@ -8,9 +8,16 @@
   "A1B3C2": {
     "uid": "A1B3C2",
     "name": "Cuong",
-    "status": 1,
+    "status": 0,
     "created_at": "2025-12-25T07:45:56.150211+00:00",
-    "entry_time": "2025-12-25T16:34:13.783790+00:00"
+    "entry_time": "2025-12-25T16:28:04.652794+00:00",
+    "exit_time": "2025-12-25T16:30:45.969241+00:00",
+    "parking_duration": {
+      "total_seconds": 161,
+      "hours": 0,
+      "minutes": 2,
+      "display": "2 phút"
+    }
   },
   "A2G3B2": {
     "uid": "A2G3B2",
@@ -33,10 +40,10 @@
     "created_at": "2025-12-25T08:34:58.852927+00:00",
     "entry_time": "2025-12-25T08:34:58.852936+00:00",
     "parking_duration": {
-      "total_seconds": 28754,
+      "total_seconds": 28547,
       "hours": 7,
-      "minutes": 59,
-      "display": "7 giờ 59 phút (hiện tại)"
+      "minutes": 55,
+      "display": "7 giờ 55 phút (hiện tại)"
     }
   },
   "U7U2U3": {
@@ -46,10 +53,10 @@
     "created_at": "2025-12-25T16:11:30.998158+00:00",
     "entry_time": "2025-12-25T16:11:30.998168+00:00",
     "parking_duration": {
-      "total_seconds": 1362,
+      "total_seconds": 1154,
       "hours": 0,
-      "minutes": 22,
-      "display": "22 phút (hiện tại)"
+      "minutes": 19,
+      "display": "19 phút (hiện tại)"
     }
   },
   "U1U7U1": {
@@ -59,10 +66,10 @@
     "created_at": "2025-12-25T16:12:25.780656+00:00",
     "entry_time": "2025-12-25T16:12:25.780664+00:00",
     "parking_duration": {
-      "total_seconds": 1308,
+      "total_seconds": 1100,
       "hours": 0,
-      "minutes": 21,
-      "display": "21 phút (hiện tại)"
+      "minutes": 18,
+      "display": "18 phút (hiện tại)"
     }
   }
 }
