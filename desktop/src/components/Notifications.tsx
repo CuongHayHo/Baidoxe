@@ -10,7 +10,7 @@
  * - Queue management cho multiple notifications
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import parkingApi from '../api';
 
 /**
@@ -181,8 +181,8 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
  */
 export const useActivityMonitor = () => {
   const { showToast } = useNotifications();
-  // Lưu số lượng log lần check cuối để detect log mới
-  const [lastLogCount, setLastLogCount] = useState(0);
+  // Dùng useRef thay vì useState để tránh re-render loop
+  const lastLogCountRef = useRef<number>(0);
 
   /**
    * Function kiểm tra hoạt động mới trong hệ thống
@@ -193,10 +193,13 @@ export const useActivityMonitor = () => {
       // Lấy log entry mới nhất (limit=1) để check count
       const data = await parkingApi.getLogs({ limit: 1 });
       
+      console.log('🔍 [useActivityMonitor] Check logs:', { lastLogCount: lastLogCountRef.current, currentCount: data.count, hasLogs: !!data.logs?.length });
+      
       // Kiểm tra có log mới không (count tăng so với lần trước)
-      if (data.success && data.count > lastLogCount && lastLogCount > 0) {
+      if (data.success && data.count > lastLogCountRef.current && lastLogCountRef.current > 0) {
         // Phát hiện hoạt động mới
-        const newCount = data.count - lastLogCount;
+        const newCount = data.count - lastLogCountRef.current;
+        console.log('✅ [useActivityMonitor] Found new logs:', newCount);
           
         if (data.logs && data.logs.length > 0) {
           const latestLog = data.logs[0];
@@ -241,7 +244,8 @@ export const useActivityMonitor = () => {
       }
       
       // Cập nhật count để sử dụng cho lần check tiếp theo
-      setLastLogCount(data.count || 0);
+      console.log('📊 [useActivityMonitor] Updated lastLogCount:', data.count || 0);
+      lastLogCountRef.current = data.count || 0;
     } catch (error) {
       console.error('Lỗi khi kiểm tra hoạt động mới:', error);
     }
@@ -256,7 +260,7 @@ export const useActivityMonitor = () => {
 
     // Cleanup interval khi component unmount
     return () => clearInterval(interval);
-  }, [lastLogCount, showToast]);
+  }, [checkForNewActivity]);
 
   return { checkForNewActivity };
 };

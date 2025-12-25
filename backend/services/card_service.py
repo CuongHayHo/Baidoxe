@@ -293,3 +293,20 @@ class CardService:
             error_msg = f"Failed to remove unknown card {uid}: {e}"
             logger.error(error_msg)
             return False, error_msg
+    
+    def clear_unknown_cards(self) -> bool:
+        """Clear all unknown cards from the system"""
+        try:
+            data = {"unknown_cards": []}
+            success, message = self.file_manager.write_json(UNKNOWN_CARDS_FILE, data, max_backups=5)
+            
+            if success:
+                logger.info("Cleared all unknown cards")
+                return True
+            else:
+                logger.error(f"Failed to clear unknown cards: {message}")
+                return False
+        except Exception as e:
+            error_msg = f"Failed to clear unknown cards: {e}"
+            logger.error(error_msg)
+            return False

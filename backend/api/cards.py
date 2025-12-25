@@ -519,6 +519,45 @@ def add_unknown_card():
             "message": f"Lỗi server: {str(e)}"
         }), 500
 
+@cards_bp.route('/unknown', methods=['DELETE'])
+def clear_all_unknown_cards():
+    """
+    Clear all unknown cards from the system
+    
+    Returns:
+        JSON response with success status and count of cleared cards
+    """
+    try:
+        logger.info("API: Clearing all unknown cards")
+        
+        # Get count before clearing
+        unknown_cards = card_service.get_unknown_cards()
+        count = len(unknown_cards) if unknown_cards else 0
+        
+        # Clear all unknown cards
+        success = card_service.clear_unknown_cards()
+        
+        if success:
+            return jsonify({
+                "success": True,
+                "message": f"Cleared {count} unknown cards",
+                "cleared_count": count
+            }), 200
+        else:
+            return jsonify({
+                "success": False,
+                "error": "Failed to clear unknown cards",
+                "message": "Không thể xóa danh sách thẻ lạ"
+            }), 500
+            
+    except Exception as e:
+        logger.error(f"Error clearing unknown cards: {e}")
+        return jsonify({
+            "success": False,
+            "error": "Internal server error",
+            "message": f"Lỗi server: {str(e)}"
+        }), 500
+
 @cards_bp.route('/unknown/<card_id>', methods=['DELETE'])
 def remove_unknown_card(card_id: str):
     """

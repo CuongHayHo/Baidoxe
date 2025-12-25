@@ -10,6 +10,8 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import UnknownCardNotification from './UnknownCardNotification';
+import parkingApi from '../api';
 
 /**
  * Interface định nghĩa cấu trúc dữ liệu thống kê dashboard
@@ -47,6 +49,8 @@ const Dashboard: React.FC = () => {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   // Lưu trữ danh sách log hoạt động gần đây
   const [recentLogs, setRecentLogs] = useState<LogStats | null>(null);
+  // Lưu trữ danh sách thẻ lạ phát hiện được
+  const [unknownCards, setUnknownCards] = useState<any[]>([]);
   // Trạng thái loading khi đang fetch dữ liệu
   const [isLoading, setIsLoading] = useState(true);
   // Lưu trữ thông báo lỗi nếu có
@@ -66,17 +70,18 @@ const Dashboard: React.FC = () => {
 
   /**
    * Hàm fetch dữ liệu dashboard từ API
-   * - Gọi đồng thời 2 API: thống kê và log gần đây
+   * - Gọi đồng thời 3 API: thống kê, log gần đây, và thẻ lạ
    * - Xử lý lỗi và cập nhật state tương ứng
    * - Cập nhật thời gian fetch cuối cùng
    */
   const fetchStats = async () => {
     try {
       const baseUrl = getApiBaseUrl();
-      // Gọi đồng thời 2 API để tối ưu tốc độ loading
-      const [statsResponse, logsResponse] = await Promise.all([
+      // Gọi đồng thời 3 API để tối ưu tốc độ loading
+      const [statsResponse, logsResponse, unknownResponse] = await Promise.all([
         fetch(`${baseUrl}/api/cards/statistics`),    // API lấy thống kê tổng quan
-        fetch(`${baseUrl}/api/cards/logs?limit=10`)  // API lấy 10 log gần đây nhất
+        fetch(`${baseUrl}/api/cards/logs?limit=10`), // API lấy 10 log gần đây nhất
+        fetch(`${baseUrl}/api/cards/unknown`)        // API lấy danh sách thẻ lạ
       ]);
 
       // Xử lý response API thống kê
@@ -90,6 +95,12 @@ const Dashboard: React.FC = () => {
       if (logsResponse.ok) {
         const logsData = await logsResponse.json();
         setRecentLogs(logsData);
+      }
+
+      // Xử lý response API thẻ lạ
+      if (unknownResponse.ok) {
+        const unknownData = await unknownResponse.json();
+        setUnknownCards(unknownData.unknown_cards || unknownData.cards || []);
       }
 
       // Cập nhật thời gian fetch thành công
@@ -195,6 +206,41 @@ const Dashboard: React.FC = () => {
           ⚠️ {error}
         </div>
       )}
+
+      {/* === UNKNOWN CARDS NOTIFICATION SECTION === */}
+      {/* Hiển thị danh sách thẻ lạ phát hiện được (nếu có) */}
+      <UnknownCardNotification
+        unknownCards={unknownCards}
+        onAddCard={async (uid: string, status: number) => {
+          try {
+            // Thêm thẻ vào hệ thống với API call
+            const baseUrl = getApiBaseUrl();
+            const response = await fetch(`${baseUrl}/api/cards/`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+              },
+              body: JSON.stringify({
+                id: uid,
+                name: uid, // Sử dụng UID làm tên mặc định
+                status: status
+              })
+            });
+
+            if (!response.ok) {
+              throw new Error('Failed to add card');
+            }
+
+            // Refresh stats để cập nhật số lượng thẻ
+            await fetchStats();
+          } catch (error) {
+            console.error('Error adding card:', error);
+            throw error;
+          }
+        }}
+        onRefresh={fetchStats}
+      />
 
       {/* === STATISTICS CARDS SECTION === */}
       {/* Grid 4 thẻ hiển thị các thống kê chính */}

@@ -2357,6 +2357,241 @@
         "local_time": "2025-12-25 15:48:58"
       },
       "metadata": {}
+    },
+    {
+      "id": "20004aba-31c2-4648-91b8-3c720eb6f9f8",
+      "timestamp": "2025-12-25T14:24:56.230175+00:00",
+      "card_id": "A4A4A4",
+      "action": "unknown",
+      "details": {
+        "source": "uno_r4",
+        "local_time": "2025-12-25 21:24:56"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "b01b12dc-80cc-43ed-a34f-8a05badc9408",
+      "timestamp": "2025-12-25T14:24:56.236888+00:00",
+      "card_id": "A4A4A4",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-12-25 21:24:56"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "d5354ef5-5a41-42fe-afc7-3501241533e8",
+      "timestamp": "2025-12-25T14:46:58.087126+00:00",
+      "card_id": "A1B3C8",
+      "action": "unknown",
+      "details": {
+        "source": "uno_r4",
+        "local_time": "2025-12-25 21:46:58"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "60fb8360-c68e-4231-8ea3-57a3a5336e90",
+      "timestamp": "2025-12-25T14:46:58.110964+00:00",
+      "card_id": "A1B3C8",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-12-25 21:46:58"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "09d13e47-c7db-48cb-9980-ab0cf4f6afa2",
+      "timestamp": "2025-12-25T15:23:16.809220+00:00",
+      "card_id": "U1U2U3",
+      "action": "unknown",
+      "details": {
+        "source": "uno_r4",
+        "local_time": "2025-12-25 22:23:16"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "ac66ca9e-4e38-411c-81d5-c652bd0d85ef",
+      "timestamp": "2025-12-25T15:23:16.824334+00:00",
+      "card_id": "U1U2U3",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-12-25 22:23:16"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "54d6553e-e875-4bb4-a363-0b2929bcabee",
+      "timestamp": "2025-12-25T15:23:34.179532+00:00",
+      "card_id": "U1U3U4",
+      "action": "unknown",
+      "details": {
+        "source": "uno_r4",
+        "local_time": "2025-12-25 22:23:34"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "0e0c0eca-1497-4070-98f0-44e82384f463",
+      "timestamp": "2025-12-25T15:23:34.206635+00:00",
+      "card_id": "U1U3U4",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-12-25 22:23:34"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "76447ec9-f5b7-4bd3-99a5-b9c97437ebbb",
+      "timestamp": "2025-12-25T15:31:20.689958+00:00",
+      "card_id": "U1U3U9",
+      "action": "unknown",
+      "details": {
+        "source": "uno_r4",
+        "local_time": "2025-12-25 22:31:20"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "e25fec23-6f69-47c2-8d40-c98c08e7d886",
+      "timestamp": "2025-12-25T15:31:20.730526+00:00",
+      "card_id": "U1U3U9",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-12-25 22:31:20"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "498e1bfb-907c-40bd-bcfb-e62e107032db",
+      "timestamp": "2025-12-25T15:49:06.122445+00:00",
+      "card_id": "A1B2V3",
+      "action": "unknown",
+      "details": {
+        "source": "uno_r4",
+        "local_time": "2025-12-25 22:49:06"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "c3437319-86db-4921-83a1-376d4d5a06de",
+      "timestamp": "2025-12-25T15:49:06.145520+00:00",
+      "card_id": "A1B2V3",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-12-25 22:49:06"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "280c23a3-966b-48fd-96c7-a6e083672cbe",
+      "timestamp": "2025-12-25T15:57:37.976569+00:00",
+      "card_id": "A6B5D7",
+      "action": "unknown",
+      "details": {
+        "source": "uno_r4",
+        "local_time": "2025-12-25 22:57:37"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "3e47f1b8-b32c-419a-87a4-ee9d37b9d0e5",
+      "timestamp": "2025-12-25T15:57:37.997712+00:00",
+      "card_id": "A6B5D7",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-12-25 22:57:37"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "661211f2-f20d-41ef-b652-dc399d877769",
+      "timestamp": "2025-12-25T16:00:28.593710+00:00",
+      "card_id": "A3B3C3",
+      "action": "unknown",
+      "details": {
+        "source": "uno_r4",
+        "local_time": "2025-12-25 23:00:28"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "58782b8e-678d-4b5d-9dd4-b6e4786cc5ae",
+      "timestamp": "2025-12-25T16:00:28.598783+00:00",
+      "card_id": "A3B3C3",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-12-25 23:00:28"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "ec789833-b9cf-41da-ac6e-d3fe23426a54",
+      "timestamp": "2025-12-25T16:06:44.377056+00:00",
+      "card_id": "U1U2U3",
+      "action": "unknown",
+      "details": {
+        "source": "uno_r4",
+        "local_time": "2025-12-25 23:06:44"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "e3cb8b3b-5690-4925-b7ea-794706b79e38",
+      "timestamp": "2025-12-25T16:06:44.382333+00:00",
+      "card_id": "U1U2U3",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-12-25 23:06:44"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "650947f6-1956-4642-8427-5ca22436c0c8",
+      "timestamp": "2025-12-25T16:07:03.959606+00:00",
+      "card_id": "U7U2U3",
+      "action": "unknown",
+      "details": {
+        "source": "uno_r4",
+        "local_time": "2025-12-25 23:07:03"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "eb0da3a8-a16e-4922-8757-7b9c11b09e14",
+      "timestamp": "2025-12-25T16:07:03.964743+00:00",
+      "card_id": "U7U2U3",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-12-25 23:07:03"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "df5b41f5-ca9a-45ee-a681-a7cbfa7bc749",
+      "timestamp": "2025-12-25T16:08:07.232682+00:00",
+      "card_id": "A1B3C2",
+      "action": "exit",
+      "details": {
+        "previous_status": 1,
+        "new_status": 0,
+        "local_time": "2025-12-25 23:08:07"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "e38a3dab-08ab-4c8c-9e66-4e23b0e654f9",
+      "timestamp": "2025-12-25T16:08:07.237744+00:00",
+      "card_id": "A1B3C2",
+      "action": "exit",
+      "details": {
+        "timestamp": "",
+        "direction": "OUT",
+        "source": "uno_r4_wifi",
+        "local_time": "2025-12-25 23:08:07"
+      },
+      "metadata": {}
     }
   ],
   "created_at": "2025-10-06T15:06:01.564501+00:00",

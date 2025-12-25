@@ -17,12 +17,16 @@ import ParkingSlots from './components/ParkingSlots';
 import AdminPanel from './components/AdminPanel';
 import LogViewer from './components/LogViewer';
 import LoginPage from './components/LoginPage';
-import { NotificationProvider } from './components/Notifications';
+import { NotificationProvider, useActivityMonitor, useStatsMonitor } from './components/Notifications';
 
 type Tab = 'dashboard' | 'cards' | 'parking' | 'logs' | 'admin';
 
 // ============ Main App Component ============
 const AppContent: React.FC<{ onLogout: () => void; userRole?: string }> = ({ onLogout, userRole = 'user' }) => {
+  // Gọi activity monitor hooks để theo dõi logs mới từ UNO R4
+  useActivityMonitor();
+  useStatsMonitor();
+
   const [activeTab, setActiveTab] = useState<Tab>('dashboard');
   const [backendStatus, setBackendStatus] = useState(false);
   const [cards, setCards] = useState<Record<string, any>>({});
