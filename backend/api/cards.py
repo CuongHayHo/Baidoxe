@@ -287,6 +287,12 @@ def update_card(card_id: str):
         success, result = card_service.update_card(clean_id, data)
         
         if success:
+            # 💾 Ghi log vào database
+            save_log_to_database(clean_id, "updated", {
+                "name": data.get("name"),
+                "status": data.get("status")
+            })
+            
             return jsonify({
                 "success": True,
                 "card": result,
@@ -337,6 +343,9 @@ def delete_card(card_id: str):
         success, message = card_service.delete_card(clean_id)
         
         if success:
+            # 💾 Ghi log vào database
+            save_log_to_database(clean_id, "deleted", {"reason": "manual_delete"})
+            
             return jsonify({
                 "success": True,
                 "message": "Card deleted successfully",
@@ -586,6 +595,13 @@ def clear_all_unknown_cards():
         success = card_service.clear_unknown_cards()
         
         if success:
+            # 💾 Log system action - clearing unknown cards
+            if count > 0:
+                save_log_to_database("SYSTEM", "cleared_unknown", {
+                    "reason": "manual_clear_all",
+                    "count": count
+                })
+            
             return jsonify({
                 "success": True,
                 "message": f"Cleared {count} unknown cards",
@@ -636,6 +652,11 @@ def remove_unknown_card(card_id: str):
         success, message = card_service.remove_unknown_card(clean_id)
         
         if success:
+            # 💾 Log removing unknown card
+            save_log_to_database(clean_id, "removed_from_unknown", {
+                "reason": "manual_remove"
+            })
+            
             return jsonify({
                 "success": True,
                 "message": "Unknown card removed successfully",

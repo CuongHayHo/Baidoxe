@@ -2671,6 +2671,30 @@
         "local_time": "2025-12-25 23:34:13"
       },
       "metadata": {}
+    },
+    {
+      "id": "e6b5780a-c579-4216-80d3-9215684d9959",
+      "timestamp": "2025-12-25T16:36:59.614148+00:00",
+      "card_id": "A1B3C2",
+      "action": "exit",
+      "details": {
+        "previous_status": 1,
+        "new_status": 0,
+        "local_time": "2025-12-25 23:36:59"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "6ad47e66-6be8-41cd-a751-9350b4245c24",
+      "timestamp": "2025-12-25T16:37:18.381351+00:00",
+      "card_id": "A1B3C2",
+      "action": "entry",
+      "details": {
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-12-25 23:37:18"
+      },
+      "metadata": {}
     }
   ],
   "created_at": "2025-10-06T15:06:01.564501+00:00",
