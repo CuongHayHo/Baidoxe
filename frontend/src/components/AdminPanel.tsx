@@ -38,6 +38,14 @@ interface SystemInfo {
   last_backup: string;   // Thời gian backup cuối cùng
 }
 
+/**
+ * Helper function to open URLs in system browser
+ */
+const openInSystemBrowser = (url: string) => {
+  // Use window.open with specific flags to trigger setWindowOpenHandler
+  window.open(url, '_blank', 'nodeIntegration=no');
+};
+
 const AdminPanel: React.FC = () => {
   const [systemInfo, setSystemInfo] = useState<SystemInfo | null>(null);
   const [backupFiles, setBackupFiles] = useState<BackupFile[]>([]);
@@ -447,25 +455,19 @@ const AdminPanel: React.FC = () => {
             📊 Cập Nhật Thống Kê
           </button>
           
-          <a 
-            href="http://localhost:5000/api/cards/"
-            target="_blank"
-            rel="noopener noreferrer"
+          <button 
+            onClick={() => openInSystemBrowser('http://localhost:5000/api/cards/')}
             className="quick-btn api-btn"
-            style={{ textDecoration: 'none', color: 'inherit' }}
           >
             🔗 Xem API Cards
-          </a>
+          </button>
           
-          <a 
-            href="http://localhost:5000/api/cards/logs"
-            target="_blank"
-            rel="noopener noreferrer"
+          <button 
+            onClick={() => openInSystemBrowser('http://localhost:5000/api/cards/logs')}
             className="quick-btn logs-btn"
-            style={{ textDecoration: 'none', color: 'inherit' }}
           >
             📋 Xem API Logs
-          </a>
+          </button>
         </div>
       </div>
 

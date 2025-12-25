@@ -448,14 +448,14 @@ const AdminPanel: React.FC = () => {
           </button>
           
           <button 
-            onClick={() => window.open('/api/cards/', '_blank')}
+            onClick={() => window.open('http://localhost:5000/api/cards/', '_blank')}
             className="quick-btn api-btn"
           >
             🔗 Xem API Cards
           </button>
           
           <button 
-            onClick={() => window.open('/api/cards/logs', '_blank')}
+            onClick={() => window.open('http://localhost:5000/api/cards/logs', '_blank')}
             className="quick-btn logs-btn"
           >
             📋 Xem API Logs

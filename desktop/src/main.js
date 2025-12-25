@@ -104,6 +104,24 @@ function createWindow() {
     mainWindow.webContents.openDevTools();
   }
 
+  // Handle window open requests - force external URLs to open in system browser
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    const { shell } = require('electron');
+    
+    console.log('🔗 Window open request for:', url);
+    
+    // Check if it's an external URL (http/https to different host/port)
+    if (url.startsWith('http://localhost:5000') || url.startsWith('https://')) {
+      console.log('✅ Opening in external browser:', url);
+      shell.openExternal(url);
+      return { action: 'deny' }; // Prevent opening new window
+    }
+    
+    console.log('✅ Allowing internal navigation:', url);
+    // Allow internal navigation (same localhost:3000)
+    return { action: 'allow' };
+  });
+
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
@@ -122,43 +140,58 @@ function createWindow() {
  */
 function createTray() {
   try {
-    const icon = path.join(__dirname, '../public/favicon.ico');
-    tray = new Tray(icon);
+    // Resolve icon path for both dev and production
+    let icon;
+    if (isDev) {
+      // Development: path from src/main.js to public/favicon.ico
+      icon = path.join(__dirname, '../public/favicon.ico');
+    } else {
+      // Production: path from app.asar to resources
+      icon = path.join(process.resourcesPath, 'public/favicon.ico');
+    }
+    
+    // Verify file exists before creating tray
+    if (!fs.existsSync(icon)) {
+      console.warn(`⚠️ Tray icon not found at: ${icon} - skipping tray icon`);
+      return;
+    }
+    
+    try {
+      tray = new Tray(icon);
 
-    const contextMenu = Menu.buildFromTemplate([
+      const contextMenu = Menu.buildFromTemplate([
+        {
+          label: 'Show',
+          click: () => {
+          if (mainWindow) {
+            mainWindow.show();
+            mainWindow.focus();
+          }
+        },
+      },
       {
-        label: 'Show',
+        label: 'Quit',
         click: () => {
-        if (mainWindow) {
-          mainWindow.show();
-          mainWindow.focus();
-        }
+          app.isQuitting = true;
+          app.quit();
+        },
       },
-    },
-    {
-      label: 'Quit',
-      click: () => {
-        app.isQuitting = true;
-        app.quit();
-      },
-    },
-  ]);
+    ]);
 
-    tray.setContextMenu(contextMenu);
-    tray.setToolTip('Baidoxe - Parking Management');
-
-    tray.on('click', () => {
-      if (mainWindow) {
-        mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
-      }
-    });
-  } catch (error) {
-    log.error('Failed to create tray icon:', error);
-    console.error('Failed to create tray icon:', error);
+      tray.setContextMenu(contextMenu);
+      console.log('✅ Tray icon created successfully');
+    } catch (trayError) {
+      console.warn(`⚠️ Failed to create tray icon: ${trayError.message} - app will continue without tray`);
+      tray = null;
+    }
+  } catch (err) {
+    console.error('Error in createTray:', err);
   }
 }
 
 /**
+ * Khởi động Flask backend server
+ *//**
  * Tạo application menu
  */
 function createMenu() {
@@ -239,16 +272,27 @@ async function startBackend() {
     try {
       // Tìm đường dẫn Python
       const pythonPath = process.env.PYTHON_PATH || 'python';
-      const backendDir = path.join(__dirname, '../../backend');
+      
+      // Determine backend directory based on environment
+      let backendDir;
+      if (isDev) {
+        // Development: backend is in ../backend relative to desktop folder
+        backendDir = path.join(__dirname, '../../backend');
+      } else {
+        // Production: backend is in ../backend relative to resources
+        backendDir = path.join(process.resourcesPath, '../backend');
+      }
 
-      // Start Flask server
-      backendProcess = spawn(pythonPath, ['-m', 'backend.run'], {
+      console.log(`Starting backend from: ${backendDir}`);
+
+      // Start Flask server using python -m backend.run
+      backendProcess = spawn(pythonPath, ['run.py'], {
         cwd: backendDir,
         stdio: 'inherit',
       });
 
       backendProcess.on('error', (error) => {
-        console.error('Failed to start backend:', error);
+        console.error('❌ Failed to start backend:', error.message);
         resolve(false);
       });
 
@@ -296,6 +340,14 @@ app.on('activate', () => {
 /**
  * IPC Handlers - Communication between Electron and React
  */
+
+// Open external links (browser, file explorer, etc)
+ipcMain.on('open-external-link', (event, url) => {
+  const { shell } = require('electron');
+  shell.openExternal(url).catch(err => {
+    console.error('Failed to open external link:', err);
+  });
+});
 
 // Get backend status
 ipcMain.handle('get-backend-status', async () => {

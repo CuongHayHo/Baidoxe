@@ -10,6 +10,9 @@ contextBridge.exposeInMainWorld('electron', {
   getBackendStatus: () => ipcRenderer.invoke('get-backend-status'),
   shutdownBackend: () => ipcRenderer.invoke('shutdown-backend'),
   
+  // External links
+  openExternalLink: (url) => ipcRenderer.send('open-external-link', url),
+  
   // Notifications
   showNotification: (options) => ipcRenderer.invoke('show-notification', options),
   
