@@ -18,6 +18,48 @@ cards_bp = Blueprint('cards', __name__, url_prefix='/api/cards')
 # Initialize card service
 card_service = CardService()
 
+def save_log_to_database(card_id: str, action: str, details: Dict[str, Any] = None):
+    """
+    Helper function - Ghi log vào database với proper app context
+    
+    Args:
+        card_id: ID của thẻ
+        action: action type (entry, exit, scan, unknown, created, deleted, etc)
+        details: Additional details dict
+    """
+    try:
+        from models.db import db
+        from scripts.init_db import create_sqlalchemy_models
+        
+        # Get CardLogModel
+        UserModel, CardModel, CardLogModel, ParkingSlotModel, ParkingConfigModel = create_sqlalchemy_models()
+        
+        # Create log data
+        log_data = {
+            "card_number": str(card_id),
+            "action": action,
+            "timestamp": datetime.now(timezone.utc),
+            "notes": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        }
+        
+        # Add extra details if provided
+        if details and isinstance(details, dict):
+            if "source" in details:
+                log_data["notes"] = f"{log_data['notes']} [Source: {details['source']}]"
+        
+        # Create and save record
+        new_log = CardLogModel(**log_data)
+        db.session.add(new_log)
+        db.session.commit()
+        
+        logger.debug(f"✅ Saved log to database: {card_id} - {action}")
+        return True
+        
+    except Exception as e:
+        logger.debug(f"⚠️ Database logging warning (non-critical): {e}")
+        # Don't fail the request if database logging fails
+        return False
+
 @cards_bp.route('/', methods=['GET'])
 def get_all_cards():
     """
@@ -160,6 +202,12 @@ def create_card():
         success, message, new_card = card_service.create_card(uid, name, initial_status)
         
         if success:
+            # 💾 Ghi log vào database
+            save_log_to_database(uid, "created", {
+                "name": name,
+                "initial_status": initial_status
+            })
+            
             return jsonify({
                 "success": True,
                 "card": new_card.to_dict() if new_card else None,
@@ -958,9 +1006,19 @@ def scan_card():
                         "direction": direction,
                         "source": "uno_r4_wifi"
                     })
+                    # 💾 Ghi vào database luôn
+                    save_log_to_database(clean_id, "entry", {
+                        "direction": direction,
+                        "source": "uno_r4_wifi"
+                    })
                 else:
                     card_service.log_service.log_card_exit(clean_id, {
                         "timestamp": timestamp,
+                        "direction": direction,
+                        "source": "uno_r4_wifi"
+                    })
+                    # 💾 Ghi vào database luôn
+                    save_log_to_database(clean_id, "exit", {
                         "direction": direction,
                         "source": "uno_r4_wifi"
                     })
@@ -991,6 +1049,8 @@ def scan_card():
             
             # Log unknown card detection
             card_service.log_service.log_unknown_card(clean_id, "uno_r4")
+            # 💾 Ghi vào database luôn
+            save_log_to_database(clean_id, "unknown", {"source": "uno_r4_wifi"})
             
             # Add to unknown cards list
             add_success, add_message = card_service.add_unknown_card(clean_id)
