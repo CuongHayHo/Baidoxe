@@ -1,29 +1,32 @@
 /**
- * App.tsx - Main app component cho Electron desktop app
- * Tái sử dụng React components từ frontend
+ * App.tsx - Main app component với Authentication
  */
 
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import './components/App.css';
 import './components/index.css';
+import './styles/AdminPanel.css';
+import './styles/UserManagement.css';
+import './styles/LoginPage.css';
 
-// Import existing components từ local src/components
+// Import components
 import Dashboard from './components/Dashboard';
 import CardList from './components/CardList';
 import ParkingSlots from './components/ParkingSlots';
 import AdminPanel from './components/AdminPanel';
 import LogViewer from './components/LogViewer';
+import LoginPage from './components/LoginPage';
 import { NotificationProvider } from './components/Notifications';
 
 type Tab = 'dashboard' | 'cards' | 'parking' | 'logs' | 'admin';
 
-function App() {
+// ============ Main App Component ============
+const AppContent: React.FC<{ onLogout: () => void; userRole?: string }> = ({ onLogout, userRole = 'user' }) => {
   const [activeTab, setActiveTab] = useState<Tab>('dashboard');
   const [backendStatus, setBackendStatus] = useState(false);
   const [cards, setCards] = useState<Record<string, any>>({});
 
-  // Check backend status on mount
   useEffect(() => {
     const checkBackend = async () => {
       if (window.electron) {
@@ -38,8 +41,7 @@ function App() {
     };
 
     checkBackend();
-    const interval = setInterval(checkBackend, 10000); // Check every 10 seconds
-
+    const interval = setInterval(checkBackend, 10000);
     return () => clearInterval(interval);
   }, []);
 
@@ -58,13 +60,16 @@ function App() {
       case 'logs':
         return <LogViewer />;
       case 'admin':
-        return <AdminPanel />;
+        if (userRole === 'admin') {
+          return <AdminPanel />;
+        } else {
+          return <Dashboard />;
+        }
       default:
         return <Dashboard />;
     }
   };
 
-  // Get breadcrumb text
   const getBreadcrumbText = () => {
     switch (activeTab) {
       case 'dashboard': return '📊 Dashboard';
@@ -76,32 +81,27 @@ function App() {
     }
   };
 
-  // Calculate stats from cards
   const totalCards = Object.keys(cards).length;
   const insideCards = Object.values(cards).filter((c: any) => c?.status === 1).length;
   const outsideCards = totalCards - insideCards;
 
   return (
     <div className="app-container">
-      {/* Header */}
       <header className="App-header">
         <h1>🅿️ Hệ thống quản lý bãi đỗ xe</h1>
         
-        {/* Breadcrumb */}
         <div className="breadcrumb">
           <span className="breadcrumb-home">🏠 Trang chủ</span>
           <span className="breadcrumb-separator">›</span>
           <span className="breadcrumb-current">{getBreadcrumbText()}</span>
         </div>
 
-        {/* Stats */}
         <div className="stats">
           <span className="stat">📊 Tổng: {totalCards}</span>
           <span className="stat">🅿️ Trong bãi: {insideCards}</span>
           <span className="stat">🚗 Ngoài bãi: {outsideCards}</span>
         </div>
 
-        {/* Navigation buttons */}
         <div className="navigation">
           <div className="nav-buttons">
             <button 
@@ -131,8 +131,20 @@ function App() {
             <button 
               className={`nav-button ${activeTab === 'admin' ? 'active' : ''}`}
               onClick={() => setActiveTab('admin')}
+              disabled={userRole !== 'admin'}
+              style={{ 
+                opacity: userRole === 'admin' ? 1 : 0.3,
+                cursor: userRole === 'admin' ? 'pointer' : 'not-allowed'
+              }}
+              title={userRole !== 'admin' ? 'Chỉ quản trị viên có thể truy cập' : ''}
             >
               ⚙️ Quản trị
+            </button>
+            <button 
+              className="nav-button logout-btn"
+              onClick={onLogout}
+            >
+              🚪 Đăng xuất
             </button>
           </div>
           <span className={`status-indicator ${backendStatus ? 'online' : 'offline'}`}>
@@ -143,6 +155,103 @@ function App() {
 
       <main className="app-content">{renderContent()}</main>
     </div>
+  );
+};
+
+// ============ App with Authentication ============
+function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isChecking, setIsChecking] = useState(true);
+  const [userRole, setUserRole] = useState<string>('user');
+
+  useEffect(() => {
+    console.log('🔍 App component MOUNTED - checking token...');
+    verifyToken();
+  }, []);
+
+  const verifyToken = async () => {
+    try {
+      const token = localStorage.getItem('authToken');
+      console.log('📌 Token in localStorage:', token ? 'EXISTS' : 'MISSING');
+
+      if (!token) {
+        console.log('❌ No token found - show LoginPage');
+        setIsLoggedIn(false);
+        setIsChecking(false);
+        return;
+      }
+
+      // Verify token with backend
+      const response = await fetch('http://localhost:5000/api/auth/verify', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      console.log('📡 Verify response:', response.status);
+
+      if (response.ok) {
+        console.log('✅ Token valid - SHOW DASHBOARD');
+        const savedRole = localStorage.getItem('userRole') || 'user';
+        setUserRole(savedRole);
+        setIsLoggedIn(true);
+      } else {
+        console.log('❌ Token invalid - CLEAR AND SHOW LOGIN');
+        localStorage.removeItem('authToken');
+        setIsLoggedIn(false);
+      }
+    } catch (error) {
+      console.error('🔴 Verification error:', error);
+      localStorage.removeItem('authToken');
+      setIsLoggedIn(false);
+    } finally {
+      setIsChecking(false);
+    }
+  };
+
+  const handleLogin = (token: string, role?: string) => {
+    console.log('✅ LOGIN SUCCESS - storing token and showing dashboard');
+    localStorage.setItem('authToken', token);
+    if (role) {
+      localStorage.setItem('userRole', role);
+      setUserRole(role);
+    }
+    setIsLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    console.log('🚪 LOGOUT - clearing token and showing login');
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userRole');
+    setUserRole('user');
+    setIsLoggedIn(false);
+  };
+
+  if (isChecking) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        backgroundColor: '#f0f0f0',
+        fontSize: '24px'
+      }}>
+        ⏳ Đang kiểm tra đăng nhập...
+      </div>
+    );
+  }
+
+  return (
+    <NotificationProvider>
+      {isLoggedIn ? (
+        <AppContent onLogout={handleLogout} userRole={userRole} />
+      ) : (
+        <LoginPage onLoginSuccess={handleLogin} />
+      )}
+    </NotificationProvider>
   );
 }
 

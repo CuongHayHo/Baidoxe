@@ -222,3 +222,7 @@ class Card:
     
     def __repr__(self):
         return f"ParkingCard(uid='{self.uid}', status={self.status})"
+
+
+# Backward compatibility alias
+ParkingCard = Card

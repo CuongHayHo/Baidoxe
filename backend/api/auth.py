@@ -3,8 +3,8 @@ Authentication API endpoints
 Các endpoint xác thực: login, register, logout
 """
 from flask import Blueprint, request, jsonify, current_app
-from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
+from werkzeug.security import check_password_hash
 import bcrypt
 import jwt
 from functools import wraps
@@ -12,45 +12,16 @@ from functools import wraps
 # Create blueprint
 auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 
-# Get db from current app
-db = None
 
 def get_db():
-    """Get database instance from current app"""
-    from flask_sqlalchemy import SQLAlchemy
-    if hasattr(current_app, 'db'):
-        return current_app.db
-    return None
+    """Get SQLAlchemy instance"""
+    return current_app.extensions.get('sqlalchemy')
 
 
-# Import models
 def get_user_model():
-    """Get User model"""
-    try:
-        from models.user import UserModel if 'UserModel' in dir() else None
-        # Try to get from app extensions
-        db = get_db()
-        if db:
-            # The model should be available through the app context
-            return db.session.query(db.Model.registry.mappers[0].class_) if db.Model.registry.mappers else None
-    except:
-        pass
-    return None
-
-
-class UserModel:
-    """User model for authentication"""
-    __tablename__ = 'users'
-    
-    id = None
-    username = None
-    password_hash = None
-    email = None
-    full_name = None
-    role = None
-    is_active = None
-    created_at = None
-    updated_at = None
+    """Get User model from models module"""
+    import models
+    return models.User
 
 
 def token_required(f):
@@ -114,23 +85,8 @@ def login():
         return jsonify({'message': 'Username and password are required'}), 400
     
     try:
-        from flask_sqlalchemy import SQLAlchemy
-        
-        # Get database
-        db = current_app.extensions.get('sqlalchemy').db
-        
-        # Define User model for this context
-        class User(db.Model):
-            __tablename__ = 'users'
-            id = db.Column(db.Integer, primary_key=True)
-            username = db.Column(db.String(80), unique=True, nullable=False)
-            password_hash = db.Column(db.String(255), nullable=False)
-            email = db.Column(db.String(120), unique=True)
-            full_name = db.Column(db.String(120))
-            role = db.Column(db.String(20), default='staff')
-            is_active = db.Column(db.Boolean, default=True)
-            created_at = db.Column(db.DateTime, default=datetime.utcnow)
-            updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+        db = get_db()
+        User = get_user_model()
         
         # Find user
         user = User.query.filter_by(username=data['username']).first()
@@ -138,9 +94,15 @@ def login():
         if not user:
             return jsonify({'message': 'Invalid username or password'}), 401
         
-        # Verify password
-        if not bcrypt.checkpw(data['password'].encode('utf-8'), user.password_hash.encode('utf-8')):
-            return jsonify({'message': 'Invalid username or password'}), 401
+        # Verify password - support both bcrypt and werkzeug hashes
+        if user.password_hash.startswith('$2'):
+            # Bcrypt format
+            if not bcrypt.checkpw(data['password'].encode('utf-8'), user.password_hash.encode('utf-8')):
+                return jsonify({'message': 'Invalid username or password'}), 401
+        else:
+            # Werkzeug format (pbkdf2)
+            if not check_password_hash(user.password_hash, data['password']):
+                return jsonify({'message': 'Invalid username or password'}), 401
         
         if not user.is_active:
             return jsonify({'message': 'User account is inactive'}), 403
@@ -149,6 +111,7 @@ def login():
         expiration_time = datetime.utcnow() + timedelta(hours=current_app.config['JWT_EXPIRATION_HOURS'])
         token = jwt.encode(
             {
+                'sub': str(user.id),  # Flask-JWT-Extended requires 'sub' claim for identity
                 'user_id': user.id,
                 'username': user.username,
                 'role': user.role,
@@ -195,23 +158,8 @@ def register(current_user_id, current_user_role):
         return jsonify({'message': 'Username and password are required'}), 400
     
     try:
-        from flask_sqlalchemy import SQLAlchemy
-        
-        # Get database
-        db = current_app.extensions.get('sqlalchemy').db
-        
-        # Define User model for this context
-        class User(db.Model):
-            __tablename__ = 'users'
-            id = db.Column(db.Integer, primary_key=True)
-            username = db.Column(db.String(80), unique=True, nullable=False)
-            password_hash = db.Column(db.String(255), nullable=False)
-            email = db.Column(db.String(120), unique=True)
-            full_name = db.Column(db.String(120))
-            role = db.Column(db.String(20), default='staff')
-            is_active = db.Column(db.Boolean, default=True)
-            created_at = db.Column(db.DateTime, default=datetime.utcnow)
-            updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+        db = get_db()
+        User = get_user_model()
         
         # Check if user already exists
         existing_user = User.query.filter_by(username=data['username']).first()
@@ -288,23 +236,8 @@ def get_all_users(current_user_id, current_user_role):
     Get all users (Admin only)
     """
     try:
-        from flask_sqlalchemy import SQLAlchemy
-        
-        # Get database
-        db = current_app.extensions.get('sqlalchemy').db
-        
-        # Define User model for this context
-        class User(db.Model):
-            __tablename__ = 'users'
-            id = db.Column(db.Integer, primary_key=True)
-            username = db.Column(db.String(80), unique=True, nullable=False)
-            password_hash = db.Column(db.String(255), nullable=False)
-            email = db.Column(db.String(120), unique=True)
-            full_name = db.Column(db.String(120))
-            role = db.Column(db.String(20), default='staff')
-            is_active = db.Column(db.Boolean, default=True)
-            created_at = db.Column(db.DateTime, default=datetime.utcnow)
-            updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+        db = get_db()
+        User = get_user_model()
         
         users = User.query.all()
         
@@ -340,23 +273,8 @@ def delete_user(current_user_id, current_user_role, user_id):
         return jsonify({'message': 'Cannot delete your own account'}), 400
     
     try:
-        from flask_sqlalchemy import SQLAlchemy
-        
-        # Get database
-        db = current_app.extensions.get('sqlalchemy').db
-        
-        # Define User model for this context
-        class User(db.Model):
-            __tablename__ = 'users'
-            id = db.Column(db.Integer, primary_key=True)
-            username = db.Column(db.String(80), unique=True, nullable=False)
-            password_hash = db.Column(db.String(255), nullable=False)
-            email = db.Column(db.String(120), unique=True)
-            full_name = db.Column(db.String(120))
-            role = db.Column(db.String(20), default='staff')
-            is_active = db.Column(db.Boolean, default=True)
-            created_at = db.Column(db.DateTime, default=datetime.utcnow)
-            updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+        db = get_db()
+        User = get_user_model()
         
         user = User.query.get(user_id)
         if not user:

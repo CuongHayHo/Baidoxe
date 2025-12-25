@@ -88,6 +88,9 @@ class Config:
     # JWT configuration
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY') or 'jwt-dev-secret-key'
     JWT_EXPIRATION_HOURS = 24
+    JWT_TOKEN_LOCATION = ["headers"]
+    JWT_HEADER_NAME = "Authorization"
+    JWT_HEADER_TYPE = "Bearer"
 
 class DevelopmentConfig(Config):
     """Development configuration"""

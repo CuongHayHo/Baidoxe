@@ -12,6 +12,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNotifications } from './Notifications';
+import UserManagement from './UserManagement';
 import parkingApi from '../api';
 
 /**
@@ -43,6 +44,7 @@ const AdminPanel: React.FC = () => {
   const [backupFiles, setBackupFiles] = useState<BackupFile[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'system' | 'users'>('system');
   const { showToast } = useNotifications();
 
   const fetchBackupFiles = async () => {
@@ -461,6 +463,25 @@ const AdminPanel: React.FC = () => {
             📋 Xem API Logs
           </button>
         </div>
+
+        {/* Tabs */}
+        <div className="admin-tabs">
+          <button
+            className={`tab-button ${activeTab === 'system' ? 'active' : ''}`}
+            onClick={() => setActiveTab('system')}
+          >
+            ⚙️ System Configuration
+          </button>
+          <button
+            className={`tab-button ${activeTab === 'users' ? 'active' : ''}`}
+            onClick={() => setActiveTab('users')}
+          >
+            👥 User Management
+          </button>
+        </div>
+
+        {/* Tab Content */}
+        {activeTab === 'users' && <UserManagement />}
       </div>
 
       {/* System Status Indicator */}

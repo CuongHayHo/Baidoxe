@@ -377,3 +377,31 @@ class ValidationHelper:
             return False
         
         return True
+
+
+# ============ User Validation Functions ============
+
+def validate_username(username: str) -> bool:
+    """
+    Validate username format
+    Requirements: 3-20 characters, alphanumeric + underscore only
+    """
+    if not isinstance(username, str):
+        return False
+    
+    if len(username) < 3 or len(username) > 20:
+        return False
+    
+    # Allow alphanumeric and underscore only
+    return bool(re.match(r'^[a-zA-Z0-9_]+$', username))
+
+
+def validate_password(password: str) -> bool:
+    """
+    Validate password strength
+    Requirements: at least 6 characters
+    """
+    if not isinstance(password, str):
+        return False
+    
+    return len(password) >= 6

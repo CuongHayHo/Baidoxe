@@ -19,8 +19,87 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { NotificationProvider, useActivityMonitor, useStatsMonitor } from './components/Notifications';
 import './App.css';
 
+// ================== MAIN APP COMPONENT ==================
+const App: React.FC = () => {
+  return (
+    <NotificationProvider>
+      <Router>
+        <AppWithHooks />
+      </Router>
+    </NotificationProvider>
+  );
+};
+
+const AppWithHooks: React.FC = () => {
+  useActivityMonitor();
+  useStatsMonitor();
+  
+  console.log('🔍 AppWithHooks RUNNING - new code loaded!');
+  
+  const [isTokenValid, setIsTokenValid] = React.useState<boolean | null>(null);
+  
+  // Verify token validity on app startup
+  React.useEffect(() => {
+    const verifyToken = async () => {
+      const hasToken = !!localStorage.getItem('authToken');
+      if (hasToken) {
+        try {
+          const response = await fetch('http://localhost:5000/api/auth/verify', {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+              'Content-Type': 'application/json'
+            }
+          });
+          if (response.ok) {
+            setIsTokenValid(true);
+          } else {
+            // Token expired or invalid - clear it
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
+            setIsTokenValid(false);
+          }
+        } catch (error) {
+          // Network error - assume token is invalid for safety
+          console.error('Token verification failed:', error);
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('user');
+          setIsTokenValid(false);
+        }
+      } else {
+        setIsTokenValid(false);
+      }
+    };
+    
+    verifyToken();
+  }, []);
+  
+  // Wait for token verification to complete
+  if (isTokenValid === null) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#f5f5f5' }}>
+        <div style={{ textAlign: 'center', padding: '40px', backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+          <h2 style={{ color: '#333', marginBottom: '10px' }}>⏳ Đang kiểm tra đăng nhập...</h2>
+          <p style={{ color: '#999' }}>Vui lòng chờ</p>
+        </div>
+      </div>
+    );
+  }
+  
+  // Check if user is authenticated
+  const isAuthenticated = isTokenValid;
+  
+  // If not authenticated, show login page
+  if (!isAuthenticated) {
+    return <LoginPage onLoginSuccess={(token, user) => { window.location.href = '/dashboard'; }} />;
+  }
+  
+  // If authenticated, show main layout with routes
+  return <Layout />;
+};
+
 // ================== SHARED LAYOUT COMPONENT ==================
-const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const Layout: React.FC = () => {
   const location = useLocation();
   
   // ================== SHARED STATE ==================
@@ -191,6 +270,9 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   return (
     <div className="App">
+      {/* Only show header if authenticated (not on login page) */}
+      {parkingApi.isAuthenticated() && (
+      <>
       {/* Header */}
       <header className="App-header">
         <h1>🅿️ Hệ thống quản lý bãi đỗ xe</h1>
@@ -269,8 +351,10 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       {/* Messages */}
       {message && <div className="message">{message}</div>}
       {loading && <div className="loading">⏳ Đang xử lý...</div>}
+      </>
+      )}
 
-      {/* Page Content */}
+      {/* Page Content Routes */}
       <Routes>
         <Route path="/login" element={<LoginPage onLoginSuccess={(token, user) => {window.location.href = '/dashboard'}} />} />
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
@@ -335,12 +419,13 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           </div>
         </div>
       </footer>
+      {!parkingApi.isAuthenticated() && <LoginPage onLoginSuccess={(token, user) => { window.location.href = '/dashboard'; }} />}
     </div>
   );
 };
 
 // ================== CARDS PAGE COMPONENT ==================
-const CardsPage: React.FC<{
+interface CardsPageProps {
   cards: Record<string, ParkingCard>;
   unknownCards: any[];
   handleAddCard: (uid: string, status: number) => Promise<void>;
@@ -349,7 +434,9 @@ const CardsPage: React.FC<{
   fetchCards: () => Promise<void>;
   fetchUnknownCards: () => Promise<void>;
   loading: boolean;
-}> = ({ cards, unknownCards, handleAddCard, handleDeleteCard, handleReload, fetchCards, loading }) => {
+}
+
+const CardsPage: React.FC<CardsPageProps> = ({ cards, unknownCards, handleAddCard, handleDeleteCard, handleReload, fetchCards, loading }) => {
   return (
     <>
       <UnknownCardNotification 
@@ -378,28 +465,6 @@ const CardsPage: React.FC<{
         </div>
       </main>
     </>
-  );
-};
-
-// ================== MAIN APP COMPONENT ==================
-const App: React.FC = () => {
-  return (
-    <NotificationProvider>
-      <Router>
-        <AppWithHooks />
-      </Router>
-    </NotificationProvider>
-  );
-};
-
-const AppWithHooks: React.FC = () => {
-  useActivityMonitor();
-  useStatsMonitor();
-  
-  return (
-    <Layout>
-      <div />
-    </Layout>
   );
 };
 

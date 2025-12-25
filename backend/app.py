@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from flask import Flask, jsonify, send_from_directory, request
 from werkzeug.exceptions import HTTPException
+from flask_jwt_extended import JWTManager
 
 # Import configuration
 from config.config import config, DEBUG_MODE, FRONTEND_BUILD_DIR
@@ -21,6 +22,7 @@ from api.cards import cards_bp
 from api.parking_slots import parking_slots_bp
 from api.system import system_bp
 from api.auth import auth_bp
+from api.users import users_bp
 
 # Import scheduled tasks
 from services.scheduled_tasks import scheduled_tasks
@@ -39,6 +41,37 @@ logger = logging.getLogger(__name__)
 
 # Initialize SQLAlchemy
 db = SQLAlchemy()
+
+def _create_user_model(db_instance):
+    """Create SQLAlchemy User model and register it in models module"""
+    from datetime import datetime
+    import models
+    
+    # Check if already created by looking at __tablename__ attribute
+    if hasattr(models.User, '__tablename__'):
+        return
+    
+    class User(db_instance.Model):
+        """User model for admin and staff roles"""
+        __tablename__ = 'users'
+        __table_args__ = {'extend_existing': True}
+        
+        id = db_instance.Column(db_instance.Integer, primary_key=True)
+        username = db_instance.Column(db_instance.String(80), unique=True, nullable=False, index=True)
+        password_hash = db_instance.Column(db_instance.String(255), nullable=False)
+        email = db_instance.Column(db_instance.String(120), unique=True, nullable=True)
+        full_name = db_instance.Column(db_instance.String(120), nullable=True)
+        role = db_instance.Column(db_instance.String(20), default='staff', nullable=False)
+        is_active = db_instance.Column(db_instance.Boolean, default=True, nullable=False)
+        created_at = db_instance.Column(db_instance.DateTime, default=datetime.utcnow, nullable=False)
+        updated_at = db_instance.Column(db_instance.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+        
+        def __repr__(self):
+            return f'<User {self.username}>'
+    
+    # Register in models module
+    models.User = User
+    models.db = db_instance
 
 def create_app(config_name='default'):
     """
@@ -66,6 +99,12 @@ def create_app(config_name='default'):
     
     # Initialize SQLAlchemy
     db.init_app(app)
+    
+    # Create User model now that db is initialized with app
+    _create_user_model(db)
+    
+    # Initialize JWT
+    jwt = JWTManager(app)
     
     # Initialize CORS
     init_cors(app)
@@ -109,6 +148,7 @@ def register_blueprints(app):
     app.register_blueprint(parking_slots_bp)
     app.register_blueprint(system_bp)
     app.register_blueprint(auth_bp)
+    app.register_blueprint(users_bp)
     
     logger.info("API blueprints registered successfully")
 
