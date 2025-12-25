@@ -2635,6 +2635,18 @@
         "local_time": "2025-12-25 23:12:25"
       },
       "metadata": {}
+    },
+    {
+      "id": "c294b418-835d-47f6-a5b6-5360037e33e7",
+      "timestamp": "2025-12-25T16:28:04.655602+00:00",
+      "card_id": "A1B3C2",
+      "action": "entry",
+      "details": {
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-12-25 23:28:04"
+      },
+      "metadata": {}
     }
   ],
   "created_at": "2025-10-06T15:06:01.564501+00:00",

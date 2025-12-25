@@ -92,7 +92,7 @@ class CardLogService:
                 details: Dict[str, Any] = None,
                 metadata: Dict[str, Any] = None) -> bool:
         """
-        Thêm log entry mới
+        Thêm log entry mới vào cả JSON file và database
         
         Args:
             card_id: ID của thẻ
@@ -117,10 +117,8 @@ class CardLogService:
             # Thêm thông tin context tự động
             log_entry["details"]["local_time"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             
-            # Đọc file log hiện tại
+            # ✅ Ghi vào JSON file
             log_data = self._read_log_file()
-            
-            # Thêm entry mới
             log_data["logs"].append(log_entry)
             
             # Giới hạn số lượng logs (tối đa 10000 entries để tránh file quá lớn)
@@ -134,12 +132,61 @@ class CardLogService:
             with open(self.log_file, 'w', encoding='utf-8') as f:
                 json.dump(log_data, f, ensure_ascii=False, indent=2)
             
+            # ✅ Ghi vào database (nếu available)
+            self._save_to_database(card_id, action, log_entry)
+            
             logger.debug(f"Added log: {card_id} - {action.value}")
             return True
             
         except Exception as e:
             logger.error(f"Failed to add log entry: {e}")
             return False
+    
+    def _save_to_database(self, card_id: str, action: LogAction, log_entry: Dict[str, Any]):
+        """
+        Ghi log vào database SQLAlchemy (nếu available)
+        
+        Args:
+            card_id: ID của thẻ
+            action: LogAction enum
+            log_entry: Log entry dict
+        """
+        try:
+            from models.db import db
+            
+            # Tạo CardLogModel entry - mapping fields từ JSON sang database
+            card_log = {
+                "card_number": card_id,  # Map từ card_id
+                "action": action.value,  # entry, exit, scan, unknown, created, deleted, etc
+                "timestamp": log_entry["timestamp"],
+                "notes": log_entry["details"].get("local_time", ""),  # Store local_time as notes
+            }
+            
+            # Nếu có source info, thêm vào notes
+            if "source" in log_entry["details"]:
+                card_log["notes"] = f"{card_log['notes']} [Source: {log_entry['details']['source']}]"
+            
+            # Nếu có thêm info, thêm vào metadata
+            if log_entry.get("metadata"):
+                card_log["notes"] = f"{card_log['notes']} {json.dumps(log_entry['metadata'])}"
+            
+            # Thử import và save
+            try:
+                from scripts.init_db import CardLogModel
+                
+                # Tạo record mới
+                new_log = CardLogModel(**card_log)
+                db.session.add(new_log)
+                db.session.commit()
+                
+                logger.debug(f"Saved log to database: {card_id} - {action.value}")
+            except (ImportError, AttributeError):
+                # CardLogModel không tồn tại hoặc SQLAlchemy chưa init
+                logger.debug(f"Database not available for logging, using JSON only")
+                
+        except Exception as e:
+            # Không throw error - JSON log đã được lưu
+            logger.debug(f"Database logging failed (non-critical): {e}")
     
     def _read_log_file(self) -> Dict[str, Any]:
         """Đọc file log, trả về dict hoặc tạo mới nếu bị lỗi"""
