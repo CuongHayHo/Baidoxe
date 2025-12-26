@@ -12,9 +12,23 @@ echo "   BAIDOXE PARKING MANAGEMENT SYSTEM - DEVELOPMENT"
 echo "==================================================================="
 echo ""
 
+# Setup Python dependencies if needed
+echo "[1/3] Setting up Python backend dependencies..."
+cd backend
+if [ ! -d "venv" ]; then
+    echo "   Creating virtual environment..."
+    python3 -m venv venv
+fi
+source venv/bin/activate
+echo "   Installing Python packages..."
+pip install -q -r requirements.txt
+cd ..
+echo "   ✓ Backend dependencies installed"
+echo ""
+
 # Initialize database if needed
 if [ ! -f "backend/data/parking_system.db" ]; then
-    echo "[1/3] Initializing database..."
+    echo "[2/3] Initializing database..."
     cd backend
     source venv/bin/activate
     python scripts/init_db.py
@@ -23,7 +37,7 @@ if [ ! -f "backend/data/parking_system.db" ]; then
     echo ""
 fi
 
-echo "[2/3] Starting Backend (Flask) on http://localhost:5000..."
+echo "[3/3] Starting Backend (Flask) on http://localhost:5000..."
 cd backend
 source venv/bin/activate
 python run.py &
@@ -32,7 +46,7 @@ cd ..
 sleep 2
 echo ""
 
-echo "[3/3] Starting Frontend (React) on http://localhost:3000..."
+echo "Starting Frontend (React) on http://localhost:3000..."
 cd frontend
 npm start &
 FRONTEND_PID=$!
