@@ -103,6 +103,11 @@ def create_app(config_name='default'):
     # Create User model now that db is initialized with app
     _create_user_model(db)
     
+    # Pre-initialize SQLAlchemy models cache to avoid metadata conflicts later
+    from models.models_cache import get_sqlalchemy_models
+    with app.app_context():
+        get_sqlalchemy_models()  # Initialize cache on first call
+    
     # Initialize JWT
     jwt = JWTManager(app)
     

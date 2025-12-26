@@ -28,11 +28,14 @@ def save_log_to_database(card_id: str, action: str, details: Dict[str, Any] = No
         details: Additional details dict
     """
     try:
-        from models.db import db
-        from scripts.init_db import create_sqlalchemy_models
+        from app import db  # Import db from app.py, not init_db.py
+        from models.models_cache import get_sqlalchemy_models
         
-        # Get CardLogModel
-        UserModel, CardModel, CardLogModel, ParkingSlotModel, ParkingConfigModel = create_sqlalchemy_models()
+        logger.info(f"🔄 Saving log to database: {card_id} - {action}")
+        
+        # Get CardLogModel from cache
+        UserModel, CardModel, CardLogModel, ParkingSlotModel, ParkingConfigModel = get_sqlalchemy_models()
+        logger.info(f"✓ Models loaded for log")
         
         # Create log data
         log_data = {
@@ -47,17 +50,116 @@ def save_log_to_database(card_id: str, action: str, details: Dict[str, Any] = No
             if "source" in details:
                 log_data["notes"] = f"{log_data['notes']} [Source: {details['source']}]"
         
+        logger.info(f"✓ Log data prepared: {log_data}")
+        
         # Create and save record
         new_log = CardLogModel(**log_data)
-        db.session.add(new_log)
-        db.session.commit()
+        logger.info(f"✓ CardLogModel created")
         
-        logger.debug(f"✅ Saved log to database: {card_id} - {action}")
+        db.session.add(new_log)
+        logger.info(f"✓ Log added to session")
+        
+        db.session.commit()
+        logger.info(f"✓ Session committed")
+        
+        logger.info(f"✅ Saved log to database: {card_id} - {action}")
         return True
+        
+    except Exception as e:
+        logger.error(f"❌ Error saving log to database ({card_id} - {action}): {e}", exc_info=True)
+        try:
+            db.session.rollback()
+        except:
+            pass
+        return False
         
     except Exception as e:
         logger.debug(f"⚠️ Database logging warning (non-critical): {e}")
         # Don't fail the request if database logging fails
+        return False
+
+def save_card_to_database(card_id: str, card_name: str, status: int, entry_time: str = None, 
+                          exit_time: str = None, created_at: str = None):
+    """
+    Helper function - Lưu card vào database với proper app context
+    
+    Args:
+        card_id: ID của thẻ (uid)
+        card_name: Tên của thẻ
+        status: Trạng thái (0=outside, 1=inside)
+        entry_time: Thời gian vào (ISO format)
+        exit_time: Thời gian ra (ISO format)
+        created_at: Thời gian tạo (ISO format)
+    """
+    try:
+        from app import db  # Import db from app.py, not init_db.py
+        from models.models_cache import get_sqlalchemy_models
+        
+        logger.info(f"🔄 Entering save_card_to_database: {card_id}")
+        
+        # Get CardModel from cache
+        UserModel, CardModel, CardLogModel, ParkingSlotModel, ParkingConfigModel = get_sqlalchemy_models()
+        logger.info(f"✓ Models loaded")
+        
+        # Convert created_at string to datetime if needed
+        created_at_dt = created_at
+        if isinstance(created_at, str):
+            try:
+                created_at_dt = datetime.fromisoformat(created_at.replace('Z', '+00:00'))
+            except Exception as parse_err:
+                logger.warning(f"Could not parse created_at: {parse_err}, using current time")
+                created_at_dt = datetime.now(timezone.utc)
+        else:
+            created_at_dt = created_at or datetime.now(timezone.utc)
+        
+        logger.info(f"✓ created_at_dt: {created_at_dt}")
+        
+        # Check if card already exists
+        logger.info(f"🔍 Checking if card {card_id} exists in database")
+        existing_card = db.session.query(CardModel).filter_by(card_number=card_id).first()
+        
+        if existing_card:
+            logger.info(f"📝 Card {card_id} exists, updating")
+            existing_card.owner_name = card_name
+            existing_card.status = 'active' if status == 1 else 'inactive'
+            if entry_time:
+                existing_card.owner_phone = entry_time
+            if exit_time:
+                existing_card.vehicle_info = exit_time
+            existing_card.updated_at = datetime.now(timezone.utc)
+            db.session.commit()
+            logger.info(f"✅ Updated card {card_id} in database")
+        else:
+            logger.info(f"➕ Card {card_id} doesn't exist, creating new")
+            try:
+                new_card = CardModel(
+                    card_number=card_id,
+                    owner_name=card_name,
+                    card_type="unknown",
+                    status="active",
+                    created_at=created_at_dt
+                )
+                logger.info(f"✓ CardModel object created: {new_card}")
+                
+                db.session.add(new_card)
+                logger.info(f"✓ Card added to session")
+                
+                db.session.commit()
+                logger.info(f"✓ Session committed")
+                logger.info(f"✅ Saved card {card_id} to database")
+            except Exception as create_err:
+                logger.error(f"❌ Error creating card record: {create_err}", exc_info=True)
+                db.session.rollback()
+                raise
+        
+        return True
+        
+    except Exception as e:
+        logger.error(f"❌ Error saving card {card_id} to database: {e}", exc_info=True)
+        try:
+            db.session.rollback()
+        except:
+            pass
         return False
 
 @cards_bp.route('/', methods=['GET'])
@@ -208,6 +310,17 @@ def create_card():
                 "initial_status": initial_status
             })
             
+            # 💾 Lưu card vào database
+            if new_card:
+                logger.info(f"🔄 Saving card to database: {uid}, name={name}, status={initial_status}, created_at={new_card.created_at}")
+                db_save_success = save_card_to_database(
+                    uid, 
+                    name, 
+                    initial_status,
+                    created_at=new_card.created_at
+                )
+                logger.info(f"💾 Card database save result: {db_save_success}")
+            
             return jsonify({
                 "success": True,
                 "card": new_card.to_dict() if new_card else None,
@@ -293,6 +406,15 @@ def update_card(card_id: str):
                 "status": data.get("status")
             })
             
+            # 💾 Cập nhật card trong database
+            status_map = {'outside': 0, 'inside': 1, 'active': 0, 'parked': 1, 'inactive': 0}
+            db_status = status_map.get(data.get('status', 'outside'), 0)
+            save_card_to_database(
+                clean_id,
+                data.get("name", ""),
+                db_status
+            )
+            
             return jsonify({
                 "success": True,
                 "card": result,
@@ -345,6 +467,24 @@ def delete_card(card_id: str):
         if success:
             # 💾 Ghi log vào database
             save_log_to_database(clean_id, "deleted", {"reason": "manual_delete"})
+            
+            # 💾 Xóa card từ database
+            try:
+                from app import db
+                from models.models_cache import get_sqlalchemy_models
+                
+                logger.info(f"🔄 Deleting card {clean_id} from database...")
+                UserModel, CardModel, CardLogModel, ParkingSlotModel, ParkingConfigModel = get_sqlalchemy_models()
+                
+                card_to_delete = db.session.query(CardModel).filter_by(card_number=clean_id).first()
+                if card_to_delete:
+                    db.session.delete(card_to_delete)
+                    db.session.commit()
+                    logger.info(f"✅ Deleted card from database: {clean_id}")
+                else:
+                    logger.warning(f"⚠️ Card {clean_id} not found in database for deletion")
+            except Exception as db_error:
+                logger.error(f"❌ Error deleting card from database: {db_error}", exc_info=True)
             
             return jsonify({
                 "success": True,
@@ -556,6 +696,14 @@ def add_unknown_card():
         success, message = card_service.add_unknown_card(clean_id)
         
         if success:
+            # 💾 Lưu thẻ lạ vào database
+            try:
+                logger.info(f"🔄 Saving unknown card {clean_id} to database...")
+                save_card_to_database(clean_id, clean_id, 0)
+                logger.info(f"✅ Successfully saved unknown card {clean_id} to database")
+            except Exception as db_err:
+                logger.error(f"❌ Error saving unknown card to database: {db_err}", exc_info=True)
+            
             return jsonify({
                 "success": True,
                 "message": "Unknown card added successfully",
@@ -1032,6 +1180,8 @@ def scan_card():
                         "direction": direction,
                         "source": "uno_r4_wifi"
                     })
+                    # 💾 Cập nhật status trong database card
+                    save_card_to_database(clean_id, updated_card.get("name", clean_id), 1)
                 else:
                     card_service.log_service.log_card_exit(clean_id, {
                         "timestamp": timestamp,
@@ -1043,6 +1193,8 @@ def scan_card():
                         "direction": direction,
                         "source": "uno_r4_wifi"
                     })
+                    # 💾 Cập nhật status trong database card
+                    save_card_to_database(clean_id, updated_card.get("name", clean_id), 0)
                 
                 logger.info(f"UNO R4: Card {clean_id} - {action} processed successfully (Direction: {direction})")
                 
