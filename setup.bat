@@ -71,19 +71,18 @@ echo   ✓ Frontend setup complete
 cd ..
 echo.
 
-REM Setup Desktop (Optional)
-echo [5/5] Setting up Desktop App (optional)...
+REM Setup Desktop
+echo [5/5] Setting up Desktop App...
 cd desktop
 echo   Installing dependencies (this may take a few minutes)...
 call npm install
 if errorlevel 1 (
-    echo WARNING: Desktop app setup failed (optional)
-    echo You can skip this if you only need web + backend
-    cd ..
-) else (
-    echo   ✓ Desktop setup complete
-    cd ..
+    echo ERROR: Failed to install desktop app dependencies
+    pause
+    exit /b 1
 )
+echo   ✓ Desktop setup complete
+cd ..
 echo.
 
 echo ===================================================================
