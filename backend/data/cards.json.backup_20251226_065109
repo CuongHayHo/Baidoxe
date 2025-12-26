@@ -1,0 +1,137 @@
+{
+  "TEST002": {
+    "uid": "TEST002",
+    "name": "cuonghayhyy",
+    "status": 0,
+    "created_at": "2025-12-25T07:43:12.069037+00:00"
+  },
+  "A1B3C2": {
+    "uid": "A1B3C2",
+    "name": "Cuong",
+    "status": 1,
+    "created_at": "2025-12-25T07:45:56.150211+00:00",
+    "entry_time": "2025-12-25T23:41:32.567087+00:00",
+    "parking_duration": {
+      "total_seconds": 470,
+      "hours": 0,
+      "minutes": 7,
+      "display": "7 phút (hiện tại)"
+    }
+  },
+  "A2G3B2": {
+    "uid": "A2G3B2",
+    "name": "CUONBGHAYU",
+    "status": 0,
+    "created_at": "2025-12-25T08:25:01.760413+00:00",
+    "entry_time": "2025-12-25T08:34:30.796753+00:00",
+    "exit_time": "2025-12-25T08:47:23.065237+00:00",
+    "parking_duration": {
+      "total_seconds": 772,
+      "hours": 0,
+      "minutes": 12,
+      "display": "12 phút"
+    }
+  },
+  "A6V6B3": {
+    "uid": "A6V6B3",
+    "name": "cuong",
+    "status": 1,
+    "created_at": "2025-12-25T08:34:58.852927+00:00",
+    "entry_time": "2025-12-25T08:34:58.852936+00:00",
+    "parking_duration": {
+      "total_seconds": 54864,
+      "hours": 15,
+      "minutes": 14,
+      "display": "15 giờ 14 phút (hiện tại)"
+    }
+  },
+  "U7U2U3": {
+    "uid": "U7U2U3",
+    "name": "U7U2U3",
+    "status": 1,
+    "created_at": "2025-12-25T16:11:30.998158+00:00",
+    "entry_time": "2025-12-25T16:11:30.998168+00:00",
+    "parking_duration": {
+      "total_seconds": 27471,
+      "hours": 7,
+      "minutes": 37,
+      "display": "7 giờ 37 phút (hiện tại)"
+    }
+  },
+  "U1U7U1": {
+    "uid": "U1U7U1",
+    "name": "U1U7U1",
+    "status": 0,
+    "created_at": "2025-12-25T16:12:25.780656+00:00",
+    "entry_time": "2025-12-25T16:12:25.780664+00:00",
+    "exit_time": "2025-12-25T23:36:36.543314+00:00",
+    "parking_duration": {
+      "total_seconds": 26650,
+      "hours": 7,
+      "minutes": 24,
+      "display": "7 giờ 24 phút"
+    }
+  },
+  "A3B2B1": {
+    "uid": "A3B2B1",
+    "name": "ASDKJASDJHAS",
+    "status": 0,
+    "created_at": "2025-12-25T16:39:26.233414+00:00"
+  },
+  "AA2S3D4": {
+    "uid": "AA2S3D4",
+    "name": "ASDASDAS",
+    "status": 0,
+    "created_at": "2025-12-25T16:52:39.940667+00:00"
+  },
+  "A3S2D1": {
+    "uid": "A3S2D1",
+    "name": "ASDASD",
+    "status": 0,
+    "created_at": "2025-12-25T16:54:24.244748+00:00"
+  },
+  "ABCD1234": {
+    "uid": "ABCD1234",
+    "name": "Test New Card",
+    "status": 0,
+    "created_at": "2025-12-25T16:57:10.391869+00:00"
+  },
+  "B2B2B2": {
+    "uid": "B2B2B2",
+    "name": "B2B2B2",
+    "status": 1,
+    "created_at": "2025-12-25T23:43:53.445018+00:00",
+    "entry_time": "2025-12-25T23:43:53.445027+00:00",
+    "parking_duration": {
+      "total_seconds": 329,
+      "hours": 0,
+      "minutes": 5,
+      "display": "5 phút (hiện tại)"
+    }
+  },
+  "B2C2D2": {
+    "uid": "B2C2D2",
+    "name": "Cuonaajs",
+    "status": 0,
+    "created_at": "2025-12-25T23:44:40.472710+00:00"
+  },
+  "A3H5H1": {
+    "uid": "A3H5H1",
+    "name": "A3H5H1",
+    "status": 1,
+    "created_at": "2025-12-25T23:48:39.106112+00:00",
+    "entry_time": "2025-12-25T23:48:39.106119+00:00",
+    "parking_duration": {
+      "total_seconds": 43,
+      "hours": 0,
+      "minutes": 0,
+      "display": "0 phút (hiện tại)"
+    }
+  },
+  "H4J3K2": {
+    "uid": "H4J3K2",
+    "name": "ASDASD",
+    "status": 0,
+    "created_at": "2025-12-25T23:49:22.907546+00:00"
+  }
+}
