@@ -24,17 +24,11 @@ IPAddress local_IP(192, 168, 4, 5);
 IPAddress gateway(192, 168, 4, 2);       
 IPAddress subnet(255, 255, 255, 0);      
 
-// ================== CẤU HÌNH API ==================
-const char* apiURL = "http://192.168.4.2:5000/api/parking-slots";  // Lựa chọn 1: IP backend trong AP
-
-// ===== Lựa chọn 2: Local WiFi (kết nối router) =====
-// IPAddress local_IP(192, 168, 1, 100);      // // IP ESP32 trong local WiFi
-// IPAddress gateway(192, 168, 1, 1);         // // Gateway router
-// IPAddress subnet(255, 255, 255, 0);        // // Subnet mask
-// const char* apiURL = "http://192.168.1.50:5000/api/parking-slots";  // // IP backend trên local WiFi
-
-// HTTP Server để xem dữ liệu cảm biến
+// HTTP Server cho Pull Model
 WebServer server(80);
+
+// Dữ liệu hiện tại cho Pull Model
+int currentDistances[15] = {0};
 
 // WiFi reconnection management
 unsigned long lastWiFiCheck = 0;
@@ -43,8 +37,8 @@ const unsigned long WIFI_RECONNECT_TIMEOUT = 10000; // 10s timeout for reconnect
 
 // ================== FORWARD DECLARATIONS ==================
 void reconnectWiFi();
-void sendSensorDataToAPI();
-void handleGetSensorData();
+void handleGetData();
+void handleDetect();
 
 // CD74HC4067 (16:1 MUX) - đưa 1 trong 16 ECHO về PIN_ECHO
 #define MUX_S0 12
@@ -150,68 +144,27 @@ void reconnectWiFi() {
 }
 
 // ===================== Send Data to API =====================
-void sendSensorDataToAPI() {
-  if (WiFi.status() != WL_CONNECTED) {
-    Serial.println("[API] WiFi not connected, skipping API send");
-    return;
-  }
-  
+void handleGetData() {
+  // Trả về dữ liệu theo format cũ mà server expect
   DynamicJsonDocument doc(1024);
+  
+  // Format - các field ở root level
   doc["success"] = true;
-  doc["soIC"] = 2;  // 2 IC 74HC595
+  doc["soIC"] = 2;  // Số IC 74HC595
   doc["totalSensors"] = 15;
   doc["timestamp"] = millis();
   
-  // Data array: chỉ gửi occupied (0 hoặc 1) giống demo.cpp
+  // Data array ở root level
   JsonArray dataArray = doc.createNestedArray("data");
-  
   for (int i = 0; i < 15; i++) {
-    // occupied = 1 nếu có vật trong 15cm, 0 nếu không (hoặc timeout)
-    int occupied = (numbers[i] > 0 && numbers[i] <= 15) ? 1 : 0;
-    dataArray.add(occupied);
+    if (currentDistances[i] == -1) {
+      dataArray.add(0);  // Lỗi = trống
+    } else {
+      dataArray.add(currentDistances[i] <= 15 ? 1 : 0);
+    }
   }
   
-  doc["wifi_connected"] = (WiFi.status() == WL_CONNECTED);
-  doc["wifi_rssi"] = WiFi.RSSI();
-  
-  String jsonPayload;
-  serializeJson(doc, jsonPayload);
-  
-  Serial.println("[API] Sending data to: " + String(apiURL));
-  Serial.println("[API] Payload: " + jsonPayload);
-  
-  HTTPClient http;
-  http.setTimeout(5000);
-  http.begin(apiURL);
-  http.addHeader("Content-Type", "application/json");
-  
-  int httpCode = http.POST(jsonPayload);
-  
-  if (httpCode == 200 || httpCode == 201) {
-    Serial.println("[API] SUCCESS - Response code: " + String(httpCode));
-  } else {
-    Serial.println("[API] FAILED - Response code: " + String(httpCode));
-  }
-  
-  http.end();
-}
-
-// ===================== Web Server - GET Endpoint =====================
-void handleGetSensorData() {
-  // Trả về dữ liệu sensor dạng JSON để xem trên browser
-  DynamicJsonDocument doc(1024);
-  doc["success"] = true;
-  doc["soIC"] = 2;
-  doc["totalSensors"] = 15;
-  doc["timestamp"] = millis();
-  
-  JsonArray dataArray = doc.createNestedArray("data");
-  
-  for (int i = 0; i < 15; i++) {
-    int occupied = (numbers[i] > 0 && numbers[i] <= 15) ? 1 : 0;
-    dataArray.add(occupied);
-  }
-  
+  // WiFi info
   doc["wifi_connected"] = (WiFi.status() == WL_CONNECTED);
   doc["wifi_rssi"] = WiFi.RSSI();
   
@@ -219,10 +172,61 @@ void handleGetSensorData() {
   serializeJson(doc, response);
   
   server.sendHeader("Access-Control-Allow-Origin", "*");
-  server.sendHeader("Content-Type", "application/json");
+  server.sendHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  server.sendHeader("Access-Control-Allow-Headers", "Content-Type");
   server.send(200, "application/json", response);
   
-  Serial.println("[HTTP] Browser requested data: " + response);
+  Serial.println("Server requested GET /data: " + response);
+}
+
+void handleDetect() {
+  // Lệnh detect lại cảm biến (reset)
+  Serial.println("Server requested POST /detect - Rescanning all sensors...");
+  
+  // Đọc lại tất cả cảm biến
+  shiftbyteICs();
+  
+  DynamicJsonDocument doc(1024);
+  doc["success"] = true;
+  doc["message"] = "Đã detect lại 15 cảm biến";
+  doc["soIC"] = 2;
+  doc["totalSensors"] = 15;
+  doc["timestamp"] = millis();
+  
+  // Data array sau khi reset
+  JsonArray dataArray = doc.createNestedArray("data");
+  for (int i = 0; i < 15; i++) {
+    if (currentDistances[i] == -1) {
+      dataArray.add(0);
+    } else {
+      dataArray.add(currentDistances[i] <= 15 ? 1 : 0);
+    }
+  }
+  
+  // WiFi info
+  doc["wifi_connected"] = (WiFi.status() == WL_CONNECTED);
+  doc["wifi_rssi"] = WiFi.RSSI();
+  
+  String response;
+  serializeJson(doc, response);
+  
+  server.sendHeader("Access-Control-Allow-Origin", "*");
+  server.sendHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  server.sendHeader("Access-Control-Allow-Headers", "Content-Type");
+  server.send(200, "application/json", response);
+  
+  Serial.println("Detect completed: " + response);
+}
+
+void handleCORS() {
+  server.sendHeader("Access-Control-Allow-Origin", "*");
+  server.sendHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  server.sendHeader("Access-Control-Allow-Headers", "Content-Type");
+  server.send(200);
+}
+
+void handleNotFound() {
+  server.send(404, "text/plain", "Not Found");
 }
 void muxInit() {
   pinMode(MUX_S0, OUTPUT);
@@ -365,8 +369,7 @@ void shiftbyteICs()
     if (count < 15) {
       // Đo khoảng cách qua MUX
       long distance = readDistanceCmMux(channel);
-      echoUsArr[count] = distance;
-      numbers[count] = distance;
+      currentDistances[count] = distance;
       Serial.print("Sensor ");
       Serial.print(count + 1);
       Serial.print(" (ch=");
@@ -386,7 +389,7 @@ void shiftbyteICs()
 void setup()
 {
   Serial.begin(115200);
-  Serial.println("\n\nESP32 Parking Sensors with WiFi");
+  Serial.println("\n\nESP32 Parking Sensors - Pull Model");
 
   pinMode(PIN_TRIG, OUTPUT);
   pinMode(PIN_ECHO, INPUT);
@@ -441,14 +444,20 @@ void setup()
     Serial.println("[WiFi] Will attempt to reconnect in loop");
   }
   
-  Serial.println("\n[API] URL: " + String(apiURL));
-  
-  // Khởi động HTTP Server để xem dữ liệu ở browser
-  server.on("/api/sensors", HTTP_GET, handleGetSensorData);
+  // Khởi động HTTP Server cho Pull Model
+  server.on("/data", HTTP_GET, handleGetData);
+  server.on("/detect", HTTP_POST, handleDetect);
+  server.on("/data", HTTP_OPTIONS, handleCORS);
+  server.on("/detect", HTTP_OPTIONS, handleCORS);
+  server.onNotFound(handleNotFound);
   server.begin();
   
-  Serial.println("[HTTP] Server started on http://" + WiFi.localIP().toString() + "/api/sensors");
-  Serial.println("[System] Ready to scan sensors and send data\n");
+  Serial.println("[HTTP] Server started on port 80");
+  Serial.println("[HTTP] Endpoints:");
+  Serial.println("  GET  http://" + WiFi.localIP().toString() + "/data   - Get sensor data");
+  Serial.println("  POST http://" + WiFi.localIP().toString() + "/detect - Rescan sensors");
+  
+  Serial.println("[System] Ready - Pull model (Backend will poll every 30 minutes)\n");
 }
 
 void loop()
@@ -456,22 +465,9 @@ void loop()
   // Kiểm tra WiFi connection
   checkWiFiConnection();
   
-  // Xử lý HTTP requests từ browser
+  // Xử lý HTTP requests từ backend (Pull Model)
   server.handleClient();
   
-  // Quét tất cả cảm biến
-  Serial.println("\n========== SENSOR SCAN ==========");
-  shiftbyteICs();
-  
-  // Gửi data lên API nếu WiFi kết nối
-  if (WiFi.status() == WL_CONNECTED) {
-    Serial.println("\n========== SEND TO API ==========");
-    sendSensorDataToAPI();
-  } else {
-    Serial.println("\n[WARNING] WiFi disconnected - API send skipped");
-  }
-  
-  // Delay 30 giây trước lần quét tiếp theo
-  Serial.println("\n[System] Next scan in 30 seconds...\n");
-  delay(30000);
+  // Small delay for system stability
+  delay(100);
 }

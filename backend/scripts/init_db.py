@@ -1,6 +1,7 @@
 """
 Database initialization script for SQLAlchemy models
 """
+# pyright: reportGeneralTypeIssues=false
 import os
 import sys
 from pathlib import Path
