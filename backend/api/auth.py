@@ -88,23 +88,66 @@ def login():
         db = get_db()
         User = get_user_model()
         
+        # Get LoginHistory model
+        import models
+        LoginHistory = models.LoginHistory
+        
+        # Get client IP and User-Agent for login history
+        client_ip = request.remote_addr
+        user_agent = request.headers.get('User-Agent', '')
+        
         # Find user
         user = User.query.filter_by(username=data['username']).first()
         
         if not user:
+            # Record failed login attempt
+            failed_login = LoginHistory(
+                user_id=None,
+                username=data['username'],
+                ip_address=client_ip,
+                user_agent=user_agent,
+                login_status='failed',
+                failure_reason='Invalid username'
+            )
+            db.session.add(failed_login)
+            db.session.commit()
             return jsonify({'message': 'Invalid username or password'}), 401
         
         # Verify password - support both bcrypt and werkzeug hashes
+        password_valid = False
         if user.password_hash.startswith('$2'):
             # Bcrypt format
-            if not bcrypt.checkpw(data['password'].encode('utf-8'), user.password_hash.encode('utf-8')):
-                return jsonify({'message': 'Invalid username or password'}), 401
+            password_valid = bcrypt.checkpw(data['password'].encode('utf-8'), user.password_hash.encode('utf-8'))
         else:
             # Werkzeug format (pbkdf2)
-            if not check_password_hash(user.password_hash, data['password']):
-                return jsonify({'message': 'Invalid username or password'}), 401
+            password_valid = check_password_hash(user.password_hash, data['password'])
+        
+        if not password_valid:
+            # Record failed login attempt
+            failed_login = LoginHistory(
+                user_id=user.id,
+                username=data['username'],
+                ip_address=client_ip,
+                user_agent=user_agent,
+                login_status='failed',
+                failure_reason='Invalid password'
+            )
+            db.session.add(failed_login)
+            db.session.commit()
+            return jsonify({'message': 'Invalid username or password'}), 401
         
         if not user.is_active:
+            # Record failed login attempt for inactive user
+            failed_login = LoginHistory(
+                user_id=user.id,
+                username=data['username'],
+                ip_address=client_ip,
+                user_agent=user_agent,
+                login_status='failed',
+                failure_reason='User account is inactive'
+            )
+            db.session.add(failed_login)
+            db.session.commit()
             return jsonify({'message': 'User account is inactive'}), 403
         
         # Generate JWT token
@@ -120,6 +163,17 @@ def login():
             current_app.config['JWT_SECRET_KEY'],
             algorithm='HS256'
         )
+        
+        # Record successful login
+        successful_login = LoginHistory(
+            user_id=user.id,
+            username=data['username'],
+            ip_address=client_ip,
+            user_agent=user_agent,
+            login_status='success'
+        )
+        db.session.add(successful_login)
+        db.session.commit()
         
         return jsonify({
             'message': 'Login successful',

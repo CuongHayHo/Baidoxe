@@ -390,3 +390,148 @@ def deactivate_user(user_id):
             'success': False,
             'message': f'Error deactivating user: {str(e)}'
         }), 500
+# ============ LOGIN HISTORY ENDPOINTS ============
+
+@users_bp.route('/login-history', methods=['GET'])
+@admin_required
+def get_login_history():
+    """
+    Get login history for all users (admin only)
+    Query parameters:
+    - user_id: Filter by specific user
+    - username: Filter by username
+    - limit: Number of records to return (default: 100)
+    - offset: Offset for pagination (default: 0)
+    - status: Filter by login status (success/failed)
+    """
+    try:
+        LoginHistory = models.LoginHistory
+        User = get_user_model()
+        db = get_db()
+        
+        # Get query parameters
+        user_id = request.args.get('user_id', type=int)
+        username = request.args.get('username', type=str)
+        limit = request.args.get('limit', default=100, type=int)
+        offset = request.args.get('offset', default=0, type=int)
+        status = request.args.get('status', type=str)
+        
+        # Build query
+        query = LoginHistory.query
+        
+        if user_id:
+            query = query.filter_by(user_id=user_id)
+        
+        if username:
+            query = query.filter_by(username=username)
+        
+        if status:
+            query = query.filter_by(login_status=status)
+        
+        # Order by login_time descending (most recent first)
+        query = query.order_by(LoginHistory.login_time.desc())
+        
+        # Get total count
+        total = query.count()
+        
+        # Apply pagination
+        history = query.limit(limit).offset(offset).all()
+        
+        # Format response
+        history_list = []
+        for record in history:
+            history_list.append({
+                'id': record.id,
+                'user_id': record.user_id,
+                'username': record.username,
+                'ip_address': record.ip_address,
+                'user_agent': record.user_agent,
+                'login_time': record.login_time.isoformat(),
+                'login_status': record.login_status,
+                'failure_reason': record.failure_reason
+            })
+        
+        return jsonify({
+            'success': True,
+            'data': history_list,
+            'pagination': {
+                'total': total,
+                'limit': limit,
+                'offset': offset,
+                'returned': len(history_list)
+            }
+        }), 200
+        
+    except Exception as e:
+        print(f"Error retrieving login history: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': f'Error retrieving login history: {str(e)}'
+        }), 500
+
+@users_bp.route('/<int:user_id>/login-history', methods=['GET'])
+@jwt_required()
+def get_user_login_history(user_id):
+    """
+    Get login history for a specific user
+    - Admin can view any user's history
+    - Users can only view their own history
+    """
+    try:
+        current_user_id = get_jwt_identity()
+        User = get_user_model()
+        current_user = User.query.get(current_user_id)
+        
+        # Check permissions
+        if current_user.role != 'admin' and current_user_id != user_id:
+            return jsonify({
+                'success': False,
+                'message': 'You do not have permission to view this user\'s login history'
+            }), 403
+        
+        LoginHistory = models.LoginHistory
+        
+        # Get query parameters
+        limit = request.args.get('limit', default=50, type=int)
+        offset = request.args.get('offset', default=0, type=int)
+        
+        # Build query
+        query = LoginHistory.query.filter_by(user_id=user_id)
+        query = query.order_by(LoginHistory.login_time.desc())
+        
+        # Get total count
+        total = query.count()
+        
+        # Apply pagination
+        history = query.limit(limit).offset(offset).all()
+        
+        # Format response
+        history_list = []
+        for record in history:
+            history_list.append({
+                'id': record.id,
+                'username': record.username,
+                'ip_address': record.ip_address,
+                'user_agent': record.user_agent,
+                'login_time': record.login_time.isoformat(),
+                'login_status': record.login_status,
+                'failure_reason': record.failure_reason
+            })
+        
+        return jsonify({
+            'success': True,
+            'data': history_list,
+            'pagination': {
+                'total': total,
+                'limit': limit,
+                'offset': offset,
+                'returned': len(history_list)
+            }
+        }), 200
+        
+    except Exception as e:
+        print(f"Error retrieving user login history: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': f'Error retrieving user login history: {str(e)}'
+        }), 500

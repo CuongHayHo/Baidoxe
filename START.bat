@@ -11,20 +11,10 @@ echo   BAIDOXE PARKING SYSTEM - STARTING
 echo ============================================================
 echo.
 
-REM Start Backend
-echo [1/2] Starting backend server...
-cd /d "%~dp0backend"
-if exist ".venv" (
-    call .venv\Scripts\activate.bat
-)
-start "Backend Server" python run.py
-echo [OK] Backend server started (http://localhost:5000)
-timeout /t 3 /nobreak
-
-REM Start Frontend
-echo [2/2] Starting frontend development server...
+REM Start Frontend (Production Mode)
+echo [1/1] Building and starting desktop app...
 cd /d "%~dp0desktop"
-start "Frontend Dev Server" cmd /k npm run dev
+cscript.exe "%~dp0run-hidden.vbs" "cmd /c npm run prod --silent"
 echo [OK] Desktop app dev server starting (http://localhost:3000)
 echo.
 
@@ -32,8 +22,8 @@ echo ============================================================
 echo   System is running!
 echo ============================================================
 echo.
-echo Backend API:   http://localhost:5000
 echo Frontend:      http://localhost:3000
+echo (Backend will start automatically with Electron app)
 echo.
 echo Press Ctrl+C in each terminal to stop servers
 echo.
