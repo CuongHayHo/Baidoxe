@@ -18,14 +18,14 @@ if exist ".venv" (
     call .venv\Scripts\activate.bat
 )
 start "Backend Server" python run.py
-echo ✓ Backend server started (http://localhost:5000)
+echo [OK] Backend server started (http://localhost:5000)
 timeout /t 3 /nobreak
 
 REM Start Frontend
 echo [2/2] Starting frontend development server...
 cd /d "%~dp0frontend"
 start "Frontend Dev Server" cmd /k npm run dev
-echo ✓ Frontend dev server starting (http://localhost:3000)
+echo [OK] Frontend dev server starting (http://localhost:3000)
 echo.
 
 echo ============================================================
