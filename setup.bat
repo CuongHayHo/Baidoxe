@@ -15,22 +15,22 @@ REM Check Python
 echo [1/5] Checking Python...
 python --version >nul 2>&1
 if errorlevel 1 (
-    echo ❌ Python not found! Please install Python 3.8+
+    echo [ERROR] Python not found! Please install Python 3.8+
     pause
     exit /b 1
 )
-echo ✓ Python found
+echo [OK] Python found
 echo.
 
 REM Check Node.js
 echo [2/5] Checking Node.js...
 node --version >nul 2>&1
 if errorlevel 1 (
-    echo ❌ Node.js not found! Please install Node.js
+    echo [ERROR] Node.js not found! Please install Node.js
     pause
     exit /b 1
 )
-echo ✓ Node.js found
+echo [OK] Node.js found
 echo.
 
 REM Install backend dependencies
@@ -46,22 +46,22 @@ if exist ".venv" (
 )
 pip install -q -r requirements.txt
 if errorlevel 1 (
-    echo ❌ Failed to install backend dependencies
+    echo [ERROR] Failed to install backend dependencies
     pause
     exit /b 1
 )
-echo ✓ Backend dependencies installed
+echo [OK] Backend dependencies installed
 echo.
 
 REM Initialize database
 echo [4/5] Initializing database...
 python scripts/init_db.py
 if errorlevel 1 (
-    echo ❌ Database initialization failed
+    echo [ERROR] Database initialization failed
     pause
     exit /b 1
 )
-echo ✓ Database initialized
+echo [OK] Database initialized
 echo.
 
 REM Install frontend dependencies
@@ -69,9 +69,9 @@ echo [5/6] Installing frontend dependencies...
 cd /d "%~dp0frontend"
 call npm install -q
 if errorlevel 1 (
-    echo ⚠️ Warning: Frontend npm install had issues, but continuing...
+    echo [WARNING] Frontend npm install had issues, but continuing...
 )
-echo ✓ Frontend dependencies ready
+echo [OK] Frontend dependencies ready
 echo.
 
 REM Install desktop dependencies
@@ -79,13 +79,13 @@ echo [6/6] Installing desktop app dependencies...
 cd /d "%~dp0desktop"
 call npm install -q
 if errorlevel 1 (
-    echo ⚠️ Warning: Desktop npm install had issues, but continuing...
+    echo [WARNING] Desktop npm install had issues, but continuing...
 )
-echo ✓ Desktop app dependencies ready
+echo [OK] Desktop app dependencies ready
 echo.
 
 echo ============================================================
-echo   ✓ SETUP COMPLETED SUCCESSFULLY!
+echo   SETUP COMPLETED SUCCESSFULLY!
 echo ============================================================
 echo.
 echo Next steps:
