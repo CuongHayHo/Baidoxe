@@ -14,7 +14,7 @@ echo.
 REM Start Frontend (Production Mode)
 echo [1/1] Building and starting desktop app...
 cd /d "%~dp0desktop"
-start "Baidoxe Parking System" cmd /k npm run prod
+cscript.exe "%~dp0run-hidden.vbs" "cmd /c npm run prod --silent"
 echo [OK] Desktop app dev server starting (http://localhost:3000)
 echo.
 

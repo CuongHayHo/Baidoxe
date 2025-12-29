@@ -89,6 +89,7 @@ function createWindow() {
       nodeIntegration: false,
       contextIsolation: true,
       enableRemoteModule: false,
+      devTools: true,
     },
     icon: path.join(__dirname, '../public/favicon.ico'),
   });
@@ -103,9 +104,10 @@ function createWindow() {
 
   mainWindow.loadURL(startUrl);
 
-  if (isDev) {
-    mainWindow.webContents.openDevTools();
-  }
+  // DevTools disabled - comment out the lines below to enable
+  // if (isDev) {
+  //   mainWindow.webContents.openDevTools();
+  // }
 
   // Handle window open requests - force external URLs to open in system browser
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
