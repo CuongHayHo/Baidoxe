@@ -248,10 +248,12 @@ async function startBackend() {
       // Start Flask server using python -m backend.run
       backendProcess = spawn(pythonPath, ['run.py'], {
         cwd: backendDir,
-        stdio: ['pipe', 'pipe', 'pipe'],
-        detached: true,
+        stdio: 'ignore',
         windowsHide: true,
       });
+
+      // Allow app to exit without waiting for backend
+      backendProcess.unref();
 
       backendProcess.on('error', (error) => {
         console.error('❌ Failed to start backend:', error.message);
@@ -284,9 +286,30 @@ app.on('ready', async () => {
 });
 
 app.on('window-all-closed', () => {
+  // Cleanup backend before quitting
+  if (backendProcess) {
+    try {
+      process.kill(-backendProcess.pid); // Kill process group on Windows
+    } catch (e) {
+      console.log('Backend already stopped');
+    }
+  }
+  
   // macOS behavior: keep app in dock
   if (process.platform !== 'darwin') {
     app.quit();
+  }
+});
+
+app.on('before-quit', () => {
+  // Ensure backend is terminated
+  if (backendProcess) {
+    try {
+      process.kill(-backendProcess.pid);
+    } catch (e) {
+      // Process may already be dead
+    }
+    backendProcess = null;
   }
 });
 

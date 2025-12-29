@@ -10,6 +10,7 @@
     "dev": "concurrently \"npm run react-start\" \"wait-on http://localhost:3000 && electron .\"",
     "react-start": "react-scripts start",
     "react-build": "react-scripts build",
+    "prod": "concurrently \"npm run react-start\" \"wait-on http://localhost:3000 && electron .\"",
     "electron-dev": "electron .",
     "electron-build": "npm run react-build && electron-builder",
     "build": "npm run react-build && electron-builder --publish never",
