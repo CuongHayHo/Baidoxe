@@ -1,7 +1,7 @@
 """
 Database initialization script for SQLAlchemy models
 """
-# pyright: reportGeneralTypeIssues=false
+
 import os
 import sys
 from pathlib import Path
@@ -112,7 +112,22 @@ def create_sqlalchemy_models():
         def __repr__(self):
             return f'<ParkingConfig {self.key}>'
     
-    return UserModel, CardModel, CardLogModel, ParkingSlotModel, ParkingConfigModel
+    class LoginHistoryModel(db.Model):
+        __tablename__ = 'login_history'
+        
+        id = db.Column(db.Integer, primary_key=True)
+        user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True, index=True)
+        username = db.Column(db.String(80), nullable=False, index=True)
+        ip_address = db.Column(db.String(45), nullable=True)
+        user_agent = db.Column(db.String(500), nullable=True)
+        login_time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False, index=True)
+        login_status = db.Column(db.String(20), default='success', nullable=False)
+        failure_reason = db.Column(db.String(255), nullable=True)
+        
+        def __repr__(self):
+            return f'<LoginHistory {self.username} at {self.login_time}>'
+    
+    return UserModel, CardModel, CardLogModel, ParkingSlotModel, ParkingConfigModel, LoginHistoryModel
 
 
 def init_db():
@@ -125,7 +140,7 @@ def init_db():
     with app.app_context():
         print("Creating database tables...")
         
-        UserModel, CardModel, CardLogModel, ParkingSlotModel, ParkingConfigModel = create_sqlalchemy_models()
+        UserModel, CardModel, CardLogModel, ParkingSlotModel, ParkingConfigModel, LoginHistoryModel = create_sqlalchemy_models()
         
         db.create_all()
         print(f"✓ Database created at: {DATABASE_PATH}")

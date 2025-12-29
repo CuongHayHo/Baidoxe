@@ -73,6 +73,41 @@ def _create_user_model(db_instance):
     models.User = User
     models.db = db_instance
 
+def _create_login_history_model(db_instance):
+    """Create SQLAlchemy LoginHistory model and register it in models module"""
+    from datetime import datetime
+    import models
+    
+    # Check if already created by looking at __tablename__ attribute
+    if hasattr(models.LoginHistory, '__tablename__'):
+        return
+    
+    # Get User model
+    User = models.User
+    
+    class LoginHistory(db_instance.Model):
+        """Login History model to track user login attempts"""
+        __tablename__ = 'login_history'
+        __table_args__ = {'extend_existing': True}
+        
+        id = db_instance.Column(db_instance.Integer, primary_key=True)
+        user_id = db_instance.Column(db_instance.Integer, db_instance.ForeignKey('users.id'), nullable=False, index=True)
+        username = db_instance.Column(db_instance.String(80), nullable=False, index=True)
+        ip_address = db_instance.Column(db_instance.String(45), nullable=True)  # Supports IPv6
+        user_agent = db_instance.Column(db_instance.String(500), nullable=True)
+        login_time = db_instance.Column(db_instance.DateTime, default=datetime.utcnow, nullable=False, index=True)
+        login_status = db_instance.Column(db_instance.String(20), default='success', nullable=False)  # success, failed
+        failure_reason = db_instance.Column(db_instance.String(255), nullable=True)  # For failed login attempts
+        
+        # Relationship to User
+        user = db_instance.relationship('User', backref='login_history')
+        
+        def __repr__(self):
+            return f'<LoginHistory {self.username} at {self.login_time}>'
+    
+    # Register in models module
+    models.LoginHistory = LoginHistory
+
 def create_app(config_name='default'):
     """
     Application factory pattern to create Flask app
@@ -103,10 +138,15 @@ def create_app(config_name='default'):
     # Create User model now that db is initialized with app
     _create_user_model(db)
     
+    # Create LoginHistory model
+    _create_login_history_model(db)
+    
     # Pre-initialize SQLAlchemy models cache to avoid metadata conflicts later
     from models.models_cache import get_sqlalchemy_models
     with app.app_context():
         get_sqlalchemy_models()  # Initialize cache on first call
+        # Create all database tables if they don't exist
+        db.create_all()
     
     # Initialize JWT
     jwt = JWTManager(app)
