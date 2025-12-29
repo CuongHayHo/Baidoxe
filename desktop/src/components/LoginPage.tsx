@@ -140,24 +140,6 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
           </button>
         </form>
 
-        <div className="login-divider">
-          <span>Hoặc</span>
-        </div>
-
-        <button 
-          type="button" 
-          className="demo-button" 
-          onClick={handleDemoLogin}
-          disabled={loading}
-        >
-          Đăng nhập Demo (Admin)
-        </button>
-
-        <div className="login-footer">
-          <p>Default credentials:</p>
-          <p className="credentials">Username: <strong>admin</strong></p>
-          <p className="credentials">Password: <strong>admin123</strong></p>
-        </div>
       </div>
     </div>
   );

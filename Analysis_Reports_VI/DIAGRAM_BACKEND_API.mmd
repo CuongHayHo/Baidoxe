@@ -1,0 +1,251 @@
+%% Backend API - Card Scan Flow (UNO R4 → API → Database)
+
+sequenceDiagram
+    title Backend API - Card Scan Flow
+    participant UNO as Arduino UNO R4
+    participant Flask as Flask app.py
+    participant Route as POST Handler
+    participant Service as CardService
+    participant DB as Database
+    participant Response as Response Builder
+    
+    rect rgb(200, 220, 255)
+        note right of UNO: T=0ms: Card Detected
+        UNO->>UNO: RFID trigger
+    end
+    
+    rect rgb(220, 240, 240)
+        note right of UNO: T=10-20ms: HTTP Request
+        UNO->>Flask: POST /api/cards/scan
+    end
+    
+    rect rgb(240, 240, 200)
+        note right of Route: T=20-25ms: Parse Request
+        Flask->>Route: Route received
+        Route->>Route: Parse JSON
+    end
+    
+    rect rgb(220, 240, 220)
+        note right of Service: T=25-40ms: Business Logic
+        Route->>Service: validate_card_scan()
+        Service->>DB: Query card
+        DB->>Service: Card found or null
+    end
+    
+    alt Card found
+        rect rgb(200, 255, 200)
+            note right of Service: T=40-45ms: Card Exists
+            Service->>Service: Check active status
+        end
+    else Card not found
+        rect rgb(255, 200, 200)
+            note right of Service: T=40-45ms: Card Unknown
+            Service->>Service: Log unknown card
+        end
+    end
+    
+    rect rgb(240, 220, 220)
+        note right of Response: T=45-50ms: Build Response
+        Service->>Response: Decision made
+        Response->>Response: Build JSON response
+    end
+    
+    rect rgb(200, 240, 255)
+        note right of Flask: T=50ms: Send Response
+        Route->>UNO: Response 200 OK
+    end
+    
+    rect rgb(220, 220, 240)
+        note right of UNO: T=60-100ms: Barrier Control
+        UNO->>UNO: Parse response
+        UNO->>UNO: Extract action field
+        UNO->>UNO: Barrier control logic
+    end
+
+---
+
+%% Backend API - Parking Slots Status
+
+sequenceDiagram
+    participant Scheduler as Scheduler Task
+    participant Backend as Flask ESP32 Service
+    participant ESP32 as ESP32 HTTP Server
+    participant DB as Database
+    
+    rect rgb(200, 220, 255)
+        note right of Scheduler: T=0min: Start Polling
+        Scheduler->>Backend: get_parking_slots()
+    end
+    
+    rect rgb(220, 240, 240)
+        note right of Backend: T=1-5ms: Request ESP32
+        Backend->>ESP32: GET /data
+    end
+    
+    rect rgb(240, 240, 200)
+        note right of ESP32: T=10-50ms: Return Data
+        ESP32->>ESP32: Prepare cached data
+        ESP32->>Backend: Response 200 OK
+    end
+    
+    rect rgb(220, 240, 220)
+        note right of Backend: T=60-80ms: Process
+        Backend->>Backend: Parse JSON
+        Backend->>Backend: Calculate occupancy
+    end
+    
+    rect rgb(240, 220, 200)
+        note right of DB: T=80-120ms: Update DB
+        Backend->>DB: Begin transaction
+        loop For each parking slot
+            Backend->>DB: UPDATE slot status
+        end
+        Backend->>DB: COMMIT
+    end
+    
+    rect rgb(200, 240, 255)
+        note right of Scheduler: T=120ms+: Complete
+        DB->>Backend: All updated
+        Backend->>Scheduler: Success
+    end
+    
+    rect rgb(240, 240, 200)
+        note right of ESP32: T=0-15s: Trigger Fresh Scan
+        ESP32->>Backend: POST /detect
+        Backend->>Backend: Force ESP32 rescan
+        Backend->>ESP32: Rescan complete
+    end
+
+---
+
+%% Backend API - Card State Machine
+
+stateDiagram-v2
+    [*] --> OUTSIDE
+    
+    OUTSIDE --> ENTRY_DETECTED: UNO POST reader=0
+    ENTRY_DETECTED --> PARKED: Vehicle passes
+    PARKED --> EXIT_SCAN: UNO POST reader=1
+    EXIT_SCAN --> OUTSIDE: Vehicle exits
+    
+    OUTSIDE --> OUTSIDE: Unknown card
+    ENTRY_DETECTED --> ENTRY_DETECTED: Duplicate
+    PARKED --> PARKED: Waiting
+
+---
+
+%% Backend API - Parking Slot State Machine
+
+stateDiagram-v2
+    [*] --> EMPTY
+    
+    EMPTY --> OCCUPIED: Entry card
+    OCCUPIED --> EMPTY: Exit card
+    
+    EMPTY --> RESERVED: Admin maintenance
+    RESERVED --> EMPTY: Admin clear
+    
+    OCCUPIED --> SENSOR_FAULT: ESP32 error
+    SENSOR_FAULT --> OCCUPIED: Recover
+    SENSOR_FAULT --> EMPTY: Manual reset
+
+---
+
+%% Backend API - Error Handling Flow
+
+flowchart TD
+    A["HTTP Request<br/>POST /api/cards/scan<br/>or<br/>GET /api/parking-slots"] --> B{"Validate<br/>Request"}
+    
+    B -->|Invalid JSON| C["Return 400<br/>Bad Request<br/>Invalid JSON format"]
+    B -->|Missing field| D["Return 400<br/>Bad Request<br/>Missing card_number"]
+    B -->|Valid| E["Route to Handler"]
+    
+    E --> F{"Business<br/>Logic<br/>Check"}
+    
+    F -->|Card not found| G["Return 403<br/>Forbidden<br/>Unknown card"]
+    F -->|Card inactive| H["Return 403<br/>Forbidden<br/>Card disabled"]
+    F -->|Card valid| I["Determine action"]
+    
+    I --> J{"Database<br/>Transaction<br/>Check"}
+    
+    J -->|Transaction error| K["ROLLBACK<br/>Return 500<br/>Database error"]
+    J -->|Lock timeout| L["ROLLBACK<br/>Return 409<br/>Conflict"]
+    J -->|Success| M["COMMIT<br/>Log card_log"]
+    
+    M --> N{"ESP32<br/>Response<br/>Check"}
+    
+    N -->|Timeout 10s| O["Return 504<br/>Gateway Timeout<br/>ESP32 unreachable"]
+    N -->|Invalid JSON| P["Return 502<br/>Bad Gateway<br/>ESP32 bad response"]
+    N -->|Valid| Q["Update parking slots<br/>COMMIT"]
+    
+    Q --> R["Return 200 OK<br/>Success response"]
+    
+    C --> S["Log error"]
+    D --> S
+    G --> S
+    H --> S
+    K --> S
+    L --> S
+    O --> S
+    P --> S
+    
+    R --> T["Send to client"]
+    S --> T
+    
+    style C fill:#ffcccc
+    style D fill:#ffcccc
+    style G fill:#ffcccc
+    style H fill:#ffcccc
+    style K fill:#ffcccc
+    style L fill:#ffcccc
+    style O fill:#ffcccc
+    style P fill:#ffcccc
+    style R fill:#c8e6c9
+    style T fill:#e3f2fd
+
+---
+
+%% Backend API - Class & Service Architecture
+
+graph TB
+    subgraph Models["Models<br/>ORM"]
+        Card["Card<br/>- id: int<br/>- card_number: str<br/>- card_status: enum<br/>- direction: enum<br/>- created_at: datetime"]
+        CardLog["CardLog<br/>- id: int<br/>- card_number: str<br/>- reader_id: int<br/>- action: enum<br/>- timestamp: datetime"]
+        ParkingSlot["ParkingSlot<br/>- id: int<br/>- slot_id: int<br/>- occupied: bool<br/>- last_update: datetime"]
+    end
+    
+    subgraph Services["Services<br/>Business Logic"]
+        CardService["CardService<br/>+ validate_card_scan()<br/>+ check_card_active()<br/>+ log_scan_event()<br/>+ get_card_by_number()"]
+        CardLogService["CardLogService<br/>+ create_log()<br/>+ get_logs_by_card()<br/>+ get_logs_by_date()"]
+        ESP32Service["ESP32Service<br/>+ get_parking_slots()<br/>+ update_slot_status()<br/>+ handle_sensor_data()"]
+    end
+    
+    subgraph Routes["API Routes<br/>Flask Views"]
+        CardRoute["POST /api/cards/scan<br/>- Parse card_number<br/>- Call CardService<br/>- Return action"]
+        SlotRoute["GET /api/parking-slots<br/>- Call ESP32Service<br/>- Poll ESP32<br/>- Update DB<br/>- Return slot status"]
+    end
+    
+    subgraph DB["Database<br/>SQLite/PostgreSQL"]
+        CardTable["cards table<br/>card_number (PK)<br/>card_status<br/>..."]
+        CardLogTable["card_logs table<br/>card_number (FK)<br/>reader_id<br/>timestamp<br/>..."]
+        SlotTable["parking_slots table<br/>slot_id (PK)<br/>occupied<br/>last_update<br/>..."]
+    end
+    
+    CardService --> Card
+    CardLogService --> CardLog
+    ESP32Service --> ParkingSlot
+    
+    CardRoute --> CardService
+    SlotRoute --> ESP32Service
+    
+    CardService --> CardLogService
+    CardLogService --> CardLog
+    
+    Card --> CardTable
+    CardLog --> CardLogTable
+    ParkingSlot --> SlotTable
+    
+    style Models fill:#e3f2fd
+    style Services fill:#f3e5f5
+    style Routes fill:#fff3cd
+    style DB fill:#c8e6c9

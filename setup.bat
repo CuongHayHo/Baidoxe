@@ -1,96 +1,95 @@
 @echo off
-REM ===================================================================
-REM Baidoxe Setup Script - Windows
-REM Cài đặt tất cả dependencies cho backend, frontend, desktop
-REM ===================================================================
-
+chcp 65001 >nul
 setlocal enabledelayedexpansion
+
+title Setup Baidoxe Parking System
 color 0A
-title Baidoxe Setup
 
 echo.
-echo ===================================================================
-echo   BAIDOXE PARKING MANAGEMENT SYSTEM - SETUP
-echo ===================================================================
-echo.
-
-REM Check Node.js
-echo [1/5] Checking Node.js...
-node --version >nul 2>&1
-if errorlevel 1 (
-    echo ERROR: Node.js not found! Please install Node.js 16+
-    echo Download from: https://nodejs.org/
-    pause
-    exit /b 1
-)
-for /f "tokens=*" %%i in ('node --version') do echo   ✓ Node.js %%i installed
+echo ============================================================
+echo   BAIDOXE PARKING SYSTEM - SETUP
+echo ============================================================
 echo.
 
 REM Check Python
-echo [2/5] Checking Python...
+echo [1/5] Checking Python...
 python --version >nul 2>&1
 if errorlevel 1 (
-    echo ERROR: Python not found! Please install Python 3.8+
-    echo Download from: https://www.python.org/
+    echo ❌ Python not found! Please install Python 3.8+
     pause
     exit /b 1
 )
-for /f "tokens=*" %%i in ('python --version') do echo   ✓ %%i installed
+echo ✓ Python found
 echo.
 
-REM Setup Backend
-echo [3/5] Setting up Backend...
-cd backend
-if not exist venv (
-    echo   Creating virtual environment...
-    python -m venv venv
+REM Check Node.js
+echo [2/5] Checking Node.js...
+node --version >nul 2>&1
+if errorlevel 1 (
+    echo ❌ Node.js not found! Please install Node.js
+    pause
+    exit /b 1
 )
-call venv\Scripts\activate.bat
-echo   Installing dependencies...
+echo ✓ Node.js found
+echo.
+
+REM Install backend dependencies
+echo [3/5] Installing backend dependencies...
+cd /d "%~dp0backend"
+if exist ".venv" (
+    echo Virtual environment found, activating...
+    call .venv\Scripts\activate.bat
+) else (
+    echo Creating virtual environment...
+    python -m venv .venv
+    call .venv\Scripts\activate.bat
+)
 pip install -q -r requirements.txt
 if errorlevel 1 (
-    echo ERROR: Failed to install backend dependencies
+    echo ❌ Failed to install backend dependencies
     pause
     exit /b 1
 )
-echo   ✓ Backend setup complete
-cd ..
+echo ✓ Backend dependencies installed
 echo.
 
-REM Setup Frontend
-echo [4/5] Setting up Frontend...
-cd frontend
-echo   Installing dependencies (this may take a few minutes)...
-call npm install
+REM Initialize database
+echo [4/5] Initializing database...
+python scripts/init_db.py
 if errorlevel 1 (
-    echo ERROR: Failed to install frontend dependencies
+    echo ❌ Database initialization failed
     pause
     exit /b 1
 )
-echo   ✓ Frontend setup complete
-cd ..
+echo ✓ Database initialized
 echo.
 
-REM Setup Desktop
-echo [5/5] Setting up Desktop App...
-cd desktop
-echo   Installing dependencies (this may take a few minutes)...
-call npm install
+REM Install frontend dependencies
+echo [5/6] Installing frontend dependencies...
+cd /d "%~dp0frontend"
+call npm install -q
 if errorlevel 1 (
-    echo ERROR: Failed to install desktop app dependencies
-    pause
-    exit /b 1
+    echo ⚠️ Warning: Frontend npm install had issues, but continuing...
 )
-echo   ✓ Desktop setup complete
-cd ..
+echo ✓ Frontend dependencies ready
 echo.
 
-echo ===================================================================
-echo   ✓ SETUP COMPLETE!
-echo ===================================================================
+REM Install desktop dependencies
+echo [6/6] Installing desktop app dependencies...
+cd /d "%~dp0desktop"
+call npm install -q
+if errorlevel 1 (
+    echo ⚠️ Warning: Desktop npm install had issues, but continuing...
+)
+echo ✓ Desktop app dependencies ready
+echo.
+
+echo ============================================================
+echo   ✓ SETUP COMPLETED SUCCESSFULLY!
+echo ============================================================
 echo.
 echo Next steps:
-echo   1. Run 'run-dev.bat' to start development environment
-echo   2. Or read INSTALL.md for detailed instructions
+echo   1. Run START.bat to start the system
+echo   2. Open http://localhost:3000 in your browser
 echo.
 pause

@@ -1,0 +1,261 @@
+%% ESP32 Sensors - Pull Model: Backend-Driven Request/Response
+
+sequenceDiagram
+    participant Backend as Backend Server<br/>Flask 5000
+    participant ESP32 as ESP32<br/>HTTP Server<br/>Port 80
+    participant Shift as 74HC595<br/>Shift Register
+    participant Mux as CD74HC4067<br/>MUX
+    participant Sensor as HC-SR04<br/>Sensor
+    participant Cache as currentDistances[]<br/>Array
+    
+    rect rgb(200, 220, 255)
+        note right of Backend: T=0: Backend Polling (every 30 minutes)
+        Backend->>ESP32: GET /data
+    end
+    
+    rect rgb(220, 240, 220)
+        note right of ESP32: T=10-50ms: Return Cached Data
+        ESP32->>Cache: Get currentDistances[0..14]
+        Cache->>ESP32: Array values
+        ESP32->>ESP32: Build JSON response<br/>success, soIC=2, totalSensors=15<br/>data[], timestamp
+        ESP32->>Backend: Response 200 OK
+    end
+    
+    rect rgb(240, 240, 200)
+        note right of Backend: T=100-200ms: Update DB
+        Backend->>Backend: Parse response<br/>occupied = distance <= 15cm
+        Backend->>Backend: Update 15 parking slots<br/>in database
+    end
+    
+    rect rgb(200, 220, 240)
+        note right of Backend: Optional: Backend Request Rescan
+        Backend->>ESP32: POST /detect<br/>(force fresh scan)
+    end
+    
+    rect rgb(220, 240, 200)
+        note right of ESP32: T=300ms: Start Sensor Scan (15 seconds)
+        ESP32->>ESP32: Call shiftbyteICs()
+    end
+    
+    loop For each sensor (1 to 15, ~1 second each)
+        rect rgb(255, 240, 200)
+            note right of Shift: Shift register control
+            ESP32->>Shift: shiftOut BIT_8[b]<br/>shiftOut BIT_8[a]
+            Shift->>Mux: Q0-Q7 active (relay power)
+        end
+        
+        rect rgb(240, 220, 200)
+            note right of Mux: MUX channel select
+            ESP32->>Mux: digitalWrite S0-S3<br/>select channel
+            Mux->>Sensor: Route TRIG/ECHO
+        end
+        
+        rect rgb(200, 240, 220)
+            note right of Sensor: HC-SR04 measurement
+            ESP32->>Sensor: Send TRIG pulse
+            Sensor->>Sensor: Measure ECHO (timeout 30ms)
+            Sensor->>ESP32: ECHO time microseconds
+        end
+        
+        rect rgb(220, 240, 220)
+            note right of Cache: Store result
+            ESP32->>Cache: distance = echoUs * 0.034 / 2
+            Cache->>Cache: currentDistances[i] = distance
+        end
+        
+        ESP32->>ESP32: delay(1000)
+    end
+    
+    rect rgb(240, 220, 200)
+        note right of ESP32: T=15.3s: Scan Complete
+        ESP32->>ESP32: All 15 sensors scanned<br/>currentDistances[] updated
+        ESP32->>Backend: Response 200 OK<br/>with fresh data
+    end
+
+---
+
+%% ESP32 Sensors - 74HC595 Shift Register + CD74HC4067 MUX Timing
+
+gantt
+    title ESP32 Sensor Scan Cycle: 15 Sensors x 1 Second = 15 Seconds
+    dateFormat YYYY-MM-DD HH:mm:ss
+    
+    section 74HC595 Control
+    Reset MR (LOW then HIGH) :shift1, 2025-12-26 00:00:00, 5ms
+    Shift out IC2 BIT_8[b] :shift2, 2025-12-26 00:00:00, 100ms
+    Shift out IC1 BIT_8[a] :shift3, 2025-12-26 00:00:00, 100ms
+    Latch ST (LOW→HIGH) :shift4, 2025-12-26 00:00:00, 5ms
+    
+    section Relay & Power
+    Relay settling time :relay1, 2025-12-26 00:00:00, 1s
+    
+    section Sensor Scanning
+    Sensor 1 read :sensor1, 2025-12-26 00:00:00, 1s
+    Sensor 2-5 read (4x) :sensor2, 2025-12-26 00:00:01, 4s
+    Sensor 6-10 read (5x) :sensor3, 2025-12-26 00:00:05, 5s
+    Sensor 11-15 read (5x) :sensor4, 2025-12-26 00:00:10, 5s
+    
+    section Complete Cycle
+    Total scan time :total, 2025-12-26 00:00:00, 15s
+    Ready for next poll :crit, 2025-12-26 00:00:15, 100ms
+
+---
+
+%% ESP32 Sensors - Main Loop (Pull Model)
+
+flowchart TD
+    A["loop() START<br/>Continuous"] --> B["checkWiFiConnection()"]
+    
+    B --> C{"WiFi check<br/>timer >= 30s?"]
+    C -->|No| D["Continue"]
+    C -->|Yes| E{"WiFi<br/>connected?"]
+    E -->|Yes| F["Log status"]
+    E -->|No| G["reconnectWiFi()<br/>timeout 10s"]
+    
+    F --> D
+    G --> D
+    
+    D --> H["server.handleClient()"]
+    H --> I{"HTTP Request<br/>received?"]
+    
+    I -->|GET /data| J["handleGetData()"]
+    J --> K["Return cached<br/>currentDistances[]<br/>as JSON"]
+    
+    I -->|POST /detect| L["handleDetect()"]
+    L --> M["Call shiftbyteICs()"]
+    M --> N["Scan all 15 sensors<br/>~15 seconds"]
+    N --> O["Update currentDistances[]<br/>with fresh values"]
+    O --> P["Return fresh data<br/>as JSON"]
+    
+    I -->|OPTIONS| Q["handleCORS()"]
+    Q --> R["Send CORS headers"]
+    
+    I -->|Other| S["handleNotFound()"]
+    S --> T["Send 404"]
+    
+    I -->|None| U["Wait for next"]
+    U --> U
+    
+    K --> V["Response 200 OK"]
+    P --> V
+    R --> V
+    T --> V
+    
+    V --> W["delay(100ms)"]
+    W --> X["Loop back"]
+    X --> A
+    
+    style H fill:#fff3cd
+    style J fill:#c8e6c9
+    style L fill:#ffcccc
+    style M fill:#ffcccc
+
+---
+
+%% ESP32 Sensors - HTTP Server Endpoints (Pull Model)
+
+flowchart LR
+    A["Backend<br/>Flask Server<br/>192.168.4.2:5000"] -->|GET /data<br/>frequent| B["handleGetData()"]
+    A -->|POST /detect<br/>occasional| C["handleDetect()"]
+    A -->|OPTIONS /data<br/>CORS preflight| D["handleCORS()"]
+    
+    B --> E["Get cached<br/>currentDistances[]"]
+    E --> F["Build JSON:<br/>success=true<br/>soIC=2<br/>totalSensors=15<br/>timestamp<br/>data[0..14]<br/>wifi_connected<br/>wifi_rssi"]
+    F --> G["Send 200 OK<br/>application/json"]
+    
+    C --> H["Call shiftbyteICs()"]
+    H --> I["Loop through 15 sensors<br/>Shift + MUX + read<br/>~1 second per sensor<br/>~15 seconds total"]
+    I --> J["Update currentDistances[]<br/>with fresh measurements"]
+    J --> K["Build JSON:<br/>success=true<br/>message='Da detect lai 15 cam bien'<br/>soIC=2<br/>totalSensors=15<br/>timestamp<br/>data[0..14]<br/>wifi_connected<br/>wifi_rssi"]
+    K --> L["Send 200 OK"]
+    
+    D --> M["Send CORS Headers:<br/>Access-Control-Allow-Origin: *<br/>Access-Control-Allow-Methods<br/>Access-Control-Allow-Headers"]
+    M --> N["Send 200 OK"]
+    
+    G --> O["Response sent"]
+    L --> O
+    N --> O
+    O --> A
+    
+    style A fill:#c8e6c9
+    style B fill:#e3f2fd
+    style C fill:#fff3cd
+    style D fill:#f3e5f5
+
+---
+
+%% ESP32 Sensors - 74HC595 + MUX Sensor Selection Logic
+
+flowchart TD
+    A["shiftbyteICs()<br/>scan 15 sensors"] --> B["Initialize:<br/>a=1, b=0, count=0"]
+    
+    B --> C["Loop: while b != 9"]
+    C --> D["Check: a == 9?"]
+    D -->|Yes| E["Reset a=0<br/>Increment b++"]
+    D -->|No| F["Continue"]
+    E --> F
+    
+    F --> G["74HC595 Reset MR:<br/>Set LOW then HIGH"]
+    G --> H["Shift out BIT_8[b]<br/>via shiftOut MSBFIRST"]
+    H --> I["Shift out BIT_8[a]<br/>via shiftOut MSBFIRST"]
+    I --> J["Latch ST:<br/>LOW → HIGH"]
+    J --> K["Enable OE:<br/>Set LOW"]
+    
+    K --> L["Relay settling<br/>delay(1000ms)"]
+    
+    L --> M["Calculate channel:<br/>channel = (b==0)<br/>? (a-1)<br/>: (7+b)"]
+    
+    M --> N["readDistanceCmMux(channel)"]
+    N --> O["MUX select: S0-S3 bits"]
+    O --> P["HC-SR04 measure<br/>Send TRIG<br/>Measure ECHO<br/>timeout 30ms"]
+    P --> Q["distance = echoUs<br/>* 0.034 / 2"]
+    
+    Q --> R["currentDistances[count]<br/>= distance"]
+    R --> S["count++"]
+    S --> T{"count < 15<br/>and<br/>b != 9?"]
+    
+    T -->|Yes| U["Next iteration<br/>a or b increment"]
+    U --> C
+    T -->|No| V["Loop exit"]
+    V --> W["Disable ST<br/>Set LOW"]
+    W --> X["Scan complete"]
+    
+    style C fill:#fff3cd
+    style N fill:#ffcccc
+    style R fill:#c8e6c9
+
+---
+
+%% ESP32 Sensors vs UNO R4 WiFi Architecture
+
+graph TB
+    subgraph UNO["UNO R4 WiFi<br/>(Event-Driven / Push)"]
+        U1["RFID Readers<br/>Active listening"]
+        U2["Loop: 10ms<br/>10ms = 100 Hz"]
+        U3["State Machine<br/>Barrier Control<br/>(8 states)"]
+        U4["HTTP Client<br/>POST /api/cards/scan<br/>Event-triggered"]
+        U1 --> U2 --> U3 --> U4
+    end
+    
+    subgraph ESP["ESP32<br/>(Pull-Based)"]
+        E1["WiFi Check<br/>every 30s<br/>reconnect timeout 10s"]
+        E2["Loop: 100ms<br/>100ms = 10 Hz<br/>handle requests"]
+        E3["HTTP Server<br/>Port 80<br/>Pull Model"]
+        E4["On request:<br/>GET /data (cache)<br/>POST /detect (scan)"]
+        E1 --> E2 --> E3 --> E4
+    end
+    
+    subgraph Backend["Backend<br/>Flask 5000"]
+        B1["POST /api/cards/scan<br/>from UNO R4<br/>Event-driven"]
+        B2["GET /api/parking-slots<br/>to ESP32<br/>Poll every 30min"]
+        B3["Business Logic<br/>Database<br/>Parking Rules"]
+        B1 --> B3
+        B2 --> B3
+    end
+    
+    U4 -.->|HTTP POST<br/>immediate| B1
+    E4 -.->|HTTP GET/POST<br/>on demand| B2
+    
+    style UNO fill:#e3f2fd
+    style ESP fill:#f3e5f5
+    style Backend fill:#c8e6c9

@@ -2973,6 +2973,387 @@
         "local_time": "2025-12-26 06:54:54"
       },
       "metadata": {}
+    },
+    {
+      "id": "d92e29c7-9fb1-4360-938f-af070c425588",
+      "timestamp": "2025-12-26T06:01:34.076057+00:00",
+      "card_id": "UNK0001",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-12-26 13:01:34"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "2dee2506-5e62-4374-87cf-d7b79eaea067",
+      "timestamp": "2025-12-26T06:06:44.564555+00:00",
+      "card_id": "A3A8A9",
+      "action": "unknown",
+      "details": {
+        "source": "uno_r4",
+        "local_time": "2025-12-26 13:06:44"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "f0d075fe-ce45-4dde-902b-af480b56b6d2",
+      "timestamp": "2025-12-26T06:06:44.577241+00:00",
+      "card_id": "A3A8A9",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-12-26 13:06:44"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "87b24689-2671-45cd-a133-070282836fbb",
+      "timestamp": "2025-12-26T06:06:53.256709+00:00",
+      "card_id": "A3A8A9",
+      "action": "created",
+      "details": {
+        "initial_status": 0,
+        "local_time": "2025-12-26 13:06:53"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "d0385b90-093c-43f2-aeda-612950f82c18",
+      "timestamp": "2025-12-26T08:00:48.744960+00:00",
+      "card_id": "B61D4305",
+      "action": "unknown",
+      "details": {
+        "source": "uno_r4",
+        "local_time": "2025-12-26 15:00:48"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "254923a1-4ec5-41d3-bb5b-e769718ae5f9",
+      "timestamp": "2025-12-26T08:00:48.778548+00:00",
+      "card_id": "B61D4305",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-12-26 15:00:48"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "8bfee3b4-aeb3-42e5-925b-0532917571e4",
+      "timestamp": "2025-12-26T08:01:06.518375+00:00",
+      "card_id": "B61D4305",
+      "action": "created",
+      "details": {
+        "initial_status": 0,
+        "local_time": "2025-12-26 15:01:06"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "b01be021-197a-4c0a-ade7-f21f318b9d86",
+      "timestamp": "2025-12-26T08:01:15.722618+00:00",
+      "card_id": "B61D4305",
+      "action": "entry",
+      "details": {
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-12-26 15:01:15"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "da752e6f-7f03-4dee-81cc-8e3794e7f5c2",
+      "timestamp": "2025-12-26T08:01:15.729025+00:00",
+      "card_id": "B61D4305",
+      "action": "entry",
+      "details": {
+        "timestamp": "",
+        "direction": "IN",
+        "source": "uno_r4_wifi",
+        "local_time": "2025-12-26 15:01:15"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "1ce395d5-4d3f-4fd9-ac05-96c13b35d4e8",
+      "timestamp": "2025-12-26T08:08:53.083810+00:00",
+      "card_id": "B61D4305",
+      "action": "exit",
+      "details": {
+        "previous_status": 1,
+        "new_status": 0,
+        "local_time": "2025-12-26 15:08:53"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "6a3b8981-8d3d-4892-9d16-e4f8311adee5",
+      "timestamp": "2025-12-26T08:08:53.106736+00:00",
+      "card_id": "B61D4305",
+      "action": "exit",
+      "details": {
+        "timestamp": "",
+        "direction": "OUT",
+        "source": "uno_r4_wifi",
+        "local_time": "2025-12-26 15:08:53"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "4fc974a3-e697-4c1d-96cb-9dfb4b611fe9",
+      "timestamp": "2025-12-26T08:09:03.694068+00:00",
+      "card_id": "B61D4305",
+      "action": "entry",
+      "details": {
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-12-26 15:09:03"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "bd69714b-2e0a-4e1e-b004-cb33d57b0534",
+      "timestamp": "2025-12-26T08:09:03.701110+00:00",
+      "card_id": "B61D4305",
+      "action": "entry",
+      "details": {
+        "timestamp": "",
+        "direction": "IN",
+        "source": "uno_r4_wifi",
+        "local_time": "2025-12-26 15:09:03"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "65be122a-8e25-427f-9e95-e555b96d7ed5",
+      "timestamp": "2025-12-26T08:09:51.242446+00:00",
+      "card_id": "668D3606",
+      "action": "unknown",
+      "details": {
+        "source": "uno_r4",
+        "local_time": "2025-12-26 15:09:51"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "c17da7c9-8790-4c74-9f9a-a71c27f5803b",
+      "timestamp": "2025-12-26T08:09:51.265951+00:00",
+      "card_id": "668D3606",
+      "action": "unknown",
+      "details": {
+        "local_time": "2025-12-26 15:09:51"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "d9021193-d195-4dea-b6f0-fe0da0f68f17",
+      "timestamp": "2025-12-26T08:10:01.245767+00:00",
+      "card_id": "668D3606",
+      "action": "created",
+      "details": {
+        "initial_status": 0,
+        "local_time": "2025-12-26 15:10:01"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "852ecdca-9731-4582-981e-e0e47007cb5d",
+      "timestamp": "2025-12-26T08:10:12.182114+00:00",
+      "card_id": "668D3606",
+      "action": "entry",
+      "details": {
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-12-26 15:10:12"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "376d1f9a-efb2-4f96-b898-78d01ab5d35a",
+      "timestamp": "2025-12-26T08:10:12.188685+00:00",
+      "card_id": "668D3606",
+      "action": "entry",
+      "details": {
+        "timestamp": "",
+        "direction": "IN",
+        "source": "uno_r4_wifi",
+        "local_time": "2025-12-26 15:10:12"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "ad1246e8-65aa-434e-847a-f39d6ba7062f",
+      "timestamp": "2025-12-26T08:10:41.543261+00:00",
+      "card_id": "668D3606",
+      "action": "exit",
+      "details": {
+        "previous_status": 1,
+        "new_status": 0,
+        "local_time": "2025-12-26 15:10:41"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "1e1e4a79-353d-435a-914d-32733aa17ad4",
+      "timestamp": "2025-12-26T08:10:41.550131+00:00",
+      "card_id": "668D3606",
+      "action": "exit",
+      "details": {
+        "timestamp": "",
+        "direction": "OUT",
+        "source": "uno_r4_wifi",
+        "local_time": "2025-12-26 15:10:41"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "17d81610-44ec-454b-8b3b-0a40180d01a3",
+      "timestamp": "2025-12-26T08:11:15.021097+00:00",
+      "card_id": "B61D4305",
+      "action": "exit",
+      "details": {
+        "previous_status": 1,
+        "new_status": 0,
+        "local_time": "2025-12-26 15:11:15"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "fb698503-3b4b-4170-9c2e-1eb5114c7765",
+      "timestamp": "2025-12-26T08:11:15.027432+00:00",
+      "card_id": "B61D4305",
+      "action": "exit",
+      "details": {
+        "timestamp": "",
+        "direction": "OUT",
+        "source": "uno_r4_wifi",
+        "local_time": "2025-12-26 15:11:15"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "14b0c0f2-509f-431c-8c20-8c5e7ec7e217",
+      "timestamp": "2025-12-26T08:11:27.281069+00:00",
+      "card_id": "668D3606",
+      "action": "entry",
+      "details": {
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-12-26 15:11:27"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "48fdb467-8670-49d7-a574-d38906bd4ecd",
+      "timestamp": "2025-12-26T08:11:27.289881+00:00",
+      "card_id": "668D3606",
+      "action": "entry",
+      "details": {
+        "timestamp": "",
+        "direction": "IN",
+        "source": "uno_r4_wifi",
+        "local_time": "2025-12-26 15:11:27"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "0ab233b3-11f7-46a4-ba24-174277993fc1",
+      "timestamp": "2025-12-26T08:11:39.350165+00:00",
+      "card_id": "B61D4305",
+      "action": "entry",
+      "details": {
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-12-26 15:11:39"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "95f9e380-e3a7-44c5-ac89-3d7bebfb1b89",
+      "timestamp": "2025-12-26T08:11:39.358269+00:00",
+      "card_id": "B61D4305",
+      "action": "entry",
+      "details": {
+        "timestamp": "",
+        "direction": "IN",
+        "source": "uno_r4_wifi",
+        "local_time": "2025-12-26 15:11:39"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "bfd43d1d-ac81-421c-b6ee-12349c938cce",
+      "timestamp": "2025-12-26T08:12:01.420880+00:00",
+      "card_id": "668D3606",
+      "action": "exit",
+      "details": {
+        "previous_status": 1,
+        "new_status": 0,
+        "local_time": "2025-12-26 15:12:01"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "dec72a6c-97ac-4c39-83b3-badcb19bb708",
+      "timestamp": "2025-12-26T08:12:01.428439+00:00",
+      "card_id": "668D3606",
+      "action": "exit",
+      "details": {
+        "timestamp": "",
+        "direction": "OUT",
+        "source": "uno_r4_wifi",
+        "local_time": "2025-12-26 15:12:01"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "5ffb4047-d473-4d1f-9c07-4417140d7a57",
+      "timestamp": "2025-12-26T08:12:10.876262+00:00",
+      "card_id": "B61D4305",
+      "action": "exit",
+      "details": {
+        "previous_status": 1,
+        "new_status": 0,
+        "local_time": "2025-12-26 15:12:10"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "d000879e-8df1-413e-8d1a-5e4d4c0806b8",
+      "timestamp": "2025-12-26T08:12:10.883195+00:00",
+      "card_id": "B61D4305",
+      "action": "exit",
+      "details": {
+        "timestamp": "",
+        "direction": "OUT",
+        "source": "uno_r4_wifi",
+        "local_time": "2025-12-26 15:12:10"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "ba42e709-ba92-48fb-8dcd-be17ff8cf236",
+      "timestamp": "2025-12-26T08:12:16.863597+00:00",
+      "card_id": "668D3606",
+      "action": "entry",
+      "details": {
+        "previous_status": 0,
+        "new_status": 1,
+        "local_time": "2025-12-26 15:12:16"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "02f2cb07-e827-48c8-9d2a-322b3aad4f40",
+      "timestamp": "2025-12-26T08:12:16.881482+00:00",
+      "card_id": "668D3606",
+      "action": "entry",
+      "details": {
+        "timestamp": "",
+        "direction": "IN",
+        "source": "uno_r4_wifi",
+        "local_time": "2025-12-26 15:12:16"
+      },
+      "metadata": {}
     }
   ],
   "created_at": "2025-10-06T15:06:01.564501+00:00",

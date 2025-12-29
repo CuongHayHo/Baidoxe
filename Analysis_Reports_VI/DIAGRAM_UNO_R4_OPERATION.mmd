@@ -1,0 +1,212 @@
+%% UNO R4 WiFi - State Machine Barrier Control (8 States)
+
+stateDiagram-v2
+    [*] --> IDLE
+    
+    IDLE --> OPENING: openBarrier called
+    OPENING --> WAITING_VEHICLE: 2s elapsed
+    WAITING_VEHICLE --> VEHICLE_PRESENT: Vehicle detected
+    VEHICLE_PRESENT --> CLOSING: Vehicle cleared
+    CLOSING --> IDLE: 2s elapsed
+    
+    WAITING_VEHICLE --> TIMEOUT_CLOSING: 30s timeout
+    TIMEOUT_CLOSING --> IDLE: 2s elapsed
+    
+    OPENING --> IDLE: Error
+    CLOSING --> IDLE: Error
+
+---
+
+%% UNO R4 WiFi - RFID Reading to Barrier Control Flow
+
+flowchart TD
+    A["Loop cycle<br/>(10ms)<br/>readRFID()"] --> B{"RFID card<br/>detected?"}
+    B -->|No| C["Continue loop"]
+    C --> A
+    
+    B -->|Yes| D["Get card_id<br/>Determine direction<br/>(IN or OUT)"]
+    D --> E{"Cooldown timer<br/>active?<br/>< 500ms"]
+    
+    E -->|Yes| F["Skip duplicate<br/>Return"]
+    F --> C
+    
+    E -->|No| G["Reset cooldown<br/>to 500ms"]
+    G --> H["Build JSON payload<br/>card_id + direction"]
+    
+    H --> I["HTTP POST<br/>/api/cards/scan<br/>to backend<br/>192.168.4.3:5000"]
+    
+    I --> J{"Server<br/>response<br/>ok?"}
+    J -->|Timeout/Error| K["Log error<br/>Fallback: openBarrier()"]
+    
+    J -->|200 OK| L{"Parse response<br/>action field"]
+    L -->|'open'| M["Call openBarrier()"]
+    L -->|'deny'| N["Log access denied<br/>Return"]
+    
+    K --> M
+    M --> O["Set barrier.state<br/>= OPENING"]
+    O --> P["updateBarrier()<br/>manages state transitions"]
+    N --> C
+    P --> C
+
+---
+
+%% UNO R4 WiFi - Ultrasonic Vehicle Detection with Noise Filtering
+
+flowchart TD
+    A["readDistanceCM()<br/>called every 10ms"] --> B["Send TRIG pulse<br/>HC-SR04"]
+    B --> C["Measure ECHO time<br/>microseconds"]
+    C --> D["Convert to distance<br/>distance_cm = time / 58"]
+    
+    D --> E{"Distance<br/>valid?<br/>(0-400cm)"]
+    E -->|No| F["Return -1<br/>error"]
+    E -->|Yes| G["Check threshold<br/>distance <= 10cm?"]
+    
+    G -->|Yes| H["isPresent = true<br/>presentCount++"]
+    G -->|No| I["isPresent = false<br/>absentCount++"]
+    
+    H --> J{"presentCount<br/>>= 3<br/>ULTRA_STABLE_COUNT"]
+    J -->|No| K["Keep previous state"]
+    J -->|Yes| L["Confirm: Vehicle detected<br/>Reset absentCount"]
+    
+    I --> M{"absentCount<br/>>= 3<br/>ULTRA_STABLE_COUNT"]
+    M -->|No| N["Keep previous state"]
+    M -->|Yes| O["Confirm: Vehicle cleared<br/>Reset presentCount"]
+    
+    K --> P["Return current state"]
+    L --> P
+    N --> P
+    O --> P
+
+---
+
+%% UNO R4 WiFi - Complete Barrier Cycle Timeline
+
+sequenceDiagram
+    participant RFID as RFID Reader
+    participant UNO as UNO R4<br/>10ms loop
+    participant Backend as Backend API<br/>192.168.4.3:5000
+    participant Servo as Servo Motor<br/>PWM
+    participant Ultra as Ultrasonic<br/>HC-SR04
+    
+    rect rgb(200, 220, 255)
+        note right of RFID: T=0ms: Card Detected
+        RFID->>UNO: Card UID detected
+        UNO->>UNO: Check cooldown (pass)
+        UNO->>UNO: Determine direction
+    end
+    
+    rect rgb(220, 240, 220)
+        note right of Backend: T=5-10ms: Build & Send HTTP
+        UNO->>Backend: POST /api/cards/scan<br/>{card_id, direction}
+    end
+    
+    rect rgb(240, 240, 200)
+        note right of Backend: T=10-25ms: Server Processing
+        Backend->>Backend: Query card status<br/>Check parking rules<br/>Build response
+        Backend->>UNO: Response 200 OK<br/>{success:true, action:"open"}
+    end
+    
+    rect rgb(220, 220, 240)
+        note right of UNO: T=30ms: State Machine Update
+        UNO->>UNO: Parse response<br/>Set barrier.state = OPENING
+        UNO->>Servo: Write PWM 90 degrees
+    end
+    
+    rect rgb(255, 240, 200)
+        note right of Servo: T=30-2030ms: Barrier Opens
+        loop Every 10ms
+            UNO->>Servo: Interpolate angle<br/>0° → 90°
+        end
+        Servo->>Servo: Reach 90 degrees
+    end
+    
+    rect rgb(200, 240, 220)
+        note right of Servo: T=2030ms: Transition
+        UNO->>UNO: barrier.state<br/>= WAITING_VEHICLE
+        UNO->>UNO: presentCount = 0
+    end
+    
+    rect rgb(220, 240, 200)
+        note right of Ultra: T=2030-2300ms: Vehicle Detection
+        loop Every 10ms
+            UNO->>Ultra: Send TRIG<br/>Measure ECHO
+            Ultra->>UNO: distance <= 10cm
+        end
+        UNO->>UNO: presentCount >= 3<br/>Set state<br/>= VEHICLE_PRESENT
+    end
+    
+    rect rgb(240, 240, 200)
+        note right of Ultra: T=2300-3500ms: Vehicle Passes
+        loop Every 10ms
+            UNO->>Ultra: Send TRIG<br/>Measure ECHO
+            Ultra->>UNO: distance > 10cm
+        end
+        UNO->>UNO: absentCount >= 3<br/>Set state = CLOSING<br/>Write PWM 0 degrees
+    end
+    
+    rect rgb(255, 240, 200)
+        note right of Servo: T=3500-5500ms: Barrier Closes
+        loop Every 10ms
+            UNO->>Servo: Interpolate angle<br/>90° → 0°
+        end
+    end
+    
+    rect rgb(220, 240, 220)
+        note right of UNO: T=5500ms: Complete
+        UNO->>UNO: barrier.state = IDLE<br/>Ready for next cycle
+        UNO->>UNO: Cooldown timer = 500ms
+    end
+
+---
+
+%% UNO R4 WiFi - RFID Dual Reader with Independent Timing
+
+flowchart LR
+    A["Reader IN<br/>Port 0 & 1"] -->|Independent| B["readRFID(rfidIn)<br/>Card detected?"]
+    C["Reader OUT<br/>Port 2 & 3"] -->|Independent| D["readRFID(rfidOut)<br/>Card detected?"]
+    
+    B -->|Yes| E["Build JSON<br/>direction: IN"]
+    D -->|Yes| F["Build JSON<br/>direction: OUT"]
+    
+    E --> G["HTTP POST<br/>card_id + direction=IN"]
+    F --> H["HTTP POST<br/>card_id + direction=OUT"]
+    
+    G --> I["Backend: Entry validation<br/>Check slot availability<br/>Return action"]
+    H --> I
+    
+    I --> J["openBarrier(barrierIn)<br/>or<br/>openBarrier(barrierOut)"]
+    
+    J --> K["Independent state<br/>machines process"]
+    
+    style A fill:#e3f2fd
+    style C fill:#f3e5f5
+    style B fill:#c8e6c9
+    style D fill:#c8e6c9
+    style I fill:#fff9c4
+    style K fill:#ffe0b2
+
+---
+
+%% UNO R4 WiFi - HTTP Client Communication with Backend
+
+flowchart TD
+    A["HTTPClient client"] --> B["client.begin()<br/>server:5000"]
+    B --> C["client.addHeader<br/>Content-Type<br/>application/json"]
+    C --> D["client.POST<br/>JSON payload<br/>card_id + direction"]
+    
+    D --> E{"HTTP response<br/>code?"]
+    E -->|200| F["Success<br/>Parse JSON response"]
+    E -->|timeout| G["Error<br/>Connection timeout<br/>fallback openBarrier()"]
+    E -->|other| H["Error<br/>HTTP error<br/>fallback openBarrier()"]
+    
+    F --> I{"Parse action<br/>field"]
+    I -->|'open'| J["openBarrier()<br/>Set state=OPENING"]
+    I -->|'deny'| K["Log access denied<br/>Return"]
+    
+    G --> J
+    H --> J
+    
+    J --> L["barrier.state<br/>managed by<br/>updateBarrier()"]
+    K --> L
+    
+    L --> M["client.end()"]
