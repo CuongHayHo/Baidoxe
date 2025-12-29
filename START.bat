@@ -23,9 +23,9 @@ timeout /t 3 /nobreak
 
 REM Start Frontend
 echo [2/2] Starting frontend development server...
-cd /d "%~dp0frontend"
+cd /d "%~dp0desktop"
 start "Frontend Dev Server" cmd /k npm run dev
-echo [OK] Frontend dev server starting (http://localhost:3000)
+echo [OK] Desktop app dev server starting (http://localhost:3000)
 echo.
 
 echo ============================================================
