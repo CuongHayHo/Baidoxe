@@ -1,41 +1,16 @@
 {
-  "A1B3C2": {
-    "uid": "A1B3C2",
-    "name": "Cuong",
-    "status": 1,
-    "created_at": "2025-12-25T07:45:56.150211+00:00",
-    "entry_time": "2025-12-25T23:41:32.567087+00:00",
-    "parking_duration": {
-      "total_seconds": 30644,
-      "hours": 8,
-      "minutes": 30,
-      "display": "8 giờ 30 phút (hiện tại)"
-    }
-  },
-  "A6V6B3": {
-    "uid": "A6V6B3",
-    "name": "cuong",
-    "status": 1,
-    "created_at": "2025-12-25T08:34:58.852927+00:00",
-    "entry_time": "2025-12-25T08:34:58.852936+00:00",
-    "parking_duration": {
-      "total_seconds": 85038,
-      "hours": 23,
-      "minutes": 37,
-      "display": "23 giờ 37 phút (hiện tại)"
-    }
-  },
   "U7U2U3": {
     "uid": "U7U2U3",
     "name": "U7U2U3",
-    "status": 1,
+    "status": 0,
     "created_at": "2025-12-25T16:11:30.998158+00:00",
     "entry_time": "2025-12-25T16:11:30.998168+00:00",
+    "exit_time": "2025-12-30T14:18:49.125012+00:00",
     "parking_duration": {
-      "total_seconds": 57645,
-      "hours": 16,
-      "minutes": 0,
-      "display": "16 giờ 0 phút (hiện tại)"
+      "total_seconds": 425238,
+      "hours": 118,
+      "minutes": 7,
+      "display": "118 giờ 7 phút"
     }
   },
   "U1U7U1": {
@@ -51,18 +26,6 @@
       "minutes": 24,
       "display": "7 giờ 24 phút"
     }
-  },
-  "A3B2B1": {
-    "uid": "A3B2B1",
-    "name": "ASDKJASDJHAS",
-    "status": 0,
-    "created_at": "2025-12-25T16:39:26.233414+00:00"
-  },
-  "AA2S3D4": {
-    "uid": "AA2S3D4",
-    "name": "ASDASDAS",
-    "status": 0,
-    "created_at": "2025-12-25T16:52:39.940667+00:00"
   },
   "A3S2D1": {
     "uid": "A3S2D1",
@@ -83,10 +46,10 @@
     "created_at": "2025-12-25T23:43:53.445018+00:00",
     "entry_time": "2025-12-25T23:43:53.445027+00:00",
     "parking_duration": {
-      "total_seconds": 30503,
-      "hours": 8,
-      "minutes": 28,
-      "display": "8 giờ 28 phút (hiện tại)"
+      "total_seconds": 398095,
+      "hours": 110,
+      "minutes": 34,
+      "display": "110 giờ 34 phút (hiện tại)"
     }
   },
   "B2C2D2": {
@@ -102,10 +65,10 @@
     "created_at": "2025-12-25T23:48:39.106112+00:00",
     "entry_time": "2025-12-25T23:48:39.106119+00:00",
     "parking_duration": {
-      "total_seconds": 30217,
-      "hours": 8,
-      "minutes": 23,
-      "display": "8 giờ 23 phút (hiện tại)"
+      "total_seconds": 397810,
+      "hours": 110,
+      "minutes": 30,
+      "display": "110 giờ 30 phút (hiện tại)"
     }
   },
   "H4J3K2": {
@@ -151,12 +114,5 @@
       "minutes": 0,
       "display": "0 phút"
     }
-  },
-  "668D3606": {
-    "uid": "668D3606",
-    "name": "668D3606",
-    "status": 1,
-    "created_at": "2025-12-26T08:10:01.243255+00:00",
-    "entry_time": "2025-12-26T08:12:16.861233+00:00"
   }
 }

@@ -3354,6 +3354,86 @@
         "local_time": "2025-12-26 15:12:16"
       },
       "metadata": {}
+    },
+    {
+      "id": "099b51b5-9842-4172-8834-b5ea4cca909a",
+      "timestamp": "2025-12-30T07:20:53.305151+00:00",
+      "card_id": "A3B2B1",
+      "action": "deleted",
+      "details": {
+        "reason": "manual_deletion",
+        "local_time": "2025-12-30 14:20:53"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "5ebe7d6f-cce5-41a2-93e3-1b27aab4b380",
+      "timestamp": "2025-12-30T07:21:25.255412+00:00",
+      "card_id": "668D3606",
+      "action": "deleted",
+      "details": {
+        "reason": "manual_deletion",
+        "local_time": "2025-12-30 14:21:25"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "074cf863-c097-41f7-ba82-3383a3354bf8",
+      "timestamp": "2025-12-30T07:42:46.057026+00:00",
+      "card_id": "A6V6B3",
+      "action": "deleted",
+      "details": {
+        "reason": "manual_deletion",
+        "local_time": "2025-12-30 14:42:46"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "8108f5c7-7a5f-42d0-aee5-1dc3edafb080",
+      "timestamp": "2025-12-30T07:43:43.744693+00:00",
+      "card_id": "AA2S3D4",
+      "action": "deleted",
+      "details": {
+        "reason": "manual_deletion",
+        "local_time": "2025-12-30 14:43:43"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "688ab7b2-ac81-4009-acfa-b3196c85ff81",
+      "timestamp": "2025-12-30T07:44:34.352744+00:00",
+      "card_id": "A1B3C2",
+      "action": "deleted",
+      "details": {
+        "reason": "manual_deletion",
+        "local_time": "2025-12-30 14:44:34"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "609e5723-8b67-4d57-aad1-38733ca3a5f2",
+      "timestamp": "2025-12-30T14:18:49.135035+00:00",
+      "card_id": "U7U2U3",
+      "action": "exit",
+      "details": {
+        "previous_status": 1,
+        "new_status": 0,
+        "local_time": "2025-12-30 21:18:49"
+      },
+      "metadata": {}
+    },
+    {
+      "id": "4f9e54df-c083-49f4-8047-b3c70cba63a7",
+      "timestamp": "2025-12-30T14:18:49.177190+00:00",
+      "card_id": "U7U2U3",
+      "action": "exit",
+      "details": {
+        "timestamp": "",
+        "direction": "OUT",
+        "source": "uno_r4_wifi",
+        "local_time": "2025-12-30 21:18:49"
+      },
+      "metadata": {}
     }
   ],
   "created_at": "2025-10-06T15:06:01.564501+00:00",

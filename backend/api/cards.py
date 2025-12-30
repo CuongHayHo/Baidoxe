@@ -59,6 +59,9 @@ def save_log_to_database(card_id: str, action: str, details: Dict[str, Any] = No
         db.session.add(new_log)
         logger.info(f"✓ Log added to session")
         
+        db.session.flush()  # Flush to check for errors before commit
+        logger.info(f"✓ Flushed to session")
+        
         db.session.commit()
         logger.info(f"✓ Session committed")
         
@@ -69,13 +72,9 @@ def save_log_to_database(card_id: str, action: str, details: Dict[str, Any] = No
         logger.error(f"❌ Error saving log to database ({card_id} - {action}): {e}", exc_info=True)
         try:
             db.session.rollback()
+            logger.info(f"✓ Rolled back failed log save")
         except:
             pass
-        return False
-        
-    except Exception as e:
-        logger.debug(f"⚠️ Database logging warning (non-critical): {e}")
-        # Don't fail the request if database logging fails
         return False
 
 def save_card_to_database(card_id: str, card_name: str, status: int, entry_time: str = None, 
@@ -127,6 +126,7 @@ def save_card_to_database(card_id: str, card_name: str, status: int, entry_time:
             if exit_time:
                 existing_card.vehicle_info = exit_time
             existing_card.updated_at = datetime.now(timezone.utc)
+            db.session.flush()  # Flush to check for errors before commit
             db.session.commit()
             logger.info(f"✅ Updated card {card_id} in database")
         else:
@@ -144,12 +144,16 @@ def save_card_to_database(card_id: str, card_name: str, status: int, entry_time:
                 db.session.add(new_card)
                 logger.info(f"✓ Card added to session")
                 
+                db.session.flush()  # Flush to check for errors before commit
+                logger.info(f"✓ Flushed to session")
+                
                 db.session.commit()
                 logger.info(f"✓ Session committed")
                 logger.info(f"✅ Saved card {card_id} to database")
             except Exception as create_err:
                 logger.error(f"❌ Error creating card record: {create_err}", exc_info=True)
                 db.session.rollback()
+                logger.info(f"✓ Rolled back failed card creation")
                 raise
         
         return True
@@ -158,6 +162,7 @@ def save_card_to_database(card_id: str, card_name: str, status: int, entry_time:
         logger.error(f"❌ Error saving card {card_id} to database: {e}", exc_info=True)
         try:
             db.session.rollback()
+            logger.info(f"✓ Rolled back database changes")
         except:
             pass
         return False
@@ -311,6 +316,7 @@ def create_card():
             })
             
             # 💾 Lưu card vào database
+            db_save_success = False
             if new_card:
                 logger.info(f"🔄 Saving card to database: {uid}, name={name}, status={initial_status}, created_at={new_card.created_at}")
                 db_save_success = save_card_to_database(
@@ -320,11 +326,15 @@ def create_card():
                     created_at=new_card.created_at
                 )
                 logger.info(f"💾 Card database save result: {db_save_success}")
+                
+                if not db_save_success:
+                    logger.warning(f"⚠️ Failed to save card {uid} to database, but JSON was saved successfully")
             
             return jsonify({
                 "success": True,
                 "card": new_card.to_dict() if new_card else None,
-                "message": message
+                "message": message,
+                "database_saved": db_save_success
             }), 201
         else:
             return jsonify({
@@ -469,6 +479,7 @@ def delete_card(card_id: str):
             save_log_to_database(clean_id, "deleted", {"reason": "manual_delete"})
             
             # 💾 Xóa card từ database
+            db_deletion_success = False
             try:
                 from app import db
                 from models.models_cache import get_sqlalchemy_models
@@ -476,20 +487,34 @@ def delete_card(card_id: str):
                 logger.info(f"🔄 Deleting card {clean_id} from database...")
                 UserModel, CardModel, CardLogModel, ParkingSlotModel, ParkingConfigModel = get_sqlalchemy_models()
                 
+                # Query the card to delete
+                logger.info(f"🔍 Querying card {clean_id} from database...")
                 card_to_delete = db.session.query(CardModel).filter_by(card_number=clean_id).first()
+                
                 if card_to_delete:
+                    logger.info(f"✓ Found card in database, deleting...")
                     db.session.delete(card_to_delete)
-                    db.session.commit()
+                    db.session.flush()  # Flush changes to session
+                    logger.info(f"✓ Card deleted from session, committing...")
+                    db.session.commit()  # Commit the deletion
                     logger.info(f"✅ Deleted card from database: {clean_id}")
+                    db_deletion_success = True
                 else:
                     logger.warning(f"⚠️ Card {clean_id} not found in database for deletion")
+                    db_deletion_success = True  # Not an error if card wasn't in DB
             except Exception as db_error:
                 logger.error(f"❌ Error deleting card from database: {db_error}", exc_info=True)
+                try:
+                    db.session.rollback()
+                    logger.info(f"✓ Rolled back database changes")
+                except:
+                    pass
             
             return jsonify({
                 "success": True,
                 "message": "Card deleted successfully",
-                "card_id": clean_id
+                "card_id": clean_id,
+                "database_deleted": db_deletion_success
             }), 200
         else:
             return jsonify({
